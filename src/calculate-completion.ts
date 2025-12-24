@@ -11,7 +11,7 @@ import miniBossesJSON from "./data/mini-bosses.json" with { type: "json" };
 import scenesJSON from "./data/scenes.json" with { type: "json" };
 import wishesJSON from "./data/wishes.json" with { type: "json" };
 import { completionValue } from "./elements.ts";
-import { isManuallyCompleted } from "./manual-progress.ts";
+import { getManualValue, isManuallySet } from "./manual-progress.ts";
 import {
   getSaveData,
   getSaveDataFlags,
@@ -36,9 +36,9 @@ function collectAllItems(): readonly Item[] {
 }
 
 function getUnlocked(item: Item, value: unknown): boolean {
-  // First check if manually toggled as completed
-  if (isManuallyCompleted(item.id)) {
-    return true;
+  // First check if manually set - if so, use manual value instead
+  if (isManuallySet(item.id)) {
+    value = getManualValue(item.id);
   }
 
   if (item.type === "quest") {
