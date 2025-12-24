@@ -2358,18 +2358,19 @@ main::-webkit-scrollbar-thumb:hover {
 
 .toc-legend {
   position: sticky;
-  bottom: 0;
+  bottom: -1.2rem;
   background: linear-gradient(
     to top,
-    rgba(17, 17, 18, 0.98) 0%,
+    rgba(17, 17, 18, 1) 0%,
+    rgba(17, 17, 18, 1) 50%,
     rgba(17, 17, 18, 0.98) 70%,
     rgba(17, 17, 18, 0.85) 85%,
     rgba(17, 17, 18, 0.4) 95%,
     transparent
   );
   backdrop-filter: blur(4px);
-  padding: 1rem 1.4rem 1.2rem 1.4rem;
-  margin: 0 -1.4rem;
+  padding: 1rem 1.4rem 2.4rem 1.4rem;
+  margin: 0 -1.4rem -1.2rem -1.4rem;
   border-top: 1px solid rgba(197, 106, 45, 0.25);
   font-size: 0.85rem;
   line-height: 1.6;
@@ -2421,7 +2422,7 @@ main::-webkit-scrollbar-thumb:hover {
 }
 
 .toc-legend.collapsed {
-  padding-bottom: 1.2rem;
+  padding-bottom: 2.4rem;
 }
 
 .legend-list {
