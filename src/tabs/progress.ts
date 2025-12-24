@@ -235,12 +235,12 @@ export function updateTabProgress(): void {
       continue;
     }
 
-    const val = getSaveDataValue(saveData, saveDataFlags, item);
+    const val = getSaveDataValue(saveDataForCalc, saveDataFlagsForCalc, item);
     const unlocked = getUnlocked(item, val);
 
     // Skip unobtainable items if another in the group was obtained
     if (
-      saveData !== undefined
+      saveDataForCalc !== undefined
       && item.unobtainable === true
       && typeof item.group === "string"
       && item.group.trim() !== ""
