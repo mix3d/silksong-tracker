@@ -124,9 +124,11 @@ export function updateTabProgress(): void {
       collapseIcon.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
       heading.append(collapseIcon);
 
-      // Add label text
-      const labelText = document.createTextNode(category.label);
-      heading.append(labelText);
+      // Add label text wrapped in span for flex-grow
+      const labelSpan = document.createElement("span");
+      labelSpan.className = "category-label";
+      labelSpan.textContent = category.label;
+      heading.append(labelSpan);
 
       const { items } = category;
 
