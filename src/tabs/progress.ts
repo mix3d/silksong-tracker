@@ -329,6 +329,46 @@ export function updateTabProgress(): void {
       }
 
       section.append(subgrid);
+
+      // Create collapsible content wrapper
+      const collapsibleContent = document.createElement("div");
+      collapsibleContent.className = "category-content";
+
+      // Move description and grid into collapsible content
+      section.removeChild(desc);
+      section.removeChild(subgrid);
+      collapsibleContent.append(desc);
+      collapsibleContent.append(subgrid);
+      section.append(collapsibleContent);
+
+      // Restore collapsed state from localStorage
+      const collapsedKey = `category-collapsed-${category.label}`;
+      const isCollapsed = localStorage.getItem(collapsedKey) === "true";
+      if (isCollapsed) {
+        section.classList.add("collapsed");
+        collapseIcon.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+      }
+
+      // Add click handler to toggle collapse (but not on checkbox)
+      heading.addEventListener("click", (e) => {
+        // Don't toggle if clicking on the checkbox
+        if ((e.target as HTMLElement).closest(".category-checkbox")) {
+          return;
+        }
+
+        const isCurrentlyCollapsed = section.classList.toggle("collapsed");
+
+        // Update icon
+        if (isCurrentlyCollapsed) {
+          collapseIcon.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+        } else {
+          collapseIcon.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+        }
+
+        // Save state to localStorage
+        localStorage.setItem(collapsedKey, isCurrentlyCollapsed.toString());
+      });
+
       allProgressGrid.append(section);
     }
   }
