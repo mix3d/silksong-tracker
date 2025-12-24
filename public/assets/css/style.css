@@ -2497,7 +2497,7 @@ main::-webkit-scrollbar-thumb:hover {
   box-shadow: -3px 0 10px rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(8px);
   overflow-y: auto;
-  padding: 1.2rem 1.4rem;
+  padding: 1.2rem 1.4rem 1.2rem 1rem;
   z-index: 100;
 }
 
