@@ -44,10 +44,42 @@ export function isManuallySet(itemId: string): boolean {
 }
 
 /**
+ * Clear all items in a group except the specified item
+ */
+export function clearGroupExcept(group: string, keepItemId: string): void {
+  const progress = getManualProgress();
+
+  // Find and remove all items with the same group prefix
+  // Items in a group typically have IDs like "red-silkshot-architect", "red-silkshot-forge", etc.
+  const groupPattern = group.toLowerCase();
+  let modified = false;
+
+  for (const itemId of Object.keys(progress)) {
+    if (itemId !== keepItemId && itemId.toLowerCase().includes(groupPattern)) {
+      delete progress[itemId];
+      modified = true;
+    }
+  }
+
+  if (modified) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    } catch (error) {
+      console.error("Error saving manual progress:", error);
+    }
+  }
+}
+
+/**
  * Toggle an item's manual completion state
  * Pass the value that represents "completed" for this item type
+ * If the item belongs to a mutually exclusive group, clear other items in the group
  */
-export function toggleManualProgress(itemId: string, completedValue: unknown = true): void {
+export function toggleManualProgress(
+  itemId: string,
+  completedValue: unknown = true,
+  group?: string,
+): void {
   const progress = getManualProgress();
   const isCurrentlySet = itemId in progress;
 
@@ -57,6 +89,11 @@ export function toggleManualProgress(itemId: string, completedValue: unknown = t
   } else {
     // Set to the completed value (toggle on)
     progress[itemId] = completedValue;
+
+    // If this item is part of a mutually exclusive group, clear others
+    if (group && group.trim() !== "") {
+      clearGroupExcept(group, itemId);
+    }
   }
 
   try {
