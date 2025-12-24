@@ -2358,7 +2358,7 @@ main::-webkit-scrollbar-thumb:hover {
 
 .toc-legend {
   position: sticky;
-  bottom: 0;
+  bottom: -1.2rem;
   background: linear-gradient(
     to top,
     rgba(17, 17, 18, 1) 0%,
