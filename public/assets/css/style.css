@@ -1414,14 +1414,15 @@ main a:hover,
 /* Collapse icon */
 .collapse-icon {
   color: var(--accent);
-  font-size: 0.85em;
+  font-size: 0.9em;
   transition: transform 0.3s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   align-self: center;
-  line-height: 1;
+  height: 20px;
+  width: 20px;
 }
 
 .collapsed .collapse-icon {
