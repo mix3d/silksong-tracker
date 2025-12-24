@@ -780,14 +780,16 @@ main a:hover,
 /* style.css */
 #info-content .info-image {
   max-width: 72px;
-  max-height: 120px; /* Aggiungi un limite di altezza */
+  max-height: 120px;
   margin: 0 auto 18px;
   display: block;
-  object-fit: contain; /* Mantiene le proporzioni */
+  object-fit: contain;
 }
 
-/* Rotate needle upgrade icons to horizontal in modal */
+/* Reduce height for needle icons by swapping dimensions and rotating */
 #info-content .info-image[src*="Needle"] {
+  max-width: 120px;
+  max-height: 72px;
   transform: rotate(-90deg);
 }
 
