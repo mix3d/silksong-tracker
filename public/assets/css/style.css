@@ -1437,12 +1437,6 @@ input[type="checkbox"]:hover {
   box-shadow: 0 0 4px var(--accent);
 }
 
-/* Focus - clean glow without black outline */
-input[type="checkbox"]:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 6px rgba(197, 106, 45, 0.5);
-}
-
 /* --- FIX HOME LAYOUT ON SMALL SCREENS --- */
 @media (max-width: 1400px) {
   .main-wrapper {
