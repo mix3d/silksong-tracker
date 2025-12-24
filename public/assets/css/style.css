@@ -1371,16 +1371,18 @@ main a:hover,
 .category-count {
   font-size: 0.9em;
   color: var(--ink-3);
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 /* Category checkbox - only visible on hover */
 .category-checkbox {
   opacity: 0;
-  margin-left: 8px;
   cursor: pointer;
   transition: opacity 0.2s ease;
   width: 16px;
   height: 16px;
+  flex-shrink: 0;
 }
 
 .category-title:hover .category-checkbox {
