@@ -48,6 +48,28 @@ function getItemsByGroup(group: string): Item[] {
   );
 }
 
+/**
+ * Get items related by upgrades (base and its upgrades, or upgrade and its base)
+ */
+function getUpgradeRelatedItems(item: Item): Item[] {
+  const allItems = collectAllItems();
+  const relatedItems: Item[] = [];
+
+  // If this is an upgrade, find its base
+  if (item.upgradeOf) {
+    const baseItem = allItems.find((i) => i.id === item.upgradeOf);
+    if (baseItem) {
+      relatedItems.push(baseItem);
+    }
+  }
+
+  // Find all upgrades of this item
+  const upgrades = allItems.filter((i) => i.upgradeOf === item.id);
+  relatedItems.push(...upgrades);
+
+  return relatedItems;
+}
+
 export function updateTabProgress(): void {
   initProgressListeners();
   const spoilerOn = showSpoilers.checked;
