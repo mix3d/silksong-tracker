@@ -1431,8 +1431,9 @@ input[type="checkbox"]:checked::after {
   line-height: 1;
 }
 
-/* Hover */
-input[type="checkbox"]:hover {
+/* Hover and focus */
+input[type="checkbox"]:hover,
+input[type="checkbox"]:focus {
   border-color: var(--accent);
   box-shadow: 0 0 4px var(--accent);
 }
