@@ -1398,6 +1398,8 @@ main a:hover,
 
 /* --- Unified Standard Checkboxes --- */
 input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
   accent-color: var(--accent);
   cursor: pointer;
   width: 18px;
