@@ -3047,3 +3047,8 @@ main::-webkit-scrollbar-thumb:hover {
   color: #fff;
   box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
 }
+
+.btn-reset span {
+  display: inline-block;
+  transform: translateY(2px);
+}
