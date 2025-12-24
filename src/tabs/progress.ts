@@ -243,9 +243,9 @@ function initWorldMapListeners() {
 }
 
 function getUnlocked(item: Item, value: unknown): boolean {
-  // First check if manually toggled as completed
-  if (isManuallyCompleted(item.id)) {
-    return true;
+  // First check if manually set - if so, use manual value instead
+  if (isManuallySet(item.id)) {
+    value = getManualValue(item.id);
   }
 
   if (item.type === "quest") {
