@@ -2,6 +2,7 @@ import { assertArray } from "complete-common";
 import { getStoredActFilter } from "../components/acts-dropdown.ts";
 import { showOnlyMissing } from "../components/show-only-missing.ts";
 import { showSpoilers } from "../components/show-spoilers.ts";
+import { updateCompletionPercentage } from "../calculate-completion.ts";
 import { BASE_PATH } from "../constants.ts";
 import bossesJSON from "../data/bosses.json" with { type: "json" };
 import completionJSON from "../data/completion.json" with { type: "json" };
@@ -207,6 +208,7 @@ export function updateTabProgress(): void {
 
   buildDynamicTOC();
   initScrollSpy();
+  updateCompletionPercentage();
 }
 
 let progressListenerRegistered = false;
