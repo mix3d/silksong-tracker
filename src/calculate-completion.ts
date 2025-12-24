@@ -11,7 +11,6 @@ import miniBossesJSON from "./data/mini-bosses.json" with { type: "json" };
 import scenesJSON from "./data/scenes.json" with { type: "json" };
 import wishesJSON from "./data/wishes.json" with { type: "json" };
 import { completionValue } from "./elements.ts";
-import { getManualValue, isManuallySet } from "./manual-progress.ts";
 import {
   getSaveData,
   getSaveDataFlags,
