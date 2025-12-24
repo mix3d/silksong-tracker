@@ -82,7 +82,16 @@ function getUnlocked(item: Item, value: unknown): boolean {
     return numberValue >= item.required || value === true;
   }
 
-  return value === true;
+  if (item.type === "quill" && typeof value === "number") {
+    return item.id === `QuillState_${value}` && [1, 2, 3].includes(value);
+  }
+
+  if (item.type === "key") {
+    return value === true;
+  }
+
+  // For materium, relic, device, and other types
+  return value === true || value === "collected" || value === "deposited";
 }
 
 /**
