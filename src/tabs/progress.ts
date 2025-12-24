@@ -620,7 +620,7 @@ ${(() => {
     // Add checkbox in label for larger click area
     const checkboxLabel = document.createElement("label");
     checkboxLabel.className = "modal-checkbox-label";
-    const checkbox = createCheckbox(item.id, isCompleted, () => {
+    const checkbox = createCheckbox(item, isCompleted, () => {
       infoOverlay.classList.add("hidden");
     });
     checkboxLabel.append(checkbox);
@@ -998,7 +998,7 @@ function renderGenericGrid(
     }
 
     // Add checkbox toggle (top-right)
-    const checkbox = createCheckbox(item.id, isDone);
+    const checkbox = createCheckbox(item, isDone);
     checkbox.classList.add("tile-checkbox");
     div.append(checkbox);
 
