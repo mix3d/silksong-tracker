@@ -485,7 +485,6 @@ function showGenericModal(item: Item) {
           </a>`
         : ""
     }
-    <button id="modalToggleCheckbox" class="modal-checkbox-toggle ${!isCompleted ? "empty" : ""}" aria-label="${isCompleted ? "Mark as incomplete" : "Mark as complete"}"></button>
     ${
       isNeedle
         ? `<div class="rotated-image-wrapper">
@@ -957,14 +956,8 @@ function renderGenericGrid(
     }
 
     // Add hover checkbox toggle (top-right circular badge)
-    const checkboxToggle = document.createElement("button");
-    checkboxToggle.className = `boss-checkbox-toggle ${!isDone ? "empty" : ""}`;
-    checkboxToggle.setAttribute("aria-label", isDone ? "Mark as incomplete" : "Mark as complete");
-    checkboxToggle.addEventListener("click", (e) => {
-      e.stopPropagation(); // Prevent opening modal
-      toggleManualProgress(item.id);
-      // The updateTabProgress will be called automatically via event listener
-    });
+    const checkboxToggle = createCheckboxToggle(item.id, isDone);
+    checkboxToggle.classList.add("tile-checkbox");
     div.append(checkboxToggle);
 
     // Click on card opens modal
