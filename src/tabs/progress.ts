@@ -116,6 +116,13 @@ export function updateTabProgress(): void {
 
       const heading = document.createElement("h3");
       heading.className = "category-title";
+      heading.style.cursor = "pointer";
+
+      // Add collapse icon
+      const collapseIcon = document.createElement("span");
+      collapseIcon.className = "collapse-icon";
+      collapseIcon.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+      heading.append(collapseIcon);
 
       // Add label text
       const labelText = document.createTextNode(category.label);
