@@ -1556,13 +1556,11 @@ main::-webkit-scrollbar-thumb:hover {
 }
 
 /* ------------------
-   CHECKBOX TOGGLE BADGE (TOP-RIGHT CIRCLE)
+   UNIFIED CHECKBOX TOGGLE COMPONENT
 ------------------- */
 
-.boss-checkbox-toggle {
+.checkbox-toggle {
   position: absolute;
-  top: 8px;
-  right: 8px;
   width: 24px;
   height: 24px;
   background: var(--accent);
@@ -1571,8 +1569,6 @@ main::-webkit-scrollbar-thumb:hover {
   display: grid;
   place-items: center;
   cursor: pointer;
-  opacity: 0;
-  visibility: hidden;
   transition:
     opacity 0.2s ease,
     visibility 0.2s ease,
@@ -1580,103 +1576,64 @@ main::-webkit-scrollbar-thumb:hover {
     transform 0.1s ease,
     box-shadow 0.2s ease;
   z-index: 10;
-  pointer-events: none;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
   padding: 0;
 }
 
+/* Empty state (not completed) */
+.checkbox-toggle.empty {
+  background: transparent;
+  border: 2px solid var(--accent);
+}
+
+/* Filled state (completed) - checkmark */
+.checkbox-toggle::after {
+  content: "✓";
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  line-height: 1;
+}
+
+.checkbox-toggle.empty::after {
+  content: none;
+}
+
+.checkbox-toggle:hover {
+  transform: scale(1.15);
+  box-shadow: 0 3px 10px rgba(197, 106, 45, 0.6);
+}
+
+.checkbox-toggle:active {
+  transform: scale(0.95);
+}
+
+/* ------------------
+   TILE-SPECIFIC POSITIONING
+------------------- */
+
+.checkbox-toggle.tile-checkbox {
+  top: 8px;
+  right: 8px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 /* Show on hover */
-.boss:hover .boss-checkbox-toggle {
+.boss:hover .checkbox-toggle.tile-checkbox {
   opacity: 1;
   visibility: visible;
   pointer-events: all;
 }
 
-/* Empty state (not completed) */
-.boss-checkbox-toggle.empty {
-  background: transparent;
-  border: 2px solid var(--accent);
-}
-
-.boss-checkbox-toggle.empty::after {
-  content: "";
-  /* No checkmark for empty state */
-}
-
-/* Filled state (completed) */
-.boss-checkbox-toggle::after {
-  content: "✓";
-  font-size: 14px;
-  font-weight: bold;
-  color: #fff;
-  line-height: 1;
-}
-
-.boss-checkbox-toggle.empty::after {
-  content: none;
-}
-
-.boss-checkbox-toggle:hover {
-  transform: scale(1.15);
-  box-shadow: 0 3px 10px rgba(197, 106, 45, 0.6);
-}
-
-.boss-checkbox-toggle:active {
-  transform: scale(0.95);
-}
-
-
 /* ------------------
-   MODAL CHECKBOX TOGGLE (SAME SIZE AS TILE VERSION)
+   MODAL-SPECIFIC POSITIONING
 ------------------- */
 
-.modal-checkbox-toggle {
-  position: absolute;
+.checkbox-toggle.modal-checkbox {
   top: 16px;
   right: 50px;
-  width: 24px;
-  height: 24px;
-  background: var(--accent);
-  border: none;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  transition:
-    background 0.2s ease,
-    transform 0.1s ease,
-    box-shadow 0.2s ease;
-  z-index: 10;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-  padding: 0;
-}
-
-/* Empty state (not completed) */
-.modal-checkbox-toggle.empty {
-  background: transparent;
-  border: 2px solid var(--accent);
-}
-
-/* Filled state (completed) */
-.modal-checkbox-toggle::after {
-  content: "✓";
-  font-size: 14px;
-  font-weight: bold;
-  color: #fff;
-  line-height: 1;
-}
-
-.modal-checkbox-toggle.empty::after {
-  content: none;
-}
-
-.modal-checkbox-toggle:hover {
-  transform: scale(1.15);
-  box-shadow: 0 3px 10px rgba(197, 106, 45, 0.6);
-}
-
-.modal-checkbox-toggle:active {
-  transform: scale(0.95);
 }
 
 #act-filter {
