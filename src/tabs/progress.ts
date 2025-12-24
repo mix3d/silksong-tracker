@@ -24,6 +24,7 @@ import {
 import {
   getManualValue,
   isManuallySet,
+  setManualProgress,
 } from "../manual-progress.ts";
 import {
   getSaveData,
@@ -118,7 +119,17 @@ export function updateTabProgress(): void {
 
       const heading = document.createElement("h3");
       heading.className = "category-title";
-      heading.textContent = category.label;
+
+      // Create checkbox for toggling all items in category
+      const categoryCheckbox = document.createElement("input");
+      categoryCheckbox.type = "checkbox";
+      categoryCheckbox.className = "category-checkbox";
+      categoryCheckbox.setAttribute("aria-label", `Toggle all ${category.label}`);
+      heading.append(categoryCheckbox);
+
+      // Add label text
+      const labelText = document.createTextNode(category.label);
+      heading.append(labelText);
 
       const { items } = category;
 
@@ -217,6 +228,79 @@ export function updateTabProgress(): void {
       count.className = "category-count";
       count.textContent = ` ${obtained}/${total}`;
       heading.append(count);
+
+      // Update checkbox state based on obtained/total
+      if (total > 0) {
+        if (obtained === total) {
+          categoryCheckbox.checked = true;
+          categoryCheckbox.indeterminate = false;
+        } else if (obtained > 0) {
+          categoryCheckbox.checked = false;
+          categoryCheckbox.indeterminate = true;
+        } else {
+          categoryCheckbox.checked = false;
+          categoryCheckbox.indeterminate = false;
+        }
+      }
+
+      // Add click handler to toggle all items in category
+      categoryCheckbox.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const shouldCheck = !categoryCheckbox.checked || categoryCheckbox.indeterminate;
+
+        // Toggle all items in this category
+        for (const item of filteredItems) {
+          // Skip tool upgrades from being individually toggled
+          if (item.type === "tool" && item.upgradeOf !== undefined) {
+            continue;
+          }
+
+          const completedValue = getCompletedValueForItem(item);
+          const isCurrentlySet = isManuallySet(item.id);
+
+          if (shouldCheck && !isCurrentlySet) {
+            // Check item
+            setManualProgress(item.id, completedValue);
+
+            // Handle upgrade relationships
+            if (item.upgradeOf) {
+              const relatedItems = getUpgradeRelatedItems(item);
+              for (const relatedItem of relatedItems) {
+                if (relatedItem.id === item.upgradeOf) {
+                  const baseCompletedValue = getCompletedValueForItem(relatedItem);
+                  setManualProgress(relatedItem.id, baseCompletedValue);
+                }
+              }
+            }
+
+            // Handle mutually exclusive groups
+            if (item.unobtainable && item.group) {
+              const groupItems = getItemsByGroup(item.group);
+              for (const groupItem of groupItems) {
+                if (groupItem.id !== item.id) {
+                  setManualProgress(groupItem.id, undefined);
+                }
+              }
+            }
+          } else if (!shouldCheck && isCurrentlySet) {
+            // Uncheck item
+            setManualProgress(item.id, undefined);
+
+            // If upgrade, also uncheck base
+            if (item.upgradeOf) {
+              const relatedItems = getUpgradeRelatedItems(item);
+              for (const relatedItem of relatedItems) {
+                if (relatedItem.id === item.upgradeOf) {
+                  setManualProgress(relatedItem.id, undefined);
+                }
+              }
+            }
+          }
+        }
+
+        // Trigger re-render
+        globalThis.dispatchEvent(new Event("manual-progress-changed"));
+      });
 
       section.append(heading);
 
