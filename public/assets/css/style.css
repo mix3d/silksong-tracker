@@ -1430,6 +1430,9 @@ input[type="checkbox"]::before {
   background-repeat: no-repeat;
   background-position: center;
 
+  /* Vertical alignment tweak */
+  margin-top: 1px;
+
   /* Animation setup */
   transform: scale(0);
   transition: 0.1s transform ease-in-out;
