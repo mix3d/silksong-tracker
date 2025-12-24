@@ -1564,85 +1564,37 @@ main::-webkit-scrollbar-thumb:hover {
 }
 
 /* ------------------
-   UNIFIED CHECKBOX TOGGLE COMPONENT
+   ITEM CHECKBOXES (TILES & MODAL)
 ------------------- */
 
-.checkbox-toggle {
+.item-checkbox {
   position: absolute;
-  width: 20px;
-  height: 20px;
-  background: var(--accent);
-  border: none;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  transition:
-    opacity 0.2s ease,
-    visibility 0.2s ease,
-    background 0.2s ease,
-    transform 0.1s ease,
-    box-shadow 0.2s ease;
   z-index: 10;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-  /* Add padding for larger click target without changing visual size */
-  padding: 6px;
-  margin: -6px;
+  cursor: pointer;
 }
 
-/* Empty state (not completed) */
-.checkbox-toggle.empty {
-  background: transparent;
-  border: 2px solid var(--accent);
-}
-
-/* Filled state (completed) - checkmark */
-.checkbox-toggle::after {
-  content: "✓";
-  font-size: 12px;
-  font-weight: bold;
-  color: #fff;
-  line-height: 1;
-}
-
-.checkbox-toggle.empty::after {
-  content: none;
-}
-
-.checkbox-toggle:hover {
-  transform: scale(1.05);
-  box-shadow: 0 3px 10px rgba(197, 106, 45, 0.6);
-}
-
-.checkbox-toggle:active {
-  transform: scale(0.98);
-}
-
-/* ------------------
-   TILE-SPECIFIC POSITIONING
-------------------- */
-
-.checkbox-toggle.tile-checkbox {
+/* Tile checkbox - top-right, hidden until hover */
+.item-checkbox.tile-checkbox {
   top: 8px;
   right: 8px;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
 }
 
 /* Show on hover */
-.boss:hover .checkbox-toggle.tile-checkbox {
+.boss:hover .item-checkbox.tile-checkbox {
   opacity: 1;
   visibility: visible;
   pointer-events: all;
 }
 
-/* ------------------
-   MODAL-SPECIFIC POSITIONING
-------------------- */
-
-.checkbox-toggle.modal-checkbox {
-  top: 10px;
+/* Modal checkbox - top-right in modal header */
+.item-checkbox.modal-checkbox {
+  top: 14px;
   right: 52px;
 }
 

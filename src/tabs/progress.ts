@@ -38,15 +38,17 @@ let tocObserver: IntersectionObserver | undefined;
 let isManualScroll = false; // prevent observer interference
 
 /**
- * Create a reusable checkbox toggle button element
+ * Create a reusable checkbox element
  */
-function createCheckboxToggle(
+function createCheckbox(
   itemId: string,
   isCompleted: boolean,
   onClick?: (e: Event) => void,
-): HTMLButtonElement {
-  const checkbox = document.createElement("button");
-  checkbox.className = `checkbox-toggle ${!isCompleted ? "empty" : ""}`;
+): HTMLInputElement {
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = isCompleted;
+  checkbox.className = "item-checkbox";
   checkbox.setAttribute(
     "aria-label",
     isCompleted ? "Mark as incomplete" : "Mark as complete",
@@ -580,8 +582,8 @@ ${(() => {
 
   infoOverlay.classList.remove("hidden");
 
-  // Add checkbox toggle to modal (after innerHTML is set)
-  const modalCheckbox = createCheckboxToggle(item.id, isCompleted, () => {
+  // Add checkbox to modal (after innerHTML is set)
+  const modalCheckbox = createCheckbox(item.id, isCompleted, () => {
     // Close modal after toggle
     infoOverlay.classList.add("hidden");
   });
@@ -953,10 +955,10 @@ function renderGenericGrid(
       div.append(counter);
     }
 
-    // Add hover checkbox toggle (top-right circular badge)
-    const checkboxToggle = createCheckboxToggle(item.id, isDone);
-    checkboxToggle.classList.add("tile-checkbox");
-    div.append(checkboxToggle);
+    // Add checkbox toggle (top-right)
+    const checkbox = createCheckbox(item.id, isDone);
+    checkbox.classList.add("tile-checkbox");
+    div.append(checkbox);
 
     // Click on card opens modal
     div.addEventListener("click", () => {
