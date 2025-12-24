@@ -1005,9 +1005,6 @@ function renderGenericGrid(
     } else if (isAccepted) {
       img.src = iconPath;
       div.classList.add("accepted");
-    } else if (item.unobtainable === true && saveData !== undefined) {
-      img.src = iconPath;
-      div.classList.add("unobtainable");
     } else if (spoilerOn) {
       img.src = iconPath;
       div.classList.add("unlocked");
