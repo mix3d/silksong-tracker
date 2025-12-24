@@ -22,6 +22,7 @@ import {
   tocList,
 } from "../elements.ts";
 // Manual progress is now integrated into save-data.ts
+import { setManualProgress } from "../manual-progress.ts";
 import {
   getSaveData,
   getSaveDataFlags,
