@@ -1398,12 +1398,12 @@ main a:hover,
 
 /* Collapse icon */
 .collapse-icon {
-  margin-right: 0.5rem;
   color: var(--accent);
   font-size: 0.85em;
   transition: transform 0.3s ease;
   display: inline-flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .collapsed .collapse-icon {
