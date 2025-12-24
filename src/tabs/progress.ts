@@ -592,6 +592,10 @@ ${(() => {
       headerActions.append(infoLink);
     }
 
+    // Create a wrapper for checkbox and close button to keep them grouped
+    const rightControls = document.createElement("div");
+    rightControls.className = "modal-right-controls";
+
     // Add checkbox in label for larger click area
     const checkboxLabel = document.createElement("label");
     checkboxLabel.className = "modal-checkbox-label";
@@ -599,7 +603,7 @@ ${(() => {
       infoOverlay.classList.add("hidden");
     });
     checkboxLabel.append(checkbox);
-    headerActions.append(checkboxLabel);
+    rightControls.append(checkboxLabel);
 
     // Add close button
     const closeBtn = document.createElement("button");
@@ -609,7 +613,9 @@ ${(() => {
     closeBtn.addEventListener("click", () => {
       infoOverlay.classList.add("hidden");
     });
-    headerActions.append(closeBtn);
+    rightControls.append(closeBtn);
+
+    headerActions.append(rightControls);
   }
 
   if (item.mapViewer) {
