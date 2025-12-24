@@ -8,7 +8,7 @@ import { setManualProgress, getManualProgress } from "../manual-progress.ts";
 /**
  * Determine the "completed" value for an item based on its type
  */
-function getCompletedValueForItem(item: Item): unknown {
+export function getCompletedValueForItem(item: Item): unknown {
   switch (item.type) {
     case "level":
       return item.required;
