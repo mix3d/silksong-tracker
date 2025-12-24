@@ -20,10 +20,18 @@ import {
   normalizeStringWithUnderscores,
   showToast,
 } from "./utils.ts";
+import {
+  createEmptySaveData,
+  loadManualSaveData,
+  clearManualSaveData,
+  saveManualSaveData,
+  updateSaveDataForItem,
+} from "./save-data-updater.ts";
 
 let currentLoadedSaveData: SilksongSave | undefined;
 let currentLoadedSaveDataMode: Mode = "normal";
 let currentLoadedSaveDataFlags: Record<string, unknown> | undefined;
+let isUsingManualSave = false;
 
 export function getSaveData(): SilksongSave | undefined {
   return currentLoadedSaveData;
