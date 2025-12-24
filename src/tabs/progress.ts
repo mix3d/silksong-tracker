@@ -120,13 +120,6 @@ export function updateTabProgress(): void {
       const heading = document.createElement("h3");
       heading.className = "category-title";
 
-      // Create checkbox for toggling all items in category
-      const categoryCheckbox = document.createElement("input");
-      categoryCheckbox.type = "checkbox";
-      categoryCheckbox.className = "category-checkbox";
-      categoryCheckbox.setAttribute("aria-label", `Toggle all ${category.label}`);
-      heading.append(categoryCheckbox);
-
       // Add label text
       const labelText = document.createTextNode(category.label);
       heading.append(labelText);
@@ -228,6 +221,13 @@ export function updateTabProgress(): void {
       count.className = "category-count";
       count.textContent = ` ${obtained}/${total}`;
       heading.append(count);
+
+      // Create checkbox for toggling all items in category (append after count)
+      const categoryCheckbox = document.createElement("input");
+      categoryCheckbox.type = "checkbox";
+      categoryCheckbox.className = "category-checkbox";
+      categoryCheckbox.setAttribute("aria-label", `Toggle all ${category.label}`);
+      heading.append(categoryCheckbox);
 
       // Update checkbox state based on obtained/total
       if (total > 0) {
