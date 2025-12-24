@@ -38,6 +38,16 @@ import { createCheckbox } from "../utils/checkbox.ts";
 let tocObserver: IntersectionObserver | undefined;
 let isManualScroll = false; // prevent observer interference
 
+/**
+ * Get all items that belong to a specific group (for mutual exclusivity)
+ */
+function getItemsByGroup(group: string): Item[] {
+  const allItems = collectAllItems();
+  return allItems.filter(
+    (item) => item.group === group && item.unobtainable === true,
+  );
+}
+
 export function updateTabProgress(): void {
   initProgressListeners();
   const spoilerOn = showSpoilers.checked;
