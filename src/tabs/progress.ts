@@ -451,15 +451,9 @@ function showGenericModal(item: Item) {
 
   infoContent.innerHTML = `
     <button id="modalCloseBtn" class="modal-close">✕</button>
+    <button id="modalToggleCheckbox" class="modal-checkbox-toggle ${!isCompleted ? "empty" : ""}" aria-label="${isCompleted ? "Mark as incomplete" : "Mark as complete"}"></button>
     <img src="${pinIconSrc}" alt="${item.label}" class="info-image">
     <h2 class="info-title">${item.label}</h2>
-
-    <div class="modal-toggle-wrapper">
-      <button id="modalToggleBtn" class="modal-toggle-btn ${isCompleted ? "completed" : ""}">
-        <i class="fa-solid fa-${isCompleted ? "check-circle" : "circle"}"></i>
-        ${isCompleted ? "Mark as Incomplete" : "Mark as Complete"}
-      </button>
-    </div>
 
     <p class="info-description">${item.description}</p>
 
@@ -666,10 +660,10 @@ ${(() => {
     });
   }
 
-  // Attach listener to the toggle button
-  const modalToggleBtn = document.querySelector("#modalToggleBtn");
-  if (modalToggleBtn) {
-    modalToggleBtn.addEventListener("click", () => {
+  // Attach listener to the checkbox toggle
+  const modalToggleCheckbox = document.querySelector("#modalToggleCheckbox");
+  if (modalToggleCheckbox) {
+    modalToggleCheckbox.addEventListener("click", () => {
       toggleManualProgress(item.id);
       // Close modal and let the page re-render
       infoOverlay.classList.add("hidden");
