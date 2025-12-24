@@ -256,10 +256,9 @@ export function updateTabProgress(): void {
           }
 
           const completedValue = getCompletedValueForItem(item);
-          const isCurrentlySet = isManuallySet(item.id);
 
-          if (shouldCheck && !isCurrentlySet) {
-            // Check item
+          if (shouldCheck) {
+            // Check item (regardless of current state)
             setManualProgress(item.id, completedValue);
 
             // Handle upgrade relationships
@@ -282,8 +281,8 @@ export function updateTabProgress(): void {
                 }
               }
             }
-          } else if (!shouldCheck && isCurrentlySet) {
-            // Uncheck item
+          } else {
+            // Uncheck item (regardless of current state)
             setManualProgress(item.id, undefined);
 
             // If upgrade, also uncheck base
