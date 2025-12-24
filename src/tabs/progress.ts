@@ -209,7 +209,55 @@ export function updateTabProgress(): void {
 
   buildDynamicTOC();
   initScrollSpy();
-  updateCompletionPercentage();
+
+  // Calculate completion percentage inline
+  const allItems = collectAllItems();
+  let totalItems = 0;
+  let completedItems = 0;
+
+  const obtainedGroupsForCalc = new Set<string>();
+  for (const item of allItems) {
+    const val = getSaveDataValue(saveData, saveDataFlags, item);
+    if (
+      typeof item.group === "string"
+      && item.group.trim() !== ""
+      && getUnlocked(item, val)
+    ) {
+      obtainedGroupsForCalc.add(item.group);
+    }
+  }
+
+  for (const item of allItems) {
+    // Skip tool upgrades (they don't count toward completion)
+    if (item.type === "tool" && item.upgradeOf !== undefined) {
+      continue;
+    }
+
+    const val = getSaveDataValue(saveData, saveDataFlags, item);
+    const unlocked = getUnlocked(item, val);
+
+    // Skip unobtainable items if another in the group was obtained
+    if (
+      saveData !== undefined
+      && item.unobtainable === true
+      && typeof item.group === "string"
+      && item.group.trim() !== ""
+      && obtainedGroupsForCalc.has(item.group)
+      && !unlocked
+    ) {
+      continue;
+    }
+
+    totalItems++;
+    if (unlocked) {
+      completedItems++;
+    }
+  }
+
+  // Calculate and update percentage
+  const percentage =
+    totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+  completionValue.textContent = `${percentage}%`;
 }
 
 let progressListenerRegistered = false;
