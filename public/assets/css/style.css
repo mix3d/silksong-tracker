@@ -1406,6 +1406,7 @@ input[type="checkbox"] {
   border: 1px solid var(--stroke);
   background-color: var(--bg-2);
   transition: all 0.2s ease;
+  outline: none;
 }
 
 /* When active (orange checkmark) */
@@ -1418,6 +1419,12 @@ input[type="checkbox"]:checked {
 input[type="checkbox"]:hover {
   border-color: var(--accent);
   box-shadow: 0 0 4px var(--accent);
+}
+
+/* Focus - clean glow without black outline */
+input[type="checkbox"]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 6px rgba(197, 106, 45, 0.5);
 }
 
 /* --- FIX HOME LAYOUT ON SMALL SCREENS --- */
