@@ -246,7 +246,10 @@ export function updateTabProgress(): void {
       // Add click handler to toggle all items in category
       categoryCheckbox.addEventListener("click", (e) => {
         e.stopPropagation();
-        const shouldCheck = !categoryCheckbox.checked || categoryCheckbox.indeterminate;
+        // Note: checkbox state is already toggled when click event fires
+        // If checkbox is now checked, we should check all items
+        // If checkbox is now unchecked, we should uncheck all items
+        const shouldCheck = categoryCheckbox.checked;
 
         // Toggle all items in this category
         for (const item of filteredItems) {
