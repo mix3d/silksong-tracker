@@ -408,6 +408,11 @@ function initWorldMapListeners() {
   globalThis.addEventListener("save-data-changed", () => {
     renderWorldMapPins();
   });
+
+  // Re-render map pins when "show only missing" filter changes
+  showOnlyMissing.addEventListener("change", () => {
+    renderWorldMapPins();
+  });
 }
 
 function getUnlocked(item: Item, value: unknown): boolean {
