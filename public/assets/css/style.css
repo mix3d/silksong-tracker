@@ -500,12 +500,16 @@ main a:hover,
 
 .modal {
   width: min(640px, 92vw);
+  max-height: 85vh;
   background: #1a1a1a;
   border: 1px solid #2c2c2c;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   padding: 16px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .modal-header {
@@ -520,36 +524,9 @@ main a:hover,
   color: #fff;
 }
 
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  background: transparent;
-  border: none;
-  font-size: 20px;
-  color: #aaa;
-  cursor: pointer;
-  z-index: 10;
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  transition:
-    color 0.2s ease,
-    background 0.2s ease;
-}
-
-.modal-close:hover {
-  color: white;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-/* More info icon link in modal header */
+/* Unified modal header buttons */
+.modal-close,
 .modal-info-link {
-  position: absolute;
-  top: 10px;
-  left: 12px;
   background: transparent;
   border: none;
   font-size: 20px;
@@ -564,9 +541,10 @@ main a:hover,
   transition:
     color 0.2s ease,
     background 0.2s ease;
-  z-index: 10;
+  flex-shrink: 0;
 }
 
+.modal-close:hover,
 .modal-info-link:hover {
   color: var(--accent);
   background: rgba(197, 106, 45, 0.1);
@@ -775,15 +753,56 @@ main a:hover,
 
 #info-content.modal {
   background: #1a1a1a;
-  padding: 30px;
+  padding: 0;
   border-radius: 12px;
   max-width: 480px;
+  max-height: 85vh;
   width: 90%;
   color: #fff;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
   text-align: center;
   position: relative;
   font-family: "TrajanPro-Regular", serif;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Modal header - stays fixed at top */
+#info-content.modal > .modal-header-actions {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #1a1a1a;
+  padding: 10px 12px;
+  border-radius: 12px 12px 0 0;
+  flex-shrink: 0;
+}
+
+/* Modal content - scrollable */
+#info-content.modal > .modal-content-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px 30px 30px;
+  flex: 1;
+}
+
+#info-content.modal > .modal-content-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+#info-content.modal > .modal-content-scroll::-webkit-scrollbar-track {
+  background: #0f0f0f;
+  border-radius: 4px;
+}
+
+#info-content.modal > .modal-content-scroll::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+}
+
+#info-content.modal > .modal-content-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 /* style.css */
@@ -1567,16 +1586,13 @@ main::-webkit-scrollbar-thumb:hover {
    ITEM CHECKBOXES (TILES & MODAL)
 ------------------- */
 
-.item-checkbox {
-  position: absolute;
-  z-index: 10;
-  cursor: pointer;
-}
-
 /* Tile checkbox - top-right, hidden until hover */
 .item-checkbox.tile-checkbox {
+  position: absolute;
   top: 8px;
   right: 8px;
+  z-index: 10;
+  cursor: pointer;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -1592,10 +1608,28 @@ main::-webkit-scrollbar-thumb:hover {
   pointer-events: all;
 }
 
-/* Modal checkbox - top-right in modal header */
-.item-checkbox.modal-checkbox {
-  top: 14px;
-  right: 52px;
+/* Modal checkbox label - unified with other header icons */
+.modal-checkbox-label {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.modal-checkbox-label:hover {
+  background: rgba(197, 106, 45, 0.1);
+}
+
+.modal-checkbox-label input[type="checkbox"] {
+  cursor: pointer;
 }
 
 #act-filter {

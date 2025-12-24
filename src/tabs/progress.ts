@@ -479,24 +479,18 @@ function showGenericModal(item: Item) {
   const isNeedle = pinIconSrc.includes("Needle");
 
   infoContent.innerHTML = `
-    <button id="modalCloseBtn" class="modal-close">✕</button>
-    ${
-      item.link !== ""
-        ? `<a href="${item.link}" target="_blank" class="modal-info-link" title="More info" aria-label="More info">
-            <i class="fa-solid fa-circle-info"></i>
-          </a>`
-        : ""
-    }
-    ${
-      isNeedle
-        ? `<div class="rotated-image-wrapper">
-            <img src="${pinIconSrc}" alt="${item.label}" class="info-image rotated-needle">
-          </div>`
-        : `<img src="${pinIconSrc}" alt="${item.label}" class="info-image">`
-    }
-    <h2 class="info-title">${item.label}</h2>
+    <div class="modal-header-actions"></div>
+    <div class="modal-content-scroll">
+      ${
+        isNeedle
+          ? `<div class="rotated-image-wrapper">
+              <img src="${pinIconSrc}" alt="${item.label}" class="info-image rotated-needle">
+            </div>`
+          : `<img src="${pinIconSrc}" alt="${item.label}" class="info-image">`
+      }
+      <h2 class="info-title">${item.label}</h2>
 
-    <p class="info-description">${item.description}</p>
+      <p class="info-description">${item.description}</p>
 
     ${
       item.type === "journal"
@@ -578,17 +572,45 @@ ${(() => {
     </div>
   `;
 })()}
+    </div>
   `;
 
   infoOverlay.classList.remove("hidden");
 
-  // Add checkbox to modal (after innerHTML is set)
-  const modalCheckbox = createCheckbox(item.id, isCompleted, () => {
-    // Close modal after toggle
-    infoOverlay.classList.add("hidden");
-  });
-  modalCheckbox.classList.add("modal-checkbox");
-  infoContent.prepend(modalCheckbox);
+  // Get the header container
+  const headerActions = infoContent.querySelector(".modal-header-actions");
+  if (headerActions) {
+    // Add info link if available
+    if (item.link !== "") {
+      const infoLink = document.createElement("a");
+      infoLink.href = item.link;
+      infoLink.target = "_blank";
+      infoLink.className = "modal-info-link";
+      infoLink.title = "More info";
+      infoLink.setAttribute("aria-label", "More info");
+      infoLink.innerHTML = '<i class="fa-solid fa-circle-info"></i>';
+      headerActions.append(infoLink);
+    }
+
+    // Add checkbox in label for larger click area
+    const checkboxLabel = document.createElement("label");
+    checkboxLabel.className = "modal-checkbox-label";
+    const checkbox = createCheckbox(item.id, isCompleted, () => {
+      infoOverlay.classList.add("hidden");
+    });
+    checkboxLabel.append(checkbox);
+    headerActions.append(checkboxLabel);
+
+    // Add close button
+    const closeBtn = document.createElement("button");
+    closeBtn.id = "modalCloseBtn";
+    closeBtn.className = "modal-close";
+    closeBtn.textContent = "✕";
+    closeBtn.addEventListener("click", () => {
+      infoOverlay.classList.add("hidden");
+    });
+    headerActions.append(closeBtn);
+  }
 
   if (item.mapViewer) {
     const viewer = document.querySelector<HTMLElement>(
@@ -691,13 +713,6 @@ ${(() => {
     }
   }
 
-  // Attach listener to the *newly created* close button.
-  const modalCloseBtn = document.querySelector("#modalCloseBtn");
-  if (modalCloseBtn) {
-    modalCloseBtn.addEventListener("click", () => {
-      infoOverlay.classList.add("hidden");
-    });
-  }
 }
 
 /**
