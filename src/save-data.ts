@@ -1,5 +1,6 @@
 import { assertObject, isArray, isObject } from "complete-common";
 import { BASE_PATH } from "./constants.ts";
+import { clearManualProgress } from "./manual-progress.ts";
 import {
   completionValue,
   modeBanner,
@@ -404,6 +405,9 @@ export function clearAllData(): void {
   currentLoadedSaveData = undefined;
   currentLoadedSaveDataFlags = undefined;
   currentLoadedSaveDataMode = "normal";
+
+  // Clear manual progress from localStorage
+  clearManualProgress();
 
   const cleanUrl = globalThis.location.origin + globalThis.location.pathname;
   globalThis.history.pushState({}, "", cleanUrl);
