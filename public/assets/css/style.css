@@ -529,10 +529,42 @@ main a:hover,
   font-size: 20px;
   color: #aaa;
   cursor: pointer;
+  z-index: 10;
 }
 
 .modal-close:hover {
   color: white;
+}
+
+/* More info icon link in modal header */
+.modal-info-link {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: #aaa;
+  cursor: pointer;
+  text-decoration: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+  z-index: 10;
+}
+
+.modal-info-link:hover {
+  color: var(--accent);
+  background: rgba(197, 106, 45, 0.1);
+}
+
+.modal-info-link i {
+  font-size: 20px;
 }
 
 /* ------------------
