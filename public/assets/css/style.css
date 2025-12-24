@@ -1383,6 +1383,9 @@ main a:hover,
   width: 16px;
   height: 16px;
   flex-shrink: 0;
+  align-self: center;
+  margin: 0;
+  vertical-align: middle;
 }
 
 .category-title:hover .category-checkbox {
