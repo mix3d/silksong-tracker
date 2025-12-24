@@ -1368,7 +1368,9 @@ main a:hover,
   flex-grow: 1;
   text-align: left;
   align-self: center;
-  line-height: 1.2;
+  line-height: 1;
+  display: flex;
+  align-items: center;
 }
 
 .category-count {
@@ -1378,8 +1380,8 @@ main a:hover,
   margin-left: auto;
   align-self: center;
   line-height: 1;
-  position: relative;
-  top: -1px;
+  display: flex;
+  align-items: center;
 }
 
 /* Category checkbox - only visible on hover */
