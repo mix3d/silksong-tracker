@@ -931,34 +931,26 @@ function renderGenericGrid(
       div.append(counter);
     }
 
-    // Add manual completion badge if manually completed
-    if (isManuallyDone) {
-      div.classList.add("manual-complete");
-    }
-
-    // Add hover toggle buttons
-    const toggleButtons = document.createElement("div");
-    toggleButtons.className = "boss-toggle-buttons";
-
-    const toggleBtn = document.createElement("button");
-    toggleBtn.className = `boss-toggle-btn ${isDone ? "complete" : ""}`;
-    toggleBtn.textContent = isDone ? "Unmark" : "Mark Complete";
-    toggleBtn.addEventListener("click", (e) => {
+    // Add hover checkbox toggle (top-right)
+    const checkboxToggle = document.createElement("button");
+    checkboxToggle.className = "boss-checkbox-toggle";
+    checkboxToggle.innerHTML = `<i class="fa-${isDone ? "solid" : "regular"} fa-${isDone ? "check-square" : "square"}"></i>`;
+    checkboxToggle.addEventListener("click", (e) => {
       e.stopPropagation(); // Prevent opening modal
       toggleManualProgress(item.id);
       // The updateTabProgress will be called automatically via event listener
     });
+    div.append(checkboxToggle);
 
+    // Add hover view button (center-bottom)
     const viewBtn = document.createElement("button");
-    viewBtn.className = "boss-toggle-btn";
+    viewBtn.className = "boss-view-btn";
     viewBtn.textContent = "View";
     viewBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       showGenericModal(item);
     });
-
-    toggleButtons.append(toggleBtn, viewBtn);
-    div.append(toggleButtons);
+    div.append(viewBtn);
 
     div.addEventListener("click", () => {
       showGenericModal(item);
