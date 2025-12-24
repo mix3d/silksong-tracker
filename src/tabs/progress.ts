@@ -446,11 +446,19 @@ function showGenericModal(item: Item) {
   }
 
   const pinIconSrc = resolveIconSrc(item.icon);
+  const isCompleted = isManuallyCompleted(item.id);
 
   infoContent.innerHTML = `
     <button id="modalCloseBtn" class="modal-close">✕</button>
     <img src="${pinIconSrc}" alt="${item.label}" class="info-image">
     <h2 class="info-title">${item.label}</h2>
+
+    <div class="modal-toggle-wrapper">
+      <button id="modalToggleBtn" class="modal-toggle-btn ${isCompleted ? "completed" : ""}">
+        <i class="fa-solid fa-${isCompleted ? "check-circle" : "circle"}"></i>
+        ${isCompleted ? "Mark as Incomplete" : "Mark as Complete"}
+      </button>
+    </div>
 
     <p class="info-description">${item.description}</p>
 
