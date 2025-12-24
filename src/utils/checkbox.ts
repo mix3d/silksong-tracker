@@ -35,6 +35,7 @@ export function createCheckbox(
   isCompleted: boolean,
   onClick?: (e: Event) => void,
   getGroupItems?: (group: string) => Item[],
+  getUpgradeRelated?: (item: Item) => Item[],
 ): HTMLInputElement {
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
@@ -66,6 +67,14 @@ export function createCheckbox(
           if (groupItem.id !== item.id) {
             setManualProgress(groupItem.id, undefined);
           }
+        }
+      }
+
+      // If this is an upgrade or has upgrades, clear related items
+      if ((item.upgradeOf || item.type === "tool") && getUpgradeRelated) {
+        const relatedItems = getUpgradeRelated(item);
+        for (const relatedItem of relatedItems) {
+          setManualProgress(relatedItem.id, undefined);
         }
       }
     }
