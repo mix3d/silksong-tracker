@@ -35,10 +35,7 @@ function collectAllItems(): readonly Item[] {
 }
 
 function getUnlocked(item: Item, value: unknown): boolean {
-  // First check if manually set - if so, use manual value instead
-  if (isManuallySet(item.id)) {
-    value = getManualValue(item.id);
-  }
+  // Manual progress is now integrated into the save data directly
 
   if (item.type === "quest") {
     return value === "completed" || value === true;
