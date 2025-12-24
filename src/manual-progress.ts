@@ -8,7 +8,7 @@
 const STORAGE_KEY = "silksong-manual-progress";
 
 interface ManualProgressData {
-  [itemId: string]: boolean;
+  [itemId: string]: unknown;
 }
 
 /**
@@ -28,27 +28,35 @@ export function getManualProgress(): ManualProgressData {
 }
 
 /**
- * Check if a specific item is manually toggled as completed
+ * Get the manually set value for a specific item (returns undefined if not manually set)
  */
-export function isManuallyCompleted(itemId: string): boolean {
+export function getManualValue(itemId: string): unknown {
   const progress = getManualProgress();
-  return progress[itemId] === true;
+  return progress[itemId];
+}
+
+/**
+ * Check if a specific item has been manually set
+ */
+export function isManuallySet(itemId: string): boolean {
+  const progress = getManualProgress();
+  return itemId in progress;
 }
 
 /**
  * Toggle an item's manual completion state
- * Returns the new state (true = completed, false = not completed)
+ * Pass the value that represents "completed" for this item type
  */
-export function toggleManualProgress(itemId: string): boolean {
+export function toggleManualProgress(itemId: string, completedValue: unknown = true): void {
   const progress = getManualProgress();
-  const currentState = progress[itemId] === true;
-  const newState = !currentState;
+  const isCurrentlySet = itemId in progress;
 
-  if (newState) {
-    progress[itemId] = true;
-  } else {
-    // Remove from storage if unchecked to keep storage clean
+  if (isCurrentlySet) {
+    // Remove from storage if already set (toggle off)
     delete progress[itemId];
+  } else {
+    // Set to the completed value (toggle on)
+    progress[itemId] = completedValue;
   }
 
   try {
@@ -60,23 +68,21 @@ export function toggleManualProgress(itemId: string): boolean {
   // Dispatch event so other parts of the app can react
   globalThis.dispatchEvent(
     new CustomEvent("manual-progress-changed", {
-      detail: { itemId, completed: newState },
+      detail: { itemId, value: isCurrentlySet ? undefined : completedValue },
     }),
   );
-
-  return newState;
 }
 
 /**
- * Set an item's manual completion state explicitly
+ * Set an item's manual value explicitly
  */
-export function setManualProgress(itemId: string, completed: boolean): void {
+export function setManualProgress(itemId: string, value: unknown): void {
   const progress = getManualProgress();
 
-  if (completed) {
-    progress[itemId] = true;
-  } else {
+  if (value === undefined) {
     delete progress[itemId];
+  } else {
+    progress[itemId] = value;
   }
 
   try {
@@ -87,7 +93,7 @@ export function setManualProgress(itemId: string, completed: boolean): void {
 
   globalThis.dispatchEvent(
     new CustomEvent("manual-progress-changed", {
-      detail: { itemId, completed },
+      detail: { itemId, value },
     }),
   );
 }
