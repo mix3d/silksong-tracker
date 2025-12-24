@@ -56,9 +56,32 @@ export function createCheckbox(
     if (isCurrentlySet) {
       // Toggle off - remove this item
       setManualProgress(item.id, undefined);
+
+      // If this was an upgrade, also uncheck the base item
+      if (item.upgradeOf && getUpgradeRelated) {
+        const relatedItems = getUpgradeRelated(item);
+        for (const relatedItem of relatedItems) {
+          // Find the base item (not other upgrades)
+          if (relatedItem.id === item.upgradeOf) {
+            setManualProgress(relatedItem.id, undefined);
+          }
+        }
+      }
     } else {
       // Toggle on - set this item
       setManualProgress(item.id, completedValue);
+
+      // If this is an upgrade, also check the base item
+      if (item.upgradeOf && getUpgradeRelated) {
+        const relatedItems = getUpgradeRelated(item);
+        for (const relatedItem of relatedItems) {
+          // Check the base item
+          if (relatedItem.id === item.upgradeOf) {
+            const baseCompletedValue = getCompletedValueForItem(relatedItem);
+            setManualProgress(relatedItem.id, baseCompletedValue);
+          }
+        }
+      }
 
       // If this is a mutually exclusive item, clear others in the group
       if (item.unobtainable && item.group && getGroupItems) {
@@ -70,12 +93,12 @@ export function createCheckbox(
         }
       }
 
-      // If this is an upgrade or has upgrades, clear related items
-      // (but skip items with the same ID, as they share the same storage key)
-      if ((item.upgradeOf || item.type === "tool") && getUpgradeRelated) {
+      // If this is a base item with upgrades, clear all upgrades
+      // (when you check the base, you shouldn't have the upgrade)
+      if (!item.upgradeOf && item.type === "tool" && getUpgradeRelated) {
         const relatedItems = getUpgradeRelated(item);
         for (const relatedItem of relatedItems) {
-          if (relatedItem.id !== item.id) {
+          if (relatedItem.id !== item.id && relatedItem.upgradeOf === item.id) {
             setManualProgress(relatedItem.id, undefined);
           }
         }
