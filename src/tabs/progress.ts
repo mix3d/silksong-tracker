@@ -1265,6 +1265,10 @@ function renderWorldMapPins() {
       const unlocked = getUnlocked(item, value);
       if (unlocked) {
         pin.classList.add("obtained");
+        // Skip obtained items when "show only missing" is enabled
+        if (showOnlyMissing.checked) {
+          continue;
+        }
       }
     }
 
