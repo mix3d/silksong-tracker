@@ -33,7 +33,30 @@ let currentLoadedSaveDataMode: Mode = "normal";
 let currentLoadedSaveDataFlags: Record<string, unknown> | undefined;
 let isUsingManualSave = false;
 
+/**
+ * Initialize save data - either load from manual save or create empty
+ */
+export function initializeSaveData(): void {
+  if (currentLoadedSaveData === undefined) {
+    // Try to load manual save data
+    const manualSave = loadManualSaveData();
+    if (manualSave) {
+      currentLoadedSaveData = manualSave;
+      currentLoadedSaveDataFlags = getSaveFileFlags(manualSave as unknown as Record<string, unknown>);
+      isUsingManualSave = true;
+    } else {
+      // Create empty save data for manual tracking
+      currentLoadedSaveData = createEmptySaveData();
+      currentLoadedSaveDataFlags = getSaveFileFlags(currentLoadedSaveData as unknown as Record<string, unknown>);
+      isUsingManualSave = true;
+    }
+  }
+}
+
 export function getSaveData(): SilksongSave | undefined {
+  if (currentLoadedSaveData === undefined) {
+    initializeSaveData();
+  }
   return currentLoadedSaveData;
 }
 
@@ -42,7 +65,34 @@ export function getSaveDataMode(): Mode {
 }
 
 export function getSaveDataFlags(): Record<string, unknown> | undefined {
+  if (currentLoadedSaveDataFlags === undefined) {
+    initializeSaveData();
+  }
   return currentLoadedSaveDataFlags;
+}
+
+/**
+ * Update a value in the current save data
+ */
+export function updateSaveDataValue(item: Item, value: unknown): void {
+  if (currentLoadedSaveData === undefined) {
+    initializeSaveData();
+  }
+
+  if (currentLoadedSaveData) {
+    updateSaveDataForItem(currentLoadedSaveData, currentLoadedSaveDataFlags, item, value);
+
+    // Refresh flags after update
+    currentLoadedSaveDataFlags = getSaveFileFlags(currentLoadedSaveData as unknown as Record<string, unknown>);
+
+    // Save to localStorage if using manual save
+    if (isUsingManualSave) {
+      saveManualSaveData(currentLoadedSaveData);
+    }
+
+    // Dispatch event
+    globalThis.dispatchEvent(new Event("save-data-changed"));
+  }
 }
 
 export async function handleSaveFile(file: File | undefined): Promise<void> {
