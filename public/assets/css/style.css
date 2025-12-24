@@ -1381,12 +1381,10 @@ main a:hover,
   opacity: 0;
   cursor: pointer;
   transition: opacity 0.2s ease;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
-  align-self: center;
-  margin: 1px 0;
-  display: block;
+  margin: 0;
 }
 
 .category-title:hover .category-checkbox {
