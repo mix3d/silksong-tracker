@@ -1500,6 +1500,88 @@ main::-webkit-scrollbar-thumb:hover {
   box-shadow: 0 0 6px rgba(241, 196, 15, 0.5);
 }
 
+/* ------------------
+   HOVER TOGGLE BUTTONS
+------------------- */
+
+.boss-toggle-buttons {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.boss:hover .boss-toggle-buttons {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+.boss-toggle-btn {
+  background: rgba(0, 0, 0, 0.85);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  color: #fff;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.1s ease,
+    box-shadow 0.2s ease;
+  backdrop-filter: blur(4px);
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.boss-toggle-btn:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(197, 106, 45, 0.5);
+}
+
+.boss-toggle-btn:active {
+  transform: translateY(0);
+}
+
+.boss-toggle-btn.complete {
+  border-color: #2ecc71;
+}
+
+.boss-toggle-btn.complete:hover {
+  background: #2ecc71;
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.5);
+}
+
+/* Manual completion badge */
+.boss.manual-complete::before {
+  content: "✓";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+  z-index: 5;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
 #act-filter {
   display: flex;
   align-items: center;
