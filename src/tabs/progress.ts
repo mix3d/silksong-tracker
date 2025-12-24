@@ -21,11 +21,7 @@ import {
   infoOverlay,
   tocList,
 } from "../elements.ts";
-import {
-  getManualValue,
-  isManuallySet,
-  setManualProgress,
-} from "../manual-progress.ts";
+// Manual progress is now integrated into save-data.ts
 import {
   getSaveData,
   getSaveDataFlags,
