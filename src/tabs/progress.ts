@@ -451,6 +451,13 @@ function showGenericModal(item: Item) {
 
   infoContent.innerHTML = `
     <button id="modalCloseBtn" class="modal-close">✕</button>
+    ${
+      item.link !== ""
+        ? `<a href="${item.link}" target="_blank" class="modal-info-link" title="More info" aria-label="More info">
+            <i class="fa-solid fa-circle-info"></i>
+          </a>`
+        : ""
+    }
     <button id="modalToggleCheckbox" class="modal-checkbox-toggle ${!isCompleted ? "empty" : ""}" aria-label="${isCompleted ? "Mark as incomplete" : "Mark as complete"}"></button>
     <img src="${pinIconSrc}" alt="${item.label}" class="info-image">
     <h2 class="info-title">${item.label}</h2>
@@ -537,16 +544,6 @@ ${(() => {
     </div>
   `;
 })()}
-
-    ${
-      item.link === ""
-        ? ""
-        : `
-        <div class="info-link-wrapper">
-          <a href="${item.link}" target="_blank" class="info-link">More info</a>
-        </div>
-      `
-    }
   `;
 
   infoOverlay.classList.remove("hidden");
