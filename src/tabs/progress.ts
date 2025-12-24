@@ -109,9 +109,12 @@ export function updateTabProgress(): void {
         (item: Item) => actFilter.includes(item.act) && matchMode(item),
       );
 
-      if (showMissingOnly && saveData !== undefined) {
+      if (showMissingOnly) {
         filteredItems = filteredItems.filter((item: Item) => {
-          const value = getSaveDataValue(saveData, saveDataFlags, item);
+          const value =
+            saveData === undefined
+              ? false
+              : getSaveDataValue(saveData, saveDataFlags, item);
 
           if (getUnlocked(item, value)) {
             return false;
