@@ -1391,6 +1391,33 @@ main a:hover,
   opacity: 1;
 }
 
+/* Collapse icon */
+.collapse-icon {
+  margin-right: 0.5rem;
+  color: var(--accent);
+  font-size: 0.85em;
+  transition: transform 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.collapsed .collapse-icon {
+  transform: rotate(0deg);
+}
+
+/* Category content wrapper for collapse animation */
+.category-content {
+  max-height: 5000px;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 1;
+}
+
+.collapsed .category-content {
+  max-height: 0;
+  opacity: 0;
+}
+
 /* MAIN% - centered and compact title */
 #main-section .category-title {
   display: block; /* cancel flex if present */
