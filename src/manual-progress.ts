@@ -1,9 +1,14 @@
 /**
  * Manual Progress Tracking
- * 
+ *
  * This module manages user's manual toggles for progress items.
- * All manual progress is stored in localStorage and persists between page loads.
+ * Now integrates directly with the save data system instead of separate storage.
+ *
+ * NOTE: Old localStorage-based system kept for backward compatibility during migration.
  */
+
+import type { Item } from "./types/Item.ts";
+import { updateSaveDataValue } from "./save-data.ts";
 
 const STORAGE_KEY = "silksong-manual-progress";
 
@@ -12,7 +17,7 @@ interface ManualProgressData {
 }
 
 /**
- * Load all manual progress toggles from localStorage
+ * Load all manual progress toggles from localStorage (legacy)
  */
 export function getManualProgress(): ManualProgressData {
   try {
@@ -28,7 +33,7 @@ export function getManualProgress(): ManualProgressData {
 }
 
 /**
- * Get the manually set value for a specific item (returns undefined if not manually set)
+ * Get the manually set value for a specific item (legacy - now use save data directly)
  */
 export function getManualValue(itemId: string): unknown {
   const progress = getManualProgress();
@@ -36,7 +41,7 @@ export function getManualValue(itemId: string): unknown {
 }
 
 /**
- * Check if a specific item has been manually set
+ * Check if a specific item has been manually set (legacy)
  */
 export function isManuallySet(itemId: string): boolean {
   const progress = getManualProgress();
@@ -44,18 +49,16 @@ export function isManuallySet(itemId: string): boolean {
 }
 
 /**
- * Toggle an item's manual completion state
- * Pass the value that represents "completed" for this item type
+ * Toggle an item's manual completion state (legacy wrapper)
  */
 export function toggleManualProgress(itemId: string, completedValue: unknown = true): void {
+  // This is now a legacy function - not used in new system
   const progress = getManualProgress();
   const isCurrentlySet = itemId in progress;
 
   if (isCurrentlySet) {
-    // Remove from storage if already set (toggle off)
     delete progress[itemId];
   } else {
-    // Set to the completed value (toggle on)
     progress[itemId] = completedValue;
   }
 
@@ -65,7 +68,6 @@ export function toggleManualProgress(itemId: string, completedValue: unknown = t
     console.error("Error saving manual progress:", error);
   }
 
-  // Dispatch event so other parts of the app can react
   globalThis.dispatchEvent(
     new CustomEvent("manual-progress-changed", {
       detail: { itemId, value: isCurrentlySet ? undefined : completedValue },
@@ -74,23 +76,19 @@ export function toggleManualProgress(itemId: string, completedValue: unknown = t
 }
 
 /**
- * Set an item's manual value explicitly
+ * Set an item's value in the save data (NEW SYSTEM)
  */
-export function setManualProgress(itemId: string, value: unknown): void {
-  const progress = getManualProgress();
+export function setManualProgress(item: Item, value: unknown): void {
+  // Update the actual save data structure
+  updateSaveDataValue(item, value);
+}
 
-  if (value === undefined) {
-    delete progress[itemId];
-  } else {
-    progress[itemId] = value;
-  }
-
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-  } catch (error) {
-    console.error("Error saving manual progress:", error);
-  }
-
+/**
+ * Set an item's value by ID (legacy signature - requires item lookup)
+ * @deprecated Use setManualProgress(item, value) with Item object instead
+ */
+export function setManualProgressById(itemId: string, value: unknown): void {
+  // Legacy function - dispatch event for backward compatibility
   globalThis.dispatchEvent(
     new CustomEvent("manual-progress-changed", {
       detail: { itemId, value },
