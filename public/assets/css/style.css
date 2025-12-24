@@ -1421,6 +1421,8 @@ main a:hover,
   flex-shrink: 0;
   align-self: center;
   line-height: 1;
+  position: relative;
+  top: -1px;
 }
 
 .collapsed .collapse-icon {
