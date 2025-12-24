@@ -98,6 +98,12 @@ function getUnlocked(item: Item, value: unknown): boolean {
   }
 
   if (item.type === "sceneVisited") {
+    // If manually set to true, return true
+    if (value === true) {
+      return true;
+    }
+
+    // Otherwise check save data
     const visitedScenes = getSaveData()?.playerData.scenesVisited ?? [];
     return Array.isArray(visitedScenes) && visitedScenes.includes(item.scene);
   }
