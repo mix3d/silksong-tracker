@@ -259,7 +259,7 @@ export function updateTabProgress(): void {
 
           if (shouldCheck) {
             // Check item (regardless of current state)
-            setManualProgress(item.id, completedValue);
+            setManualProgress(item, completedValue);
 
             // Handle upgrade relationships
             if (item.upgradeOf) {
@@ -267,7 +267,7 @@ export function updateTabProgress(): void {
               for (const relatedItem of relatedItems) {
                 if (relatedItem.id === item.upgradeOf) {
                   const baseCompletedValue = getCompletedValueForItem(relatedItem);
-                  setManualProgress(relatedItem.id, baseCompletedValue);
+                  setManualProgress(relatedItem, baseCompletedValue);
                 }
               }
             }
@@ -277,20 +277,24 @@ export function updateTabProgress(): void {
               const groupItems = getItemsByGroup(item.group);
               for (const groupItem of groupItems) {
                 if (groupItem.id !== item.id) {
-                  setManualProgress(groupItem.id, undefined);
+                  // Set to uncompleted value (0 or false)
+                  const uncompletedValue = groupItem.type === "collectable" || groupItem.type === "level" || groupItem.type === "journal" ? 0 : false;
+                  setManualProgress(groupItem, uncompletedValue);
                 }
               }
             }
           } else {
-            // Uncheck item (regardless of current state)
-            setManualProgress(item.id, undefined);
+            // Uncheck item (set to uncompleted value)
+            const uncompletedValue = item.type === "collectable" || item.type === "level" || item.type === "journal" ? 0 : false;
+            setManualProgress(item, uncompletedValue);
 
             // If upgrade, also uncheck base
             if (item.upgradeOf) {
               const relatedItems = getUpgradeRelatedItems(item);
               for (const relatedItem of relatedItems) {
                 if (relatedItem.id === item.upgradeOf) {
-                  setManualProgress(relatedItem.id, undefined);
+                  const uncompletedValue = relatedItem.type === "collectable" || relatedItem.type === "level" || relatedItem.type === "journal" ? 0 : false;
+                  setManualProgress(relatedItem, uncompletedValue);
                 }
               }
             }
