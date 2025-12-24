@@ -496,7 +496,10 @@ function showGenericModal(item: Item) {
   }
 
   const pinIconSrc = resolveIconSrc(item.icon);
-  const isCompleted = isManuallyCompleted(item.id);
+  const saveData = getSaveData();
+  const saveDataFlags = getSaveDataFlags();
+  const value = getSaveDataValue(saveData, saveDataFlags, item);
+  const isCompleted = getUnlocked(item, value);
   const isNeedle = pinIconSrc.includes("Needle");
 
   infoContent.innerHTML = `
