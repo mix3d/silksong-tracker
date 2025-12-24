@@ -786,11 +786,14 @@ main a:hover,
   object-fit: contain;
 }
 
-/* Reduce height for needle icons by swapping dimensions and rotating */
+/* Needle icons: keep them tall pre-rotation so they're wide post-rotation */
 #info-content .info-image[src*="Needle"] {
-  max-width: 120px;
-  max-height: 72px;
+  max-width: 72px;
+  max-height: 120px;
+  width: auto;
+  height: 120px;
   transform: rotate(-90deg);
+  transform-origin: center center;
 }
 
 #info-content .info-title {
