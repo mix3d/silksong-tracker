@@ -1572,56 +1572,56 @@ main::-webkit-scrollbar-thumb:hover {
 
 
 /* ------------------
-   MODAL TOGGLE BUTTON
+   MODAL CHECKBOX TOGGLE
 ------------------- */
 
-.modal-toggle-wrapper {
-  display: flex;
-  justify-content: center;
-  margin: 16px 0;
-}
-
-.modal-toggle-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid var(--accent);
-  border-radius: 8px;
-  color: var(--ink-1);
-  padding: 10px 20px;
-  font-size: 0.95rem;
-  font-weight: 600;
+.modal-checkbox-toggle {
+  position: absolute;
+  top: 16px;
+  right: 50px;
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
   cursor: pointer;
   transition:
     background 0.2s ease,
     transform 0.1s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+    box-shadow 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  padding: 0;
 }
 
-.modal-toggle-btn:hover {
-  background: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(197, 106, 45, 0.5);
+/* Empty state (not completed) */
+.modal-checkbox-toggle.empty {
+  background: transparent;
+  border: 2px solid var(--accent);
 }
 
-.modal-toggle-btn:active {
-  transform: translateY(0);
+/* Filled state (completed) */
+.modal-checkbox-toggle::after {
+  content: "✓";
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  line-height: 1;
 }
 
-.modal-toggle-btn.completed {
-  border-color: #2ecc71;
-  background: rgba(46, 204, 113, 0.1);
+.modal-checkbox-toggle.empty::after {
+  content: none;
 }
 
-.modal-toggle-btn.completed:hover {
-  background: #2ecc71;
-  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.5);
+.modal-checkbox-toggle:hover {
+  transform: scale(1.15);
+  box-shadow: 0 3px 10px rgba(197, 106, 45, 0.6);
 }
 
-.modal-toggle-btn i {
-  font-size: 1.1rem;
+.modal-checkbox-toggle:active {
+  transform: scale(0.95);
 }
 
 #act-filter {
