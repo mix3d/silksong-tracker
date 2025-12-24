@@ -786,12 +786,24 @@ main a:hover,
   object-fit: contain;
 }
 
-/* Needle icons: keep them tall pre-rotation so they're wide post-rotation */
-#info-content .info-image[src*="Needle"] {
+/* Wrapper for rotated needle images - has swapped dimensions for layout */
+.rotated-image-wrapper {
+  width: 120px;
+  height: 72px;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+/* Needle image inside wrapper - rotated to horizontal */
+.rotated-image-wrapper .rotated-needle {
+  width: 72px;
+  height: 120px;
   max-width: 72px;
   max-height: 120px;
-  width: auto;
-  height: 120px;
+  margin: 0;
   transform: rotate(-90deg);
   transform-origin: center center;
 }
