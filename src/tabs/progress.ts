@@ -664,6 +664,16 @@ ${(() => {
       infoOverlay.classList.add("hidden");
     });
   }
+
+  // Attach listener to the toggle button
+  const modalToggleBtn = document.querySelector("#modalToggleBtn");
+  if (modalToggleBtn) {
+    modalToggleBtn.addEventListener("click", () => {
+      toggleManualProgress(item.id);
+      // Close modal and let the page re-render
+      infoOverlay.classList.add("hidden");
+    });
+  }
 }
 
 /**
