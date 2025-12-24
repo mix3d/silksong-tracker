@@ -47,7 +47,8 @@ export function createCheckbox(
   checkbox.addEventListener("click", (e) => {
     e.stopPropagation();
     const completedValue = getCompletedValueForItem(item);
-    toggleManualProgress(item.id, completedValue);
+    const group = item.unobtainable && item.group ? item.group : undefined;
+    toggleManualProgress(item.id, completedValue, group);
     if (onClick) {
       onClick(e);
     }
