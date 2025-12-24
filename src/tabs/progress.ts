@@ -931,10 +931,10 @@ function renderGenericGrid(
       div.append(counter);
     }
 
-    // Add hover checkbox toggle (top-right)
+    // Add hover checkbox toggle (top-right circular badge)
     const checkboxToggle = document.createElement("button");
-    checkboxToggle.className = "boss-checkbox-toggle";
-    checkboxToggle.innerHTML = `<i class="fa-${isDone ? "solid" : "regular"} fa-${isDone ? "check-square" : "square"}"></i>`;
+    checkboxToggle.className = `boss-checkbox-toggle ${!isDone ? "empty" : ""}`;
+    checkboxToggle.setAttribute("aria-label", isDone ? "Mark as incomplete" : "Mark as complete");
     checkboxToggle.addEventListener("click", (e) => {
       e.stopPropagation(); // Prevent opening modal
       toggleManualProgress(item.id);
