@@ -627,8 +627,20 @@ function buildDynamicTOC() {
   // Append legend block at the bottom of the TOC.
   const legendBlock = document.createElement("div");
   legendBlock.className = "toc-legend";
+
+  // Check if legend is collapsed from localStorage
+  const isLegendCollapsed = localStorage.getItem("legend-collapsed") === "true";
+  if (isLegendCollapsed) {
+    legendBlock.classList.add("collapsed");
+  }
+
   legendBlock.innerHTML = `
-    <div class="legend-title">Legend</div>
+    <div class="legend-header">
+      <span class="legend-collapse-icon">
+        <i class="fa-solid fa-chevron-${isLegendCollapsed ? "right" : "down"}"></i>
+      </span>
+      <div class="legend-title">Legend</div>
+    </div>
     <ul class="legend-list">
       <li><i class="fa-solid fa-arrow-up"></i> Upgrade of another tool</li>
       <li><i class="fa-solid fa-code-branch"></i> Mutually exclusive item</li>
@@ -636,6 +648,22 @@ function buildDynamicTOC() {
     </ul>
   `;
   tocList.parentElement?.append(legendBlock);
+
+  // Add click handler to toggle collapsed state
+  const legendHeader = legendBlock.querySelector(".legend-header");
+  const legendIcon = legendBlock.querySelector(".legend-collapse-icon i");
+
+  legendHeader?.addEventListener("click", () => {
+    const isCollapsed = legendBlock.classList.toggle("collapsed");
+    localStorage.setItem("legend-collapsed", String(isCollapsed));
+
+    // Update chevron icon
+    if (legendIcon) {
+      legendIcon.className = isCollapsed
+        ? "fa-solid fa-chevron-right"
+        : "fa-solid fa-chevron-down";
+    }
+  });
 }
 
 function resolveIconSrc(icon: string | undefined): string {
