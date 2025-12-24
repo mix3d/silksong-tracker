@@ -1417,35 +1417,33 @@ input[type="checkbox"] {
   margin: 0; /* Reset browser default margins */
 }
 
-/* Create the checkmark using borders instead of a shape */
+/* 1. Define the Checkmark as an SVG image */
 input[type="checkbox"]::before {
   content: "";
-  /* These dimensions determine the size of the checkmark */
-  width: 5px;
-  height: 10px;
+  width: 12px; /* Adjustable size */
+  height: 12px;
 
-  /* Create the "L" shape */
-  border: solid white;
-  border-width: 0 2px 2px 0; /* Top, Right, Bottom, Left */
+  /* This is the SVG data URI for a perfect, rounded checkmark */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
 
-  /* Rotate it to look like a checkmark */
-  transform: rotate(45deg) scale(0);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 
-  /* Positioning tweaks */
-  margin-top: -2px; /* Pulls it up slightly to visual center */
-
-  transition: 120ms transform ease-in-out;
+  /* Animation setup */
+  transform: scale(0);
+  transition: 0.1s transform ease-in-out;
 }
 
-/* When active */
+/* 2. Show the checkmark when active */
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+/* (Keep your existing background/border styles for the input parent) */
 input[type="checkbox"]:checked {
   background-color: var(--accent);
   border-color: var(--accent);
-}
-
-/* When checked, show it (maintain rotation) */
-input[type="checkbox"]:checked::before {
-  transform: rotate(45deg) scale(1);
 }
 
 /* Hover */
