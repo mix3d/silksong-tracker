@@ -913,6 +913,35 @@ function renderGenericGrid(
       div.append(counter);
     }
 
+    // Add manual completion badge if manually completed
+    if (isManuallyDone) {
+      div.classList.add("manual-complete");
+    }
+
+    // Add hover toggle buttons
+    const toggleButtons = document.createElement("div");
+    toggleButtons.className = "boss-toggle-buttons";
+
+    const toggleBtn = document.createElement("button");
+    toggleBtn.className = `boss-toggle-btn ${isDone ? "complete" : ""}`;
+    toggleBtn.textContent = isDone ? "Unmark" : "Mark Complete";
+    toggleBtn.addEventListener("click", (e) => {
+      e.stopPropagation(); // Prevent opening modal
+      toggleManualProgress(item.id);
+      // The updateTabProgress will be called automatically via event listener
+    });
+
+    const viewBtn = document.createElement("button");
+    viewBtn.className = "boss-toggle-btn";
+    viewBtn.textContent = "View";
+    viewBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showGenericModal(item);
+    });
+
+    toggleButtons.append(toggleBtn, viewBtn);
+    div.append(toggleButtons);
+
     div.addEventListener("click", () => {
       showGenericModal(item);
     });
