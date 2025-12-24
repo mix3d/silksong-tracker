@@ -409,12 +409,12 @@ main a:hover,
   line-height: 1;
   display: flex;
   align-items: center;
+  margin-bottom: -2px;
 }
 
 .btn-icon:hover {
   background: #a95b22;
   box-shadow: 0 0 12px rgba(197, 106, 45, 0.4);
-  transform: translateY(-1px);
 }
 
 .btn-icon:active {
