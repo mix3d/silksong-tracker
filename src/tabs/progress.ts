@@ -212,12 +212,14 @@ export function updateTabProgress(): void {
 
   // Calculate completion percentage inline
   const allItems = collectAllItems();
+  const saveDataForCalc = getSaveData();
+  const saveDataFlagsForCalc = getSaveDataFlags();
   let totalItems = 0;
   let completedItems = 0;
 
   const obtainedGroupsForCalc = new Set<string>();
   for (const item of allItems) {
-    const val = getSaveDataValue(saveData, saveDataFlags, item);
+    const val = getSaveDataValue(saveDataForCalc, saveDataFlagsForCalc, item);
     if (
       typeof item.group === "string"
       && item.group.trim() !== ""
