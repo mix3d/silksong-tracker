@@ -7,6 +7,7 @@
 
 import type { Item } from "./types/Item.ts";
 import { updateSaveDataValue } from "./save-data.ts";
+import { clearManualSaveData } from "./save-data-updater.ts";
 
 /**
  * Set an item's value in the save data
@@ -14,6 +15,13 @@ import { updateSaveDataValue } from "./save-data.ts";
  */
 export function setManualProgress(item: Item, value: unknown): void {
   updateSaveDataValue(item, value);
+}
+
+/**
+ * Clear all manual progress (delegates to save data system)
+ */
+export function clearManualProgress(): void {
+  clearManualSaveData();
 }
 
 /**
