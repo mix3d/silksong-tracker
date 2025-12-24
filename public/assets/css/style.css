@@ -968,8 +968,7 @@ main a:hover,
 }
 
 .toggle input {
-  accent-color: #888; /* check color */
-  transform: scale(1.2); /* larger */
+  /* Inherits unified checkbox styles from input[type="checkbox"] */
 }
 
 .main-stats div {
@@ -1368,12 +1367,12 @@ main a:hover,
   vertical-align: baseline;
 }
 
-/* --- Custom checkboxes --- */
+/* --- Unified Standard Checkboxes --- */
 input[type="checkbox"] {
   accent-color: var(--accent);
   cursor: pointer;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 3px;
   border: 1px solid var(--stroke);
   background-color: var(--bg-2);
@@ -2472,8 +2471,7 @@ main::-webkit-scrollbar-thumb:hover {
 }
 
 .dropdown-menu input[type="checkbox"] {
-  accent-color: var(--accent);
-  transform: scale(1.1);
+  /* Inherits unified checkbox styles from input[type="checkbox"] */
 }
 
 .dropdown-divider {
