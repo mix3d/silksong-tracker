@@ -1361,7 +1361,8 @@ main a:hover,
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  line-height: 1;
+  min-height: 28px;
+  padding: 4px 0;
 }
 
 .category-label {
