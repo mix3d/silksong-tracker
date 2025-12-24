@@ -530,10 +530,19 @@ main a:hover,
   color: #aaa;
   cursor: pointer;
   z-index: 10;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
 }
 
 .modal-close:hover {
   color: white;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* More info icon link in modal header */
@@ -1577,7 +1586,9 @@ main::-webkit-scrollbar-thumb:hover {
     box-shadow 0.2s ease;
   z-index: 10;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-  padding: 0;
+  /* Add padding for larger click target without changing visual size */
+  padding: 6px;
+  margin: -6px;
 }
 
 /* Empty state (not completed) */
@@ -1632,8 +1643,8 @@ main::-webkit-scrollbar-thumb:hover {
 ------------------- */
 
 .checkbox-toggle.modal-checkbox {
-  top: 14px;
-  right: 46px;
+  top: 10px;
+  right: 52px;
 }
 
 #act-filter {
