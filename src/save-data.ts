@@ -1,4 +1,5 @@
 import { assertObject, isArray, isObject } from "complete-common";
+import { updateCompletionPercentage } from "./calculate-completion.ts";
 import { BASE_PATH } from "./constants.ts";
 import {
   completionValue,
@@ -69,7 +70,6 @@ export async function handleSaveFile(file: File | undefined): Promise<void> {
     currentLoadedSaveData = saveDataRaw as unknown as SilksongSave;
     currentLoadedSaveDataFlags = getSaveFileFlags(saveDataRaw);
 
-    completionValue.textContent = `${saveData.playerData.completionPercentage}%`;
     const seconds = saveData.playerData.playTime;
     const hours = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
@@ -90,6 +90,9 @@ export async function handleSaveFile(file: File | undefined): Promise<void> {
 
     renderActiveTab();
     globalThis.dispatchEvent(new Event("save-data-changed"));
+
+    // Recalculate completion percentage including manual progress
+    updateCompletionPercentage();
 
     if (scrollContainer) {
       requestAnimationFrame(() => {
@@ -411,7 +414,6 @@ export function clearAllData(): void {
 
   modeBanner.classList.add("hidden");
   modeBanner.innerHTML = "";
-  completionValue.textContent = "0%";
   playtimeValue.textContent = "0h 00m";
   rosariesValue.textContent = "0";
   shardsValue.textContent = "0";
@@ -428,6 +430,9 @@ export function clearAllData(): void {
   } catch (error) {
     console.warn("Reset render executed on current tab", error);
   }
+
+  // Recalculate completion percentage (may include manual progress)
+  updateCompletionPercentage();
 
   showToast("Data cleared.");
 }
