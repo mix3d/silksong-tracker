@@ -448,6 +448,7 @@ function showGenericModal(item: Item) {
 
   const pinIconSrc = resolveIconSrc(item.icon);
   const isCompleted = isManuallyCompleted(item.id);
+  const isNeedle = pinIconSrc.includes("Needle");
 
   infoContent.innerHTML = `
     <button id="modalCloseBtn" class="modal-close">✕</button>
@@ -459,7 +460,13 @@ function showGenericModal(item: Item) {
         : ""
     }
     <button id="modalToggleCheckbox" class="modal-checkbox-toggle ${!isCompleted ? "empty" : ""}" aria-label="${isCompleted ? "Mark as incomplete" : "Mark as complete"}"></button>
-    <img src="${pinIconSrc}" alt="${item.label}" class="info-image">
+    ${
+      isNeedle
+        ? `<div class="rotated-image-wrapper">
+            <img src="${pinIconSrc}" alt="${item.label}" class="info-image rotated-needle">
+          </div>`
+        : `<img src="${pinIconSrc}" alt="${item.label}" class="info-image">`
+    }
     <h2 class="info-title">${item.label}</h2>
 
     <p class="info-description">${item.description}</p>
