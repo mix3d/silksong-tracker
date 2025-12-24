@@ -728,98 +728,104 @@ function renderGenericGrid(
 
     const value = getSaveDataValue(saveData, saveDataFlags, item);
 
+    // Check manual progress first
+    const isManuallyDone = isManuallyCompleted(item.id);
     let isDone: boolean;
     let isAccepted = false;
 
-    switch (item.type) {
-      case "level": {
-        const current = Number.isFinite(Number(value)) ? Number(value) : 0;
-        isDone = current >= item.required;
-        break;
-      }
+    if (isManuallyDone) {
+      isDone = true;
+    } else {
+      switch (item.type) {
+        case "level": {
+          const current = Number.isFinite(Number(value)) ? Number(value) : 0;
+          isDone = current >= item.required;
+          break;
+        }
 
-      case "collectable": {
-        const current = Number.isFinite(Number(value)) ? Number(value) : 0;
-        isDone = current > 0;
-        break;
-      }
+        case "collectable": {
+          const current = Number.isFinite(Number(value)) ? Number(value) : 0;
+          isDone = current > 0;
+          break;
+        }
 
-      case "quill": {
-        isDone =
-          typeof value === "number"
-          && item.id === `QuillState_${value}`
-          && [1, 2, 3].includes(value);
-        break;
-      }
+        case "quill": {
+          isDone =
+            typeof value === "number"
+            && item.id === `QuillState_${value}`
+            && [1, 2, 3].includes(value);
+          break;
+        }
 
-      case "quest": {
-        isDone = value === "completed" || value === true;
-        isAccepted = value === "accepted";
-        break;
-      }
+        case "quest": {
+          isDone = value === "completed" || value === true;
+          isAccepted = value === "accepted";
+          break;
+        }
 
-      case "relic":
-      case "materium":
-      case "device": {
-        isDone = value === "deposited";
-        isAccepted = value === "collected";
-        break;
-      }
+        case "relic":
+        case "materium":
+        case "device": {
+          isDone = value === "deposited";
+          isAccepted = value === "collected";
+          break;
+        }
 
-      case "journal": {
-        const current = Number.isFinite(Number(value)) ? Number(value) : 0;
-        const { required } = item;
-        isDone = current >= required;
-        isAccepted = current > 0 && current < required;
-        break;
-      }
+        case "journal": {
+          const current = Number.isFinite(Number(value)) ? Number(value) : 0;
+          const { required } = item;
+          isDone = current >= required;
+          isAccepted = current > 0 && current < required;
+          break;
+        }
 
-      case "anyOf": {
-        const anyOfResults: unknown[] = Array.isArray(value) ? value : [];
-        isDone = item.anyOf.some((check, index) => {
-          const someValue = anyOfResults[index];
+        case "anyOf": {
+          const anyOfResults: unknown[] = Array.isArray(value) ? value : [];
+          isDone = item.anyOf.some((check, index) => {
+            const someValue = anyOfResults[index];
 
-          const evaluateCheck = (): boolean => {
-            switch (check.type) {
-              case "flag":
-              case "sceneBool":
-              case "sceneVisited": {
-                return someValue === true;
+            const evaluateCheck = (): boolean => {
+              switch (check.type) {
+                case "flag":
+                case "sceneBool":
+                case "sceneVisited": {
+                  return someValue === true;
+                }
+
+                case "flagInt": {
+                  return typeof someValue === "number" ? someValue >= 1 : false;
+                }
+
+                case "level": {
+                  const current = Number.isFinite(Number(someValue))
+                    ? Number(someValue)
+                    : 0;
+                  return current >= check.required;
+                }
               }
+            };
 
-              case "flagInt": {
-                return typeof someValue === "number" ? someValue >= 1 : false;
-              }
+            return evaluateCheck();
+          });
+          break;
+        }
 
-              case "level": {
-                const current = Number.isFinite(Number(someValue))
-                  ? Number(someValue)
-                  : 0;
-                return current >= check.required;
-              }
-            }
-          };
+        case "key": {
+          isDone = value === true;
+          break;
+        }
 
-          return evaluateCheck();
-        });
-        break;
-      }
+        case "sceneVisited": {
+          const visitedScenes = getSaveData()?.playerData.scenesVisited ?? [];
+          isDone =
+            Array.isArray(visitedScenes) && visitedScenes.includes(item.scene);
+          break;
+        }
 
-      case "key": {
-        isDone = value === true;
-        break;
-      }
-
-      case "sceneVisited": {
-        const visitedScenes = getSaveData()?.playerData.scenesVisited ?? [];
-        isDone =
-          Array.isArray(visitedScenes) && visitedScenes.includes(item.scene);
-        break;
-      }
-
-      default: {
-        isDone = value === true;
-        break;
+        default: {
+          isDone = value === true;
+          break;
+        }
       }
     }
 
