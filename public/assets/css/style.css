@@ -387,12 +387,16 @@ main a:hover,
   background: var(--accent);
   color: #fff;
   border: none;
-  width: 32px;
+  padding: 6px 12px;
   height: 32px;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
+  font-family: "TrajanPro", serif;
+  font-size: 0.85rem;
+  font-weight: 600;
   transition:
     background 0.25s ease,
     box-shadow 0.25s ease,
@@ -403,6 +407,8 @@ main a:hover,
 .btn-icon i {
   font-size: 14px;
   line-height: 1;
+  display: flex;
+  align-items: center;
 }
 
 .btn-icon:hover {
