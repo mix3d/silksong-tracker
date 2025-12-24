@@ -942,16 +942,7 @@ function renderGenericGrid(
     });
     div.append(checkboxToggle);
 
-    // Add hover view button (center-bottom)
-    const viewBtn = document.createElement("button");
-    viewBtn.className = "boss-view-btn";
-    viewBtn.textContent = "View";
-    viewBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      showGenericModal(item);
-    });
-    div.append(viewBtn);
-
+    // Click on card opens modal
     div.addEventListener("click", () => {
       showGenericModal(item);
     });
