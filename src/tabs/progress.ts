@@ -999,12 +999,18 @@ function renderGenericGrid(
     const iconPath = resolveIconSrc(item.icon);
     const lockedPath = `${BASE_PATH}/assets/icons/locked.png`;
 
+    // Check if this item is crossed out because another in the group was obtained
+    const isCrossedOut = div.classList.contains("unobtainable");
+
     if (isDone) {
       img.src = iconPath;
       div.classList.add("done");
     } else if (isAccepted) {
       img.src = iconPath;
       div.classList.add("accepted");
+    } else if (isCrossedOut) {
+      // Show icon for crossed-out items (another in group was obtained)
+      img.src = iconPath;
     } else if (spoilerOn) {
       img.src = iconPath;
       div.classList.add("unlocked");
