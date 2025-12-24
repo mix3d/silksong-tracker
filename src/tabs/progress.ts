@@ -21,6 +21,10 @@ import {
   tocList,
 } from "../elements.ts";
 import {
+  isManuallyCompleted,
+  toggleManualProgress,
+} from "../manual-progress.ts";
+import {
   getSaveData,
   getSaveDataFlags,
   getSaveDataMode,
@@ -215,6 +219,10 @@ function initProgressListeners() {
   progressListenerRegistered = true;
 
   globalThis.addEventListener("save-data-changed", () => {
+    updateTabProgress();
+  });
+
+  globalThis.addEventListener("manual-progress-changed", () => {
     updateTabProgress();
   });
 }
