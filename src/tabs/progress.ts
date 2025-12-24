@@ -34,7 +34,7 @@ import {
 } from "../save-data.ts";
 import type { Category } from "../types/Category.ts";
 import type { Item } from "../types/Item.ts";
-import { createCheckbox } from "../utils/checkbox.ts";
+import { createCheckbox, getCompletedValueForItem } from "../utils/checkbox.ts";
 
 let tocObserver: IntersectionObserver | undefined;
 let isManualScroll = false; // prevent observer interference
