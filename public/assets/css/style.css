@@ -2384,8 +2384,8 @@ main::-webkit-scrollbar-thumb:hover {
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  padding: 8px 12px;
-  margin: -8px -12px 0.6rem -12px;
+  padding: 8px 0;
+  margin-bottom: 0.6rem;
   border-radius: 6px;
   transition: background 0.2s ease;
 }
@@ -2421,12 +2421,12 @@ main::-webkit-scrollbar-thumb:hover {
 }
 
 .toc-legend.collapsed {
-  padding-bottom: 0.5rem;
+  padding-bottom: 1.2rem;
 }
 
 .legend-list {
   list-style: none;
-  padding: 0 12px;
+  padding: 0;
   margin: 0;
 }
 
