@@ -71,10 +71,13 @@ export function createCheckbox(
       }
 
       // If this is an upgrade or has upgrades, clear related items
+      // (but skip items with the same ID, as they share the same storage key)
       if ((item.upgradeOf || item.type === "tool") && getUpgradeRelated) {
         const relatedItems = getUpgradeRelated(item);
         for (const relatedItem of relatedItems) {
-          setManualProgress(relatedItem.id, undefined);
+          if (relatedItem.id !== item.id) {
+            setManualProgress(relatedItem.id, undefined);
+          }
         }
       }
     }
