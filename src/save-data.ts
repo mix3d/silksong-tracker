@@ -1,5 +1,4 @@
 import { assertObject, isArray, isObject } from "complete-common";
-import { updateCompletionPercentage } from "./calculate-completion.ts";
 import { BASE_PATH } from "./constants.ts";
 import {
   completionValue,
