@@ -37,6 +37,32 @@ import type { Item } from "../types/Item.ts";
 let tocObserver: IntersectionObserver | undefined;
 let isManualScroll = false; // prevent observer interference
 
+/**
+ * Create a reusable checkbox toggle button element
+ */
+function createCheckboxToggle(
+  itemId: string,
+  isCompleted: boolean,
+  onClick?: (e: Event) => void,
+): HTMLButtonElement {
+  const checkbox = document.createElement("button");
+  checkbox.className = `checkbox-toggle ${!isCompleted ? "empty" : ""}`;
+  checkbox.setAttribute(
+    "aria-label",
+    isCompleted ? "Mark as incomplete" : "Mark as complete",
+  );
+
+  checkbox.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleManualProgress(itemId);
+    if (onClick) {
+      onClick(e);
+    }
+  });
+
+  return checkbox;
+}
+
 export function updateTabProgress(): void {
   initProgressListeners();
   const spoilerOn = showSpoilers.checked;
