@@ -1361,28 +1361,19 @@ main a:hover,
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  min-height: 28px;
-  padding: 4px 0;
 }
 
 .category-label {
   flex-grow: 1;
   text-align: left;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  height: 20px;
+  font-size: 1em;
 }
 
 .category-count {
-  font-size: 0.9em;
+  font-size: 0.85em;
   color: var(--ink-3);
   flex-shrink: 0;
   margin-left: auto;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  height: 20px;
 }
 
 /* Category checkbox - only visible on hover */
