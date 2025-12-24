@@ -952,14 +952,13 @@ function renderGenericGrid(
 
     // Check for "accepted" state (in-progress items)
     let isAccepted = false;
-    const actualValue = isManuallySet(item.id) ? getManualValue(item.id) : value;
 
     if (item.type === "quest") {
-      isAccepted = actualValue === "accepted";
+      isAccepted = value === "accepted";
     } else if (item.type === "relic" || item.type === "materium" || item.type === "device") {
-      isAccepted = actualValue === "collected";
+      isAccepted = value === "collected";
     } else if (item.type === "journal") {
-      const current = Number.isFinite(Number(actualValue)) ? Number(actualValue) : 0;
+      const current = Number.isFinite(Number(value)) ? Number(value) : 0;
       isAccepted = current > 0 && current < item.required;
     }
 
