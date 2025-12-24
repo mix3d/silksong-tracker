@@ -2369,8 +2369,8 @@ main::-webkit-scrollbar-thumb:hover {
     transparent
   );
   backdrop-filter: blur(4px);
-  padding: 0.75rem 1.4rem;
-  margin: 0 -1.4rem;
+  padding: 0.75rem 1.4rem 2rem 1.4rem;
+  margin: 0 -1.4rem -1.25rem -1.4rem;
   border-top: 1px solid rgba(197, 106, 45, 0.25);
   font-size: 0.85rem;
   line-height: 1.4;
@@ -2430,7 +2430,7 @@ main::-webkit-scrollbar-thumb:hover {
 }
 
 .toc-legend.collapsed {
-  padding: 0.75rem 1.4rem;
+  padding: 0.75rem 1.4rem 2rem 1.4rem;
 }
 
 .legend-list {
