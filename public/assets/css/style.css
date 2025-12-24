@@ -1398,8 +1398,6 @@ main a:hover,
 
 /* --- Unified Standard Checkboxes --- */
 input[type="checkbox"] {
-  -webkit-appearance: none;
-  appearance: none;
   accent-color: var(--accent);
   cursor: pointer;
   width: 18px;
@@ -1408,32 +1406,16 @@ input[type="checkbox"] {
   border: 1px solid var(--stroke);
   background-color: var(--bg-2);
   transition: all 0.2s ease;
-  outline: none;
 }
 
 /* When active (orange checkmark) */
 input[type="checkbox"]:checked {
   background-color: var(--accent);
   border-color: var(--accent);
-  position: relative;
 }
 
-/* Custom checkmark */
-input[type="checkbox"]:checked::after {
-  content: "✓";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 1;
-}
-
-/* Hover and focus */
-input[type="checkbox"]:hover,
-input[type="checkbox"]:focus {
+/* Hover */
+input[type="checkbox"]:hover {
   border-color: var(--accent);
   box-shadow: 0 0 4px var(--accent);
 }
