@@ -664,7 +664,7 @@ ${(() => {
     checkboxLabel.className = "modal-checkbox-label";
     const checkbox = createCheckbox(item, isCompleted, () => {
       infoOverlay.classList.add("hidden");
-    }, getItemsByGroup);
+    }, getItemsByGroup, getUpgradeRelatedItems);
     checkboxLabel.append(checkbox);
     rightControls.append(checkboxLabel);
 
@@ -953,7 +953,7 @@ function renderGenericGrid(
     }
 
     // Add checkbox toggle (top-right)
-    const checkbox = createCheckbox(item, isDone, undefined, getItemsByGroup);
+    const checkbox = createCheckbox(item, isDone, undefined, getItemsByGroup, getUpgradeRelatedItems);
     checkbox.classList.add("tile-checkbox");
     div.append(checkbox);
 
