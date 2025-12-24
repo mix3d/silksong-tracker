@@ -421,10 +421,8 @@ function initWorldMapListeners() {
 }
 
 function getUnlocked(item: Item, value: unknown): boolean {
-  // First check if manually set - if so, use manual value instead
-  if (isManuallySet(item.id)) {
-    value = getManualValue(item.id);
-  }
+  // Manual progress is now integrated into the save data directly,
+  // so we don't need to check it separately
 
   if (item.type === "quest") {
     return value === "completed" || value === true;
