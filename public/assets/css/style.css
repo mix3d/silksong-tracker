@@ -2501,10 +2501,6 @@ main::-webkit-scrollbar-thumb:hover {
   display: none;
 }
 
-.dropdown-menu input[type="checkbox"] {
-  /* Inherits unified checkbox styles from input[type="checkbox"] */
-}
-
 .dropdown-divider {
   height: 1px;
   background: var(--stroke-soft);
