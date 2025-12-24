@@ -1368,6 +1368,29 @@ main a:hover,
   color: var(--ink-3);
 }
 
+/* Category checkbox - only visible on hover */
+.category-checkbox {
+  opacity: 0;
+  margin-left: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  width: 16px;
+  height: 16px;
+}
+
+.category-title:hover .category-checkbox {
+  opacity: 1;
+}
+
+/* Indeterminate state styling */
+.category-checkbox:indeterminate {
+  opacity: 0;
+}
+
+.category-title:hover .category-checkbox:indeterminate {
+  opacity: 1;
+}
+
 /* MAIN% - centered and compact title */
 #main-section .category-title {
   display: block; /* cancel flex if present */
