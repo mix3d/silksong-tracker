@@ -818,10 +818,10 @@ main a:hover,
 /* style.css */
 #info-content .info-image {
   max-width: 72px;
-  max-height: 120px;
+  max-height: 120px; /* Aggiungi un limite di altezza */
   margin: 0 auto 18px;
   display: block;
-  object-fit: contain;
+  object-fit: contain; /* Mantiene le proporzioni */
 }
 
 /* Wrapper for rotated needle images - has swapped dimensions for layout */
