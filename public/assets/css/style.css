@@ -2358,24 +2358,51 @@ main::-webkit-scrollbar-thumb:hover {
 
 .toc-legend {
   position: sticky;
-  bottom: 1.5rem;
+  bottom: 0;
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.9),
-    rgba(0, 0, 0, 0.4) 60%,
+    rgba(15, 15, 16, 0.98) 70%,
+    rgba(15, 15, 16, 0.85) 85%,
+    rgba(15, 15, 16, 0.4) 95%,
     transparent
   );
-  backdrop-filter: blur(2px);
-  padding-top: 1rem;
-  padding-bottom: 0.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(4px);
+  padding: 1rem 0 1rem 0;
+  border-top: 1px solid rgba(197, 106, 45, 0.25);
   font-size: 0.85rem;
   line-height: 1.6;
   color: var(--ink-1);
-  opacity: 0.95;
   font-family: "TrajanPro", serif;
   letter-spacing: 0.02em;
   z-index: 2;
+}
+
+.legend-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 12px;
+  margin: -8px -12px 0.6rem -12px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.legend-header:hover {
+  background: rgba(197, 106, 45, 0.08);
+}
+
+.legend-collapse-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  color: var(--accent);
+  transition: transform 0.2s ease;
+}
+
+.legend-collapse-icon i {
+  font-size: 12px;
 }
 
 .legend-title {
@@ -2383,8 +2410,16 @@ main::-webkit-scrollbar-thumb:hover {
   text-transform: uppercase;
   font-size: 0.8rem;
   color: var(--accent);
-  margin-bottom: 0.6rem;
   letter-spacing: 0.06em;
+  flex-grow: 1;
+}
+
+.toc-legend.collapsed .legend-list {
+  display: none;
+}
+
+.toc-legend.collapsed {
+  padding-bottom: 0.5rem;
 }
 
 .legend-list {
