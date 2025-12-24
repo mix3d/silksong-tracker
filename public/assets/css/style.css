@@ -397,7 +397,7 @@ main a:hover,
   font-family: "TrajanPro", serif;
   font-size: 0.85rem;
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1;
   transition:
     background 0.25s ease,
     box-shadow 0.25s ease;
@@ -409,7 +409,11 @@ main a:hover,
   line-height: 1;
   display: flex;
   align-items: center;
-  transform: translateY(-1px);
+}
+
+.btn-icon span {
+  display: inline-block;
+  transform: translateY(2px);
 }
 
 .btn-icon:hover {
