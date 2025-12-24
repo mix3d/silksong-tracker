@@ -1391,6 +1391,8 @@ main a:hover,
   align-self: center;
   margin: 0;
   vertical-align: middle;
+  position: relative;
+  top: -1px;
 }
 
 .category-title:hover .category-checkbox {
