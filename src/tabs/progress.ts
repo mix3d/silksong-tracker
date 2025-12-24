@@ -155,13 +155,9 @@ export function updateTabProgress(): void {
           continue;
         }
 
-        if (saveData === undefined) {
-          total++;
-          continue;
-        }
-
         if (
-          item.unobtainable === true
+          saveData !== undefined
+          && item.unobtainable === true
           && typeof item.group === "string"
           && item.group.trim() !== ""
           && filteredItems.some(
