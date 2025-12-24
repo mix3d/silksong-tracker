@@ -1677,10 +1677,6 @@ main::-webkit-scrollbar-thumb:hover {
   background: rgba(197, 106, 45, 0.1);
 }
 
-.modal-checkbox-label input[type="checkbox"] {
-  cursor: pointer;
-}
-
 #act-filter {
   display: flex;
   align-items: center;
