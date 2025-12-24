@@ -522,7 +522,7 @@ main a:hover,
 
 .modal-close {
   position: absolute;
-  top: 10px;
+  top: 12px;
   right: 12px;
   background: transparent;
   border: none;
@@ -530,6 +530,10 @@ main a:hover,
   color: #aaa;
   cursor: pointer;
   z-index: 10;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
 }
 
 .modal-close:hover {
@@ -539,18 +543,18 @@ main a:hover,
 /* More info icon link in modal header */
 .modal-info-link {
   position: absolute;
-  top: 10px;
+  top: 12px;
   left: 12px;
   background: transparent;
   border: none;
-  font-size: 20px;
+  font-size: 18px;
   color: #aaa;
   cursor: pointer;
   text-decoration: none;
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   border-radius: 6px;
   transition:
     color 0.2s ease,
@@ -564,7 +568,7 @@ main a:hover,
 }
 
 .modal-info-link i {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 /* ------------------
@@ -1632,8 +1636,8 @@ main::-webkit-scrollbar-thumb:hover {
 ------------------- */
 
 .checkbox-toggle.modal-checkbox {
-  top: 16px;
-  right: 50px;
+  top: 12px;
+  right: 44px;
 }
 
 #act-filter {
