@@ -1366,6 +1366,8 @@ main a:hover,
 .category-label {
   flex-grow: 1;
   text-align: left;
+  align-self: center;
+  line-height: 1.2;
 }
 
 .category-count {
