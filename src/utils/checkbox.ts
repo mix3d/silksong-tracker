@@ -3,7 +3,7 @@
  */
 
 import type { Item } from "../types/Item.ts";
-import { toggleManualProgress } from "../manual-progress.ts";
+import { setManualProgress, getManualProgress } from "../manual-progress.ts";
 
 /**
  * Determine the "completed" value for an item based on its type
@@ -34,6 +34,7 @@ export function createCheckbox(
   item: Item,
   isCompleted: boolean,
   onClick?: (e: Event) => void,
+  getGroupItems?: (group: string) => Item[],
 ): HTMLInputElement {
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
@@ -46,9 +47,29 @@ export function createCheckbox(
 
   checkbox.addEventListener("click", (e) => {
     e.stopPropagation();
+
+    const progress = getManualProgress();
+    const isCurrentlySet = item.id in progress;
     const completedValue = getCompletedValueForItem(item);
-    const group = item.unobtainable && item.group ? item.group : undefined;
-    toggleManualProgress(item.id, completedValue, group);
+
+    if (isCurrentlySet) {
+      // Toggle off - remove this item
+      setManualProgress(item.id, undefined);
+    } else {
+      // Toggle on - set this item
+      setManualProgress(item.id, completedValue);
+
+      // If this is a mutually exclusive item, clear others in the group
+      if (item.unobtainable && item.group && getGroupItems) {
+        const groupItems = getGroupItems(item.group);
+        for (const groupItem of groupItems) {
+          if (groupItem.id !== item.id) {
+            setManualProgress(groupItem.id, undefined);
+          }
+        }
+      }
+    }
+
     if (onClick) {
       onClick(e);
     }
