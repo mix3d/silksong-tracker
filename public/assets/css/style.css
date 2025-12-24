@@ -522,7 +522,7 @@ main a:hover,
 
 .modal-close {
   position: absolute;
-  top: 12px;
+  top: 10px;
   right: 12px;
   background: transparent;
   border: none;
@@ -530,10 +530,6 @@ main a:hover,
   color: #aaa;
   cursor: pointer;
   z-index: 10;
-  width: 24px;
-  height: 24px;
-  display: grid;
-  place-items: center;
 }
 
 .modal-close:hover {
@@ -543,18 +539,18 @@ main a:hover,
 /* More info icon link in modal header */
 .modal-info-link {
   position: absolute;
-  top: 12px;
+  top: 10px;
   left: 12px;
   background: transparent;
   border: none;
-  font-size: 18px;
+  font-size: 20px;
   color: #aaa;
   cursor: pointer;
   text-decoration: none;
   display: grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   border-radius: 6px;
   transition:
     color 0.2s ease,
@@ -568,7 +564,7 @@ main a:hover,
 }
 
 .modal-info-link i {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 /* ------------------
@@ -1565,8 +1561,8 @@ main::-webkit-scrollbar-thumb:hover {
 
 .checkbox-toggle {
   position: absolute;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   background: var(--accent);
   border: none;
   border-radius: 50%;
@@ -1593,7 +1589,7 @@ main::-webkit-scrollbar-thumb:hover {
 /* Filled state (completed) - checkmark */
 .checkbox-toggle::after {
   content: "✓";
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   color: #fff;
   line-height: 1;
@@ -1604,12 +1600,12 @@ main::-webkit-scrollbar-thumb:hover {
 }
 
 .checkbox-toggle:hover {
-  transform: scale(1.15);
+  transform: scale(1.05);
   box-shadow: 0 3px 10px rgba(197, 106, 45, 0.6);
 }
 
 .checkbox-toggle:active {
-  transform: scale(0.95);
+  transform: scale(0.98);
 }
 
 /* ------------------
@@ -1636,8 +1632,8 @@ main::-webkit-scrollbar-thumb:hover {
 ------------------- */
 
 .checkbox-toggle.modal-checkbox {
-  top: 12px;
-  right: 44px;
+  top: 14px;
+  right: 46px;
 }
 
 #act-filter {
