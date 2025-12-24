@@ -580,6 +580,14 @@ ${(() => {
 
   infoOverlay.classList.remove("hidden");
 
+  // Add checkbox toggle to modal (after innerHTML is set)
+  const modalCheckbox = createCheckboxToggle(item.id, isCompleted, () => {
+    // Close modal after toggle
+    infoOverlay.classList.add("hidden");
+  });
+  modalCheckbox.classList.add("modal-checkbox");
+  infoContent.prepend(modalCheckbox);
+
   if (item.mapViewer) {
     const viewer = document.querySelector<HTMLElement>(
       `#custom-map-${item.id}`,
@@ -685,16 +693,6 @@ ${(() => {
   const modalCloseBtn = document.querySelector("#modalCloseBtn");
   if (modalCloseBtn) {
     modalCloseBtn.addEventListener("click", () => {
-      infoOverlay.classList.add("hidden");
-    });
-  }
-
-  // Attach listener to the checkbox toggle
-  const modalToggleCheckbox = document.querySelector("#modalToggleCheckbox");
-  if (modalToggleCheckbox) {
-    modalToggleCheckbox.addEventListener("click", () => {
-      toggleManualProgress(item.id);
-      // Close modal and let the page re-render
       infoOverlay.classList.add("hidden");
     });
   }
