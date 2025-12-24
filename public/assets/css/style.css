@@ -383,6 +383,38 @@ main a:hover,
   border-radius: 8px;
 }
 
+.btn-icon {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.15s ease;
+  cursor: pointer;
+}
+
+.btn-icon i {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.btn-icon:hover {
+  background: #a95b22;
+  box-shadow: 0 0 12px rgba(197, 106, 45, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-icon:active {
+  transform: scale(0.97);
+}
+
 .topbar label {
   margin: 0;
   font-size: 0.9rem;
