@@ -241,6 +241,11 @@ function initWorldMapListeners() {
 }
 
 function getUnlocked(item: Item, value: unknown): boolean {
+  // First check if manually toggled as completed
+  if (isManuallyCompleted(item.id)) {
+    return true;
+  }
+
   if (item.type === "quest") {
     return value === "completed" || value === true;
   }
