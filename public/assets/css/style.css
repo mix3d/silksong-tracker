@@ -1360,7 +1360,8 @@ main a:hover,
 .category-title {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
+  line-height: 1;
 }
 
 .category-label {
