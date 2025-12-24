@@ -642,7 +642,7 @@ ${(() => {
     checkboxLabel.className = "modal-checkbox-label";
     const checkbox = createCheckbox(item, isCompleted, () => {
       infoOverlay.classList.add("hidden");
-    });
+    }, getItemsByGroup);
     checkboxLabel.append(checkbox);
     rightControls.append(checkboxLabel);
 
@@ -931,7 +931,7 @@ function renderGenericGrid(
     }
 
     // Add checkbox toggle (top-right)
-    const checkbox = createCheckbox(item, isDone);
+    const checkbox = createCheckbox(item, isDone, undefined, getItemsByGroup);
     checkbox.classList.add("tile-checkbox");
     div.append(checkbox);
 
