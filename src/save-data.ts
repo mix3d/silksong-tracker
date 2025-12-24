@@ -127,6 +127,7 @@ export async function handleSaveFile(file: File | undefined): Promise<void> {
 
     currentLoadedSaveData = saveDataRaw as unknown as SilksongSave;
     currentLoadedSaveDataFlags = getSaveFileFlags(saveDataRaw);
+    isUsingManualSave = false; // Mark that we're using a real save file
 
     const seconds = saveData.playerData.playTime;
     const hours = Math.floor(seconds / 3600);
