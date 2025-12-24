@@ -1398,7 +1398,11 @@ main a:hover,
 
 /* --- Unified Standard Checkboxes --- */
 input[type="checkbox"] {
-  accent-color: var(--accent);
+  /* 1. This kills the native "black corner" box */
+  -webkit-appearance: none;
+  appearance: none;
+
+  /* Your existing layout styles */
   cursor: pointer;
   width: 18px;
   height: 18px;
@@ -1406,14 +1410,36 @@ input[type="checkbox"] {
   border: 1px solid var(--stroke);
   background-color: var(--bg-2);
   transition: all 0.2s ease;
-  outline: none !important;
-  box-shadow: none;
+
+  /* Layout for the checkmark */
+  display: grid;
+  place-content: center;
+  margin: 0; /* Reset browser default margins */
 }
 
-/* When active (orange checkmark) */
+/* 2. Create the custom Checkmark */
+input[type="checkbox"]::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  transform-origin: center;
+
+  /* Creates a white checkmark shape */
+  box-shadow: inset 1em 1em white;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+/* When active */
 input[type="checkbox"]:checked {
   background-color: var(--accent);
   border-color: var(--accent);
+}
+
+/* Show the checkmark when active */
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
 }
 
 /* Hover */
@@ -1422,10 +1448,10 @@ input[type="checkbox"]:hover {
   box-shadow: 0 0 4px var(--accent);
 }
 
-/* Remove all focus outlines and borders */
+/* Focus states */
 input[type="checkbox"]:focus,
 input[type="checkbox"]:focus-visible {
-  outline: none !important;
+  outline: none;
   box-shadow: 0 0 4px var(--accent);
 }
 
