@@ -1406,6 +1406,7 @@ input[type="checkbox"] {
   border: 1px solid var(--stroke);
   background-color: var(--bg-2);
   transition: all 0.2s ease;
+  outline: none;
 }
 
 /* When active (orange checkmark) */
