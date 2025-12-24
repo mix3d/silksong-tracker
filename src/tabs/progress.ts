@@ -409,6 +409,11 @@ function initWorldMapListeners() {
     renderWorldMapPins();
   });
 
+  // Re-render map pins when manual progress changes (checkboxes)
+  globalThis.addEventListener("manual-progress-changed", () => {
+    renderWorldMapPins();
+  });
+
   // Re-render map pins when "show only missing" filter changes
   showOnlyMissing.addEventListener("change", () => {
     renderWorldMapPins();
