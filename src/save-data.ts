@@ -427,8 +427,5 @@ export function clearAllData(): void {
     console.warn("Reset render executed on current tab", error);
   }
 
-  // Recalculate completion percentage (may include manual progress)
-  updateCompletionPercentage();
-
   showToast("Data cleared.");
 }
