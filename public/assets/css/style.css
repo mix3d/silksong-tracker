@@ -1406,7 +1406,8 @@ input[type="checkbox"] {
   border: 1px solid var(--stroke);
   background-color: var(--bg-2);
   transition: all 0.2s ease;
-  outline: none;
+  outline: none !important;
+  box-shadow: none;
 }
 
 /* When active (orange checkmark) */
@@ -1418,6 +1419,13 @@ input[type="checkbox"]:checked {
 /* Hover */
 input[type="checkbox"]:hover {
   border-color: var(--accent);
+  box-shadow: 0 0 4px var(--accent);
+}
+
+/* Remove all focus outlines and borders */
+input[type="checkbox"]:focus,
+input[type="checkbox"]:focus-visible {
+  outline: none !important;
   box-shadow: 0 0 4px var(--accent);
 }
 
