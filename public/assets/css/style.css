@@ -1582,6 +1582,59 @@ main::-webkit-scrollbar-thumb:hover {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
+/* ------------------
+   MODAL TOGGLE BUTTON
+------------------- */
+
+.modal-toggle-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0;
+}
+
+.modal-toggle-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  color: var(--ink-1);
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.1s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-toggle-btn:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(197, 106, 45, 0.5);
+}
+
+.modal-toggle-btn:active {
+  transform: translateY(0);
+}
+
+.modal-toggle-btn.completed {
+  border-color: #2ecc71;
+  background: rgba(46, 204, 113, 0.1);
+}
+
+.modal-toggle-btn.completed:hover {
+  background: #2ecc71;
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.5);
+}
+
+.modal-toggle-btn i {
+  font-size: 1.1rem;
+}
+
 #act-filter {
   display: flex;
   align-items: center;
