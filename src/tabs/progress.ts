@@ -1265,15 +1265,17 @@ function renderWorldMapPins() {
     pin.style.left = `${item.mapViewer.x * 100}%`;
     pin.style.top = `${item.mapViewer.y * 100}%`;
 
-    if (saveData !== undefined) {
-      const value = getSaveDataValue(saveData, saveDataFlags, item);
-      const unlocked = getUnlocked(item, value);
-      if (unlocked) {
-        pin.classList.add("obtained");
-        // Skip obtained items when "show only missing" is enabled
-        if (showOnlyMissing.checked) {
-          continue;
-        }
+    // Check if item is unlocked (either from save data or manual progress)
+    const value = saveData !== undefined
+      ? getSaveDataValue(saveData, saveDataFlags, item)
+      : undefined;
+    const unlocked = getUnlocked(item, value);
+
+    if (unlocked) {
+      pin.classList.add("obtained");
+      // Skip obtained items when "show only missing" is enabled
+      if (showOnlyMissing.checked) {
+        continue;
       }
     }
 
