@@ -90,9 +90,6 @@ export async function handleSaveFile(file: File | undefined): Promise<void> {
     renderActiveTab();
     globalThis.dispatchEvent(new Event("save-data-changed"));
 
-    // Recalculate completion percentage including manual progress
-    updateCompletionPercentage();
-
     if (scrollContainer) {
       requestAnimationFrame(() => {
         scrollContainer.scrollTop = currentScroll;
