@@ -2,7 +2,6 @@ import { assertArray } from "complete-common";
 import { getStoredActFilter } from "../components/acts-dropdown.ts";
 import { showOnlyMissing } from "../components/show-only-missing.ts";
 import { showSpoilers } from "../components/show-spoilers.ts";
-import { updateCompletionPercentage } from "../calculate-completion.ts";
 import { BASE_PATH } from "../constants.ts";
 import bossesJSON from "../data/bosses.json" with { type: "json" };
 import completionJSON from "../data/completion.json" with { type: "json" };
@@ -15,6 +14,7 @@ import wishesJSON from "../data/wishes.json" with { type: "json" };
 
 import {
   allProgressGrid,
+  completionValue,
   getHTMLElement,
   getHTMLElements,
   infoContent,
@@ -22,8 +22,8 @@ import {
   tocList,
 } from "../elements.ts";
 import {
-  isManuallyCompleted,
-  toggleManualProgress,
+  getManualValue,
+  isManuallySet,
 } from "../manual-progress.ts";
 import {
   getSaveData,
@@ -33,37 +33,10 @@ import {
 } from "../save-data.ts";
 import type { Category } from "../types/Category.ts";
 import type { Item } from "../types/Item.ts";
+import { createCheckbox } from "../utils/checkbox.ts";
 
 let tocObserver: IntersectionObserver | undefined;
 let isManualScroll = false; // prevent observer interference
-
-/**
- * Create a reusable checkbox element
- */
-function createCheckbox(
-  itemId: string,
-  isCompleted: boolean,
-  onClick?: (e: Event) => void,
-): HTMLInputElement {
-  const checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  checkbox.checked = isCompleted;
-  checkbox.className = "item-checkbox";
-  checkbox.setAttribute(
-    "aria-label",
-    isCompleted ? "Mark as incomplete" : "Mark as complete",
-  );
-
-  checkbox.addEventListener("click", (e) => {
-    e.stopPropagation();
-    toggleManualProgress(itemId);
-    if (onClick) {
-      onClick(e);
-    }
-  });
-
-  return checkbox;
-}
 
 export function updateTabProgress(): void {
   initProgressListeners();
