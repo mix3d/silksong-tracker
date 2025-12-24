@@ -1410,7 +1410,10 @@ main a:hover,
   transition: transform 0.3s ease;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  align-self: center;
+  line-height: 1;
 }
 
 .collapsed .collapse-icon {
