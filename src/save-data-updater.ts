@@ -68,11 +68,22 @@ export function updateSaveDataForItem(
 
   switch (item.type) {
     case "flag":
-    case "key":
     case "boss": {
       const { flag } = item;
       if (flag) {
         playerDataExpanded[flag] = value;
+      }
+      break;
+    }
+
+    case "key": {
+      // Keys can have multiple flags
+      if ("flags" in item && item.flags && Array.isArray(item.flags)) {
+        for (const flag of item.flags) {
+          playerDataExpanded[flag] = value;
+        }
+      } else if ("flag" in item && item.flag) {
+        playerDataExpanded[item.flag] = value;
       }
       break;
     }
