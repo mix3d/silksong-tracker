@@ -783,6 +783,12 @@ main a:hover,
   gap: 8px;
 }
 
+.modal-right-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* Modal content - scrollable */
 #info-content.modal > .modal-content-scroll {
   overflow-y: auto;
