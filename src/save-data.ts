@@ -461,12 +461,17 @@ function checkSceneValue(
 }
 
 export function clearAllData(): void {
-  currentLoadedSaveData = undefined;
-  currentLoadedSaveDataFlags = undefined;
-  currentLoadedSaveDataMode = "normal";
-
-  // Clear manual progress from localStorage
+  // Clear manual progress from old system (backward compatibility)
   clearManualProgress();
+
+  // Clear manual save data
+  clearManualSaveData();
+
+  // Reset to empty save data
+  currentLoadedSaveData = createEmptySaveData();
+  currentLoadedSaveDataFlags = getSaveFileFlags(currentLoadedSaveData as unknown as Record<string, unknown>);
+  currentLoadedSaveDataMode = "normal";
+  isUsingManualSave = true;
 
   const cleanUrl = globalThis.location.origin + globalThis.location.pathname;
   globalThis.history.pushState({}, "", cleanUrl);
