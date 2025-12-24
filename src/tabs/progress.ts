@@ -811,106 +811,19 @@ function renderGenericGrid(
     img.alt = item.label;
 
     const value = getSaveDataValue(saveData, saveDataFlags, item);
+    const isDone = getUnlocked(item, value);
 
-    // Check manual progress first
-    const isManuallyDone = isManuallyCompleted(item.id);
-    let isDone: boolean;
+    // Check for "accepted" state (in-progress items)
     let isAccepted = false;
+    const actualValue = isManuallySet(item.id) ? getManualValue(item.id) : value;
 
-    if (isManuallyDone) {
-      isDone = true;
-    } else {
-      switch (item.type) {
-        case "level": {
-          const current = Number.isFinite(Number(value)) ? Number(value) : 0;
-          isDone = current >= item.required;
-          break;
-        }
-
-        case "collectable": {
-          const current = Number.isFinite(Number(value)) ? Number(value) : 0;
-          isDone = current > 0;
-          break;
-        }
-
-        case "quill": {
-          isDone =
-            typeof value === "number"
-            && item.id === `QuillState_${value}`
-            && [1, 2, 3].includes(value);
-          break;
-        }
-
-        case "quest": {
-          isDone = value === "completed" || value === true;
-          isAccepted = value === "accepted";
-          break;
-        }
-
-        case "relic":
-        case "materium":
-        case "device": {
-          isDone = value === "deposited";
-          isAccepted = value === "collected";
-          break;
-        }
-
-        case "journal": {
-          const current = Number.isFinite(Number(value)) ? Number(value) : 0;
-          const { required } = item;
-          isDone = current >= required;
-          isAccepted = current > 0 && current < required;
-          break;
-        }
-
-        case "anyOf": {
-          const anyOfResults: unknown[] = Array.isArray(value) ? value : [];
-          isDone = item.anyOf.some((check, index) => {
-            const someValue = anyOfResults[index];
-
-            const evaluateCheck = (): boolean => {
-              switch (check.type) {
-                case "flag":
-                case "sceneBool":
-                case "sceneVisited": {
-                  return someValue === true;
-                }
-
-                case "flagInt": {
-                  return typeof someValue === "number" ? someValue >= 1 : false;
-                }
-
-                case "level": {
-                  const current = Number.isFinite(Number(someValue))
-                    ? Number(someValue)
-                    : 0;
-                  return current >= check.required;
-                }
-              }
-            };
-
-            return evaluateCheck();
-          });
-          break;
-        }
-
-        case "key": {
-          isDone = value === true;
-          break;
-        }
-
-        case "sceneVisited": {
-          const visitedScenes = getSaveData()?.playerData.scenesVisited ?? [];
-          isDone =
-            Array.isArray(visitedScenes) && visitedScenes.includes(item.scene);
-          break;
-        }
-
-        default: {
-          isDone = value === true;
-          break;
-        }
-      }
+    if (item.type === "quest") {
+      isAccepted = actualValue === "accepted";
+    } else if (item.type === "relic" || item.type === "materium" || item.type === "device") {
+      isAccepted = actualValue === "collected";
+    } else if (item.type === "journal") {
+      const current = Number.isFinite(Number(actualValue)) ? Number(actualValue) : 0;
+      isAccepted = current > 0 && current < item.required;
     }
 
     // Unobtainable icon
