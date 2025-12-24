@@ -2362,15 +2362,20 @@ main::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(
     to top,
     rgba(17, 17, 18, 1) 0%,
-    rgba(17, 17, 18, 1) 50%,
-    rgba(17, 17, 18, 0.98) 70%,
-    rgba(17, 17, 18, 0.85) 85%,
-    rgba(17, 17, 18, 0.4) 95%,
+    rgba(17, 17, 18, 1) 30%,
+    rgba(17, 17, 18, 0.98) 60%,
+    rgba(17, 17, 18, 0.85) 80%,
+    rgba(17, 17, 18, 0.4) 92%,
     transparent
   );
   backdrop-filter: blur(4px);
-  padding: 0.75rem 1.4rem 2rem 1.4rem;
-  margin: 0 -1.4rem -1.25rem -1.4rem;
+  padding: 0.75rem;
+  margin: 0 calc(-1.4rem + 0.75rem - 0.75rem) -1.2rem calc(-1.4rem + 0.75rem - 0.75rem);
+  margin-left: -1.4rem;
+  margin-right: -1.4rem;
+  padding-left: 1.4rem;
+  padding-right: 1.4rem;
+  padding-bottom: calc(0.75rem + 1.2rem);
   border-top: 1px solid rgba(197, 106, 45, 0.25);
   font-size: 0.85rem;
   line-height: 1.4;
@@ -2430,7 +2435,7 @@ main::-webkit-scrollbar-thumb:hover {
 }
 
 .toc-legend.collapsed {
-  padding: 0.75rem 1.4rem 2rem 1.4rem;
+  padding: 0.75rem 1.4rem calc(0.75rem + 1.2rem) 1.4rem;
 }
 
 .legend-list {
