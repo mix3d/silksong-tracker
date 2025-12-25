@@ -23,6 +23,11 @@ export function getCompletedValueForItem(item: Item): unknown {
     case "materium":
     case "device":
       return "deposited";
+    case "quill": {
+      // Extract the quill number from the ID (QuillState_1 -> 1)
+      const match = item.id.match(/QuillState_(\d+)/);
+      return match ? Number.parseInt(match[1], 10) : 1;
+    }
     default:
       return true;
   }
