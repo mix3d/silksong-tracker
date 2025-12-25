@@ -24,11 +24,11 @@ const CATEGORY_WEIGHTS: Record<string, { totalPercent: number; itemCount: number
   // Needle upgrades — 4% total (4 upgrades)
   "needle-upgrades": { totalPercent: 4, itemCount: 4 },
   
-  // Ancient Masks — 5% total (5 masks = 20 mask shards)
-  "ancient-masks": { totalPercent: 5, itemCount: 5 },
-  
-  // Silk Spool — 9% total (9 spools = 18 spool fragments)
-  "silk-capacity": { totalPercent: 9, itemCount: 9 },
+  // Ancient Masks — 5% total (20 mask shards = 5 masks)
+  "ancient-masks": { totalPercent: 5, itemCount: 20 },
+
+  // Silk Spool — 9% total (18 spool fragments = 9 spools)
+  "silk-capacity": { totalPercent: 9, itemCount: 18 },
   
   // Silk Hearts — 3% total (3 hearts)
   "silk-regen-max": { totalPercent: 3, itemCount: 3 },
