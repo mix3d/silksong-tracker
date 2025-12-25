@@ -1369,6 +1369,11 @@ function renderWorldMapPins() {
       }
     }
 
+    // Skip non-progress items when "Progress only" is enabled
+    if (showProgressOnly.checked && !itemCountsTowardCompletion(item)) {
+      continue;
+    }
+
     pin.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
