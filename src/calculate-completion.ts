@@ -93,30 +93,22 @@ export function itemCountsTowardCompletion(item: Item): boolean {
 
 function getItemCategory(item: Item): string | null {
   // Map items to their completion categories based on flags and types
-  
+
   // Needle upgrades
   if (item.flag === "nailUpgrades" && item.type === "level") {
     // Skip base needle (required: 0)
     if (item.required === 0) return null;
     return "needle-upgrades";
   }
-  
-  // Ancient Masks (mask shards collected every 4)
-  if (item.flag === "heartPieces" && item.type === "level") {
-    // Only count actual masks, not the base
-    if (item.required > 0 && item.required % 4 === 0) {
-      return "ancient-masks";
-    }
-    return null;
+
+  // Ancient Masks - individual mask shards (20 total, 4 per mask = 5 masks)
+  if (item.label?.includes("Mask Shard") || item.mapCategory === "mask-shards") {
+    return "ancient-masks";
   }
-  
-  // Silk Spools (spool fragments collected every 2)
-  if (item.flag === "silkHealth" && item.type === "level") {
-    // Only count actual spools, not the base
-    if (item.required > 0 && item.required % 2 === 0) {
-      return "silk-capacity";
-    }
-    return null;
+
+  // Silk Spools - individual spool fragments (18 total, 2 per spool = 9 spools)
+  if (item.label?.includes("Spool Fragment") || item.mapCategory === "spool-fragments") {
+    return "silk-capacity";
   }
   
   // Silk Hearts
