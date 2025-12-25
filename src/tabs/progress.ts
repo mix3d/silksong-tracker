@@ -426,6 +426,7 @@ export function updateTabProgress(): void {
     }
   }
 
+  const countedGroupsForCalc = new Set<string>();
   for (const item of allItems) {
     // Skip tool upgrades (they don't count toward completion)
     if (item.type === "tool" && item.upgradeOf !== undefined) {
@@ -435,15 +436,28 @@ export function updateTabProgress(): void {
     const val = getSaveDataValue(saveDataForCalc, saveDataFlagsForCalc, item);
     const unlocked = getUnlocked(item, val);
 
-    // Skip unobtainable items if another in the group was obtained
+    // Handle mutually exclusive (unobtainable) groups
     if (
-      saveDataForCalc !== undefined
-      && item.unobtainable === true
+      item.unobtainable === true
       && typeof item.group === "string"
       && item.group.trim() !== ""
-      && obtainedGroupsForCalc.has(item.group)
-      && !unlocked
     ) {
+      // If we've already counted this group, skip this item
+      if (countedGroupsForCalc.has(item.group)) {
+        continue;
+      }
+
+      // Mark this group as counted
+      countedGroupsForCalc.add(item.group);
+
+      // Count this group as 1 total
+      totalItems++;
+
+      // Check if ANY item in this group is unlocked
+      if (obtainedGroupsForCalc.has(item.group)) {
+        completedItems++;
+      }
+
       continue;
     }
 
