@@ -341,6 +341,39 @@ export function updateSaveDataForItem(
       playerDataExpanded[flag] = typeof value === "number" ? value : (value ? 1 : 0);
       break;
     }
+
+    case "anyOf": {
+      // For anyOf items, we need to update all the conditions
+      // If setting to "completed/true", we set the first condition to true
+      // If setting to "uncompleted/false", we set all conditions to false
+      const isCompleting = value === true || value === "completed";
+
+      for (let i = 0; i < item.anyOf.length; i++) {
+        const check = item.anyOf[i];
+
+        // Create a mock item for this specific check
+        const mockItem = {
+          ...item,
+          type: check.type,
+          flag: "flag" in check ? check.flag : undefined,
+          scene: "scene" in check ? check.scene : undefined,
+          required: "required" in check ? check.required : undefined,
+        } as Item;
+
+        // For completing, only set the first condition to true (to avoid conflicts)
+        // For uncompleting, set all conditions to false
+        if (isCompleting && i === 0) {
+          // Set first condition to completed value
+          const completedValue = check.type === "level" ? check.required : true;
+          updateSaveDataForItem(saveData, saveDataFlags, mockItem, completedValue);
+        } else if (!isCompleting) {
+          // Set all conditions to uncompleted value
+          const uncompletedValue = check.type === "level" ? 0 : false;
+          updateSaveDataForItem(saveData, saveDataFlags, mockItem, uncompletedValue);
+        }
+      }
+      break;
+    }
   }
 }
 
