@@ -1065,6 +1065,11 @@ function renderGenericGrid(
       continue;
     }
 
+    // Hide non-progress items if "Progress only" is checked.
+    if (showProgressOnly.checked && !itemCountsTowardCompletion(item)) {
+      continue;
+    }
+
     // Missable icon
     if (item.missable === true) {
       const warn = document.createElement("span");
