@@ -1,6 +1,7 @@
 import { initActsDropdown } from "./components/acts-dropdown.ts";
 import { initBackToTop } from "./components/back-to-top.ts";
 import { initShowOnlyMissing } from "./components/show-only-missing.ts";
+import { initShowProgressOnly } from "./components/show-progress-only.ts";
 import { initShowSpoilers } from "./components/show-spoilers.ts";
 import {
   getStoredActiveTab,
@@ -52,6 +53,7 @@ function initComponents() {
   // Top-nav
   initActsDropdown();
   initShowOnlyMissing();
+  initShowProgressOnly();
   initShowSpoilers();
   initUploadSave();
 
