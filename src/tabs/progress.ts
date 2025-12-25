@@ -328,7 +328,8 @@ export function updateTabProgress(): void {
 
       const visible = renderGenericGrid(subgrid, filteredItems, spoilerOn);
 
-      if (filteredItems.length === 0 || (showMissingOnly && visible === 0)) {
+      // Hide category if all items are filtered out
+      if (filteredItems.length === 0 || visible === 0) {
         continue;
       }
 
