@@ -156,7 +156,8 @@ export function createCheckbox(
       }
 
       // If this is a mutually exclusive item, clear others in the group
-      if (item.unobtainable && item.group && getGroupItems) {
+      // EXCEPT for quills, which all share the same flag and setting one automatically "clears" others
+      if (item.unobtainable && item.group && getGroupItems && item.type !== "quill") {
         const groupItems = getGroupItems(item.group);
         for (const groupItem of groupItems) {
           if (groupItem.id !== item.id) {
