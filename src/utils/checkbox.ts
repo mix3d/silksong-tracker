@@ -42,6 +42,7 @@ function getUncompletedValueForItem(item: Item): unknown {
     case "collectable":
     case "journal":
     case "flagInt":
+    case "quill":
       return 0;
     case "quest":
     case "relic":
