@@ -110,6 +110,7 @@ export function updateTabProgress(): void {
     categoryHeader.textContent = title;
     categoryHeader.style.marginTop = "2rem";
     categoryHeader.style.marginBottom = "1rem";
+    allProgressGrid.append(categoryHeader);
 
     // Track if any sections are visible in this category
     let hasVisibleSections = false;
@@ -380,35 +381,9 @@ export function updateTabProgress(): void {
       hasVisibleSections = true;
     }
 
-    // Only show category header if it has visible sections
-    if (hasVisibleSections) {
-      // Insert header before the sections
-      const firstSection = allProgressGrid.querySelector('.main-section-block:last-child');
-      if (firstSection) {
-        // Find all sections that were just added
-        const sections = allProgressGrid.querySelectorAll('.main-section-block');
-        const startIndex = Array.from(sections).findIndex(s => {
-          return s === firstSection;
-        });
-
-        // Get the position to insert the header (before the first new section)
-        let insertPosition: Element | null = null;
-        for (let i = sections.length - 1; i >= 0; i--) {
-          const sectionElement = sections[i];
-          if (sectionElement) {
-            insertPosition = sectionElement;
-            break;
-          }
-        }
-
-        if (insertPosition) {
-          insertPosition.parentNode?.insertBefore(categoryHeader, insertPosition.parentNode.children[insertPosition.parentNode.children.length - (sections.length - startIndex)]);
-        } else {
-          allProgressGrid.append(categoryHeader);
-        }
-      } else {
-        allProgressGrid.append(categoryHeader);
-      }
+    // Remove category header if no sections are visible
+    if (!hasVisibleSections) {
+      categoryHeader.remove();
     }
   }
 
