@@ -1138,8 +1138,8 @@ function renderGenericGrid(
     title.textContent = item.label;
     div.append(img, title);
 
-    // Journal counter
-    if (item.type === "journal") {
+    // Journal counter (only show for multi-kill entries, not bosses)
+    if (item.type === "journal" && item.required > 1) {
       const current = Number.isFinite(Number(value)) ? Number(value) : 0;
       const counter = document.createElement("span");
       counter.className = "journal-counter";
