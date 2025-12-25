@@ -285,12 +285,21 @@ export function updateTabProgress(): void {
           item => item.unobtainable === true && item.group === firstGroup
         );
 
-        if (shouldCheck && isAllSameGroup) {
-          // For mutually exclusive groups, only select the first item
-          const firstItem = filteredItems[0];
-          if (firstItem) {
-            const completedValue = getCompletedValueForItem(firstItem);
-            setManualProgress(firstItem, completedValue);
+        if (isAllSameGroup) {
+          // For mutually exclusive groups (like quills)
+          if (shouldCheck) {
+            // Only select the first item
+            const firstItem = filteredItems[0];
+            if (firstItem) {
+              const completedValue = getCompletedValueForItem(firstItem);
+              setManualProgress(firstItem, completedValue);
+            }
+          } else {
+            // Uncheck whichever item is currently selected
+            for (const item of filteredItems) {
+              const uncompletedValue = item.type === "collectable" || item.type === "level" || item.type === "journal" || item.type === "quill" ? 0 : false;
+              setManualProgress(item, uncompletedValue);
+            }
           }
         } else {
           // Normal behavior: toggle all items in this category
