@@ -84,6 +84,13 @@ function collectAllItems(): readonly Item[] {
   return categories.flatMap((c) => c.items);
 }
 
+/**
+ * Check if an item counts toward the 100% completion percentage
+ */
+export function itemCountsTowardCompletion(item: Item): boolean {
+  return getItemCategory(item) !== null;
+}
+
 function getItemCategory(item: Item): string | null {
   // Map items to their completion categories based on flags and types
   
