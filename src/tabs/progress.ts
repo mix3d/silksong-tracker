@@ -110,7 +110,9 @@ export function updateTabProgress(): void {
     categoryHeader.textContent = title;
     categoryHeader.style.marginTop = "2rem";
     categoryHeader.style.marginBottom = "1rem";
-    allProgressGrid.append(categoryHeader);
+
+    // Track if any sections are visible in this category
+    let hasVisibleSections = false;
 
     for (const category of categories) {
       const section = document.createElement("div");
