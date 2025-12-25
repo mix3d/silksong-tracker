@@ -470,6 +470,11 @@ function initWorldMapListeners() {
   showOnlyMissing.addEventListener("change", () => {
     renderWorldMapPins();
   });
+
+  // Re-render map pins when "progress only" filter changes
+  showProgressOnly.addEventListener("change", () => {
+    renderWorldMapPins();
+  });
 }
 
 function getUnlocked(item: Item, value: unknown): boolean {
