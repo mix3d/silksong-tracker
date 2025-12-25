@@ -195,6 +195,7 @@ export function updateTabProgress(): void {
 
       let obtained = 0;
       let total = 0;
+      const countedUnobtainableGroups = new Set<string>();
 
       for (const item of filteredItems) {
         const value =
@@ -207,18 +208,34 @@ export function updateTabProgress(): void {
           continue;
         }
 
+        // Handle mutually exclusive (unobtainable) groups
         if (
-          saveData !== undefined
-          && item.unobtainable === true
+          item.unobtainable === true
           && typeof item.group === "string"
           && item.group.trim() !== ""
-          && filteredItems.some(
+        ) {
+          // If we've already counted this group, skip this item
+          if (countedUnobtainableGroups.has(item.group)) {
+            continue;
+          }
+
+          // Mark this group as counted
+          countedUnobtainableGroups.add(item.group);
+
+          // Count this group as 1 total
+          total++;
+
+          // Check if ANY item in this group is unlocked
+          const groupHasUnlocked = filteredItems.some(
             (i) =>
               i.group === item.group
               && getUnlocked(i, getSaveDataValue(saveData, saveDataFlags, i)),
-          )
-          && !unlocked
-        ) {
+          );
+
+          if (groupHasUnlocked) {
+            obtained++;
+          }
+
           continue;
         }
 
