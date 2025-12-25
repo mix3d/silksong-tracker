@@ -279,53 +279,68 @@ export function updateTabProgress(): void {
         // If checkbox is now unchecked, we should uncheck all items
         const shouldCheck = categoryCheckbox.checked;
 
-        // Toggle all items in this category
-        for (const item of filteredItems) {
-          // Skip tool upgrades from being individually toggled
-          if (item.type === "tool" && item.upgradeOf !== undefined) {
-            continue;
+        // Check if this is a mutually exclusive group (all items share same unobtainable group)
+        const firstGroup = filteredItems[0]?.group;
+        const isAllSameGroup = firstGroup && filteredItems.every(
+          item => item.unobtainable === true && item.group === firstGroup
+        );
+
+        if (shouldCheck && isAllSameGroup) {
+          // For mutually exclusive groups, only select the first item
+          const firstItem = filteredItems[0];
+          if (firstItem) {
+            const completedValue = getCompletedValueForItem(firstItem);
+            setManualProgress(firstItem, completedValue);
           }
-
-          const completedValue = getCompletedValueForItem(item);
-
-          if (shouldCheck) {
-            // Check item (regardless of current state)
-            setManualProgress(item, completedValue);
-
-            // Handle upgrade relationships
-            if (item.upgradeOf) {
-              const relatedItems = getUpgradeRelatedItems(item);
-              for (const relatedItem of relatedItems) {
-                if (relatedItem.id === item.upgradeOf) {
-                  const baseCompletedValue = getCompletedValueForItem(relatedItem);
-                  setManualProgress(relatedItem, baseCompletedValue);
-                }
-              }
+        } else {
+          // Normal behavior: toggle all items in this category
+          for (const item of filteredItems) {
+            // Skip tool upgrades from being individually toggled
+            if (item.type === "tool" && item.upgradeOf !== undefined) {
+              continue;
             }
 
-            // Handle mutually exclusive groups
-            if (item.unobtainable && item.group) {
-              const groupItems = getItemsByGroup(item.group);
-              for (const groupItem of groupItems) {
-                if (groupItem.id !== item.id) {
-                  // Set to uncompleted value (0 or false)
-                  const uncompletedValue = groupItem.type === "collectable" || groupItem.type === "level" || groupItem.type === "journal" ? 0 : false;
-                  setManualProgress(groupItem, uncompletedValue);
+            const completedValue = getCompletedValueForItem(item);
+
+            if (shouldCheck) {
+              // Check item (regardless of current state)
+              setManualProgress(item, completedValue);
+
+              // Handle upgrade relationships
+              if (item.upgradeOf) {
+                const relatedItems = getUpgradeRelatedItems(item);
+                for (const relatedItem of relatedItems) {
+                  if (relatedItem.id === item.upgradeOf) {
+                    const baseCompletedValue = getCompletedValueForItem(relatedItem);
+                    setManualProgress(relatedItem, baseCompletedValue);
+                  }
                 }
               }
-            }
-          } else {
-            // Uncheck item (set to uncompleted value)
-            const uncompletedValue = item.type === "collectable" || item.type === "level" || item.type === "journal" ? 0 : false;
-            setManualProgress(item, uncompletedValue);
 
-            // If upgrade, also uncheck base
-            if (item.upgradeOf) {
-              const relatedItems = getUpgradeRelatedItems(item);
-              for (const relatedItem of relatedItems) {
-                if (relatedItem.id === item.upgradeOf) {
-                  const uncompletedValue = relatedItem.type === "collectable" || relatedItem.type === "level" || relatedItem.type === "journal" ? 0 : false;
-                  setManualProgress(relatedItem, uncompletedValue);
+              // Handle mutually exclusive groups
+              if (item.unobtainable && item.group) {
+                const groupItems = getItemsByGroup(item.group);
+                for (const groupItem of groupItems) {
+                  if (groupItem.id !== item.id) {
+                    // Set to uncompleted value (0 or false)
+                    const uncompletedValue = groupItem.type === "collectable" || groupItem.type === "level" || groupItem.type === "journal" ? 0 : false;
+                    setManualProgress(groupItem, uncompletedValue);
+                  }
+                }
+              }
+            } else {
+              // Uncheck item (set to uncompleted value)
+              const uncompletedValue = item.type === "collectable" || item.type === "level" || item.type === "journal" ? 0 : false;
+              setManualProgress(item, uncompletedValue);
+
+              // If upgrade, also uncheck base
+              if (item.upgradeOf) {
+                const relatedItems = getUpgradeRelatedItems(item);
+                for (const relatedItem of relatedItems) {
+                  if (relatedItem.id === item.upgradeOf) {
+                    const uncompletedValue = relatedItem.type === "collectable" || relatedItem.type === "level" || relatedItem.type === "journal" ? 0 : false;
+                    setManualProgress(relatedItem, uncompletedValue);
+                  }
                 }
               }
             }
