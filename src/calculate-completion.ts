@@ -1,5 +1,5 @@
 /**
- * Calculate overall completion percentage including manual progress
+ * Calculate overall completion percentage with proper category weighting
  */
 
 import bossesJSON from "./data/bosses.json" with { type: "json" };
@@ -19,6 +19,56 @@ import {
 import type { Category } from "./types/Category.ts";
 import type { Item } from "./types/Item.ts";
 
+// Category weights based on requirements
+const CATEGORY_WEIGHTS: Record<string, { totalPercent: number; itemCount: number }> = {
+  // Needle upgrades — 4% total (4 upgrades)
+  "needle-upgrades": { totalPercent: 4, itemCount: 4 },
+  
+  // Ancient Masks — 5% total (5 masks = 20 mask shards)
+  "ancient-masks": { totalPercent: 5, itemCount: 5 },
+  
+  // Silk Spool — 9% total (9 spools = 18 spool fragments)
+  "silk-capacity": { totalPercent: 9, itemCount: 9 },
+  
+  // Silk Hearts — 3% total (3 hearts)
+  "silk-regen-max": { totalPercent: 3, itemCount: 3 },
+  
+  // Miscellaneous — 2% total (Sylphsong, Everbloom)
+  "miscellaneous": { totalPercent: 2, itemCount: 2 },
+  
+  // Crests — 6% total (6 crests)
+  "crests": { totalPercent: 6, itemCount: 6 },
+  
+  // Silk Skills — 6% total (6 skills)
+  "silk-skills": { totalPercent: 6, itemCount: 6 },
+  
+  // Crafting Kit Upgrades — 4% total (4 upgrades)
+  "crafting-kit": { totalPercent: 4, itemCount: 4 },
+  
+  // Tool Pouch Upgrades — 4% total (4 upgrades)
+  "tool-pouch": { totalPercent: 4, itemCount: 4 },
+  
+  // Abilities — 6% total (6 abilities)
+  "abilities": { totalPercent: 6, itemCount: 6 },
+  
+  // Tools — 51% total (51 tools)
+  "tools": { totalPercent: 51, itemCount: 51 },
+};
+
+// Shared countKey items that count as one
+const SHARED_COUNT_GROUPS = new Set([
+  "claw-mirror", // Claw Mirror / Claw Mirrors
+  "curveclaw", // Curveclaw / Curvesickle
+  "dead-bugs-purse", // Dead Bug's Purse / Shell Satchel
+  "druids-eye", // Druid's Eye / Druid's Eyes
+]);
+
+// Items with isCounted = false (don't count toward completion)
+const UNCOUNTED_ITEMS = new Set([
+  "Extractor", // Needle Phial
+  "Silk Snare", // Snare Setter
+]);
+
 function collectAllItems(): readonly Item[] {
   const categories = [
     ...(mainJSON.categories as Category[]),
@@ -32,6 +82,113 @@ function collectAllItems(): readonly Item[] {
   ];
 
   return categories.flatMap((c) => c.items);
+}
+
+function getItemCategory(item: Item): string | null {
+  // Map items to their completion categories based on flags and types
+  
+  // Needle upgrades
+  if (item.flag === "nailUpgrades" && item.type === "level") {
+    // Skip base needle (required: 0)
+    if (item.required === 0) return null;
+    return "needle-upgrades";
+  }
+  
+  // Ancient Masks (mask shards collected every 4)
+  if (item.flag === "heartPieces" && item.type === "level") {
+    // Only count actual masks, not the base
+    if (item.required > 0 && item.required % 4 === 0) {
+      return "ancient-masks";
+    }
+    return null;
+  }
+  
+  // Silk Spools (spool fragments collected every 2)
+  if (item.flag === "silkHealth" && item.type === "level") {
+    // Only count actual spools, not the base
+    if (item.required > 0 && item.required % 2 === 0) {
+      return "silk-capacity";
+    }
+    return null;
+  }
+  
+  // Silk Hearts
+  if (item.flag?.includes("Silk Heart") || item.label?.includes("Silk Heart")) {
+    return "silk-regen-max";
+  }
+  
+  // Miscellaneous
+  if (item.flag === "EVAHEAL" || item.flag === "BoundCrestUpgrader") {
+    return "miscellaneous"; // Sylphsong
+  }
+  if (item.flag === "WhiteFlower") {
+    return "miscellaneous"; // Everbloom
+  }
+  
+  // Crests
+  if (item.flag === "Toolmaster" || item.flag === "Warrior" || item.flag === "Reaper" ||
+      item.flag === "Spell" || item.flag === "Wanderer" || item.flag === "Witch") {
+    return "crests";
+  }
+  
+  // Silk Skills
+  if (item.flag === "Parry" || item.flag === "Silk Boss Needle" || item.flag === "Silk Charge" ||
+      item.flag === "Silk Spear" || item.flag === "Silk Bomb" || item.flag === "Thread Sphere") {
+    return "silk-skills";
+  }
+  
+  // Crafting Kit
+  if (item.flag?.includes("Crafting") || item.label?.includes("Crafting Kit")) {
+    return "crafting-kit";
+  }
+  
+  // Tool Pouch
+  if (item.flag?.includes("Tool Pouch") || item.label?.includes("Tool Pouch")) {
+    return "tool-pouch";
+  }
+  
+  // Abilities
+  const abilityFlags = ["Clawline", "Wallcling", "Needle Strike", "Needolin", "Silk Soar", "Swift Step"];
+  if (abilityFlags.includes(item.flag)) {
+    return "abilities";
+  }
+  
+  // Tools - most items with type "tool" or specific tool flags
+  if (item.type === "tool") {
+    // Skip upgrades (they have upgradeOf property)
+    if (item.upgradeOf !== undefined) {
+      return null;
+    }
+    
+    // Skip uncounted items
+    if (item.flag && UNCOUNTED_ITEMS.has(item.flag)) {
+      return null;
+    }
+    
+    return "tools";
+  }
+  
+  // Also check for tools by flag name
+  const toolFlags = [
+    "Wallcling", "Barbed Wire", "Dazzle Bind", "Cogwork Flier", "Cogwork Saw",
+    "Compass", "Conch Drill", "Curve Claws", "Dead Mans Purse", "Screw Attack",
+    "Mosscreep Tool 1", "Flea Charm", "Flea Brew", "Flintstone", "Fractured Mask",
+    "Quickbind", "Longneedle", "Harpoon", "Lava Charm", "Rosary Magnet",
+    "Magnetite Dice", "Revenge Crystal", "Multibind", "Pinstress Tool", "Pimpilo",
+    "Lifeblood Syringe", "Poison Pouch", "Quick Sling", "Reserve Bind",
+    "Rosary Cannon", "Brolly Spike", "Scuttlebrace", "Bone Necklace",
+    "WebShot Architect", "WebShot Forge", "WebShot Weaver", "Sprintmaster",
+    "Thief Claw", "Musician Charm", "Spool Extender", "Sting Shard",
+    "Straight Pin", "Tack", "Thief Charm", "Tri Pin", "Shakra Ring",
+    "Zap Imbuement", "Lightning Rod", "Bell Bind", "White Ring",
+    "Weighted Anklet", "Wisp Lantern", "Maggot Charm"
+  ];
+  
+  if (item.flag && toolFlags.includes(item.flag)) {
+    return "tools";
+  }
+  
+  return null;
 }
 
 function getUnlocked(item: Item, value: unknown): boolean {
@@ -108,34 +265,42 @@ function getUnlocked(item: Item, value: unknown): boolean {
 }
 
 /**
- * Calculate and update the completion percentage display
+ * Calculate and update the completion percentage display using weighted categories
  */
 export function updateCompletionPercentage(): void {
   const allItems = collectAllItems();
   const saveData = getSaveData();
   const saveDataFlags = getSaveDataFlags();
 
-  let totalItems = 0;
-  let completedItems = 0;
+  // Track completion per category
+  const categoryProgress: Record<string, { completed: number; total: number }> = {};
+  
+  // Initialize all categories
+  for (const categoryKey of Object.keys(CATEGORY_WEIGHTS)) {
+    categoryProgress[categoryKey] = { completed: 0, total: 0 };
+  }
 
-  // Count obtained groups for unobtainable items
+  // Track obtained groups for unobtainable items and shared count keys
   const obtainedGroups = new Set<string>();
+  const obtainedSharedGroups = new Set<string>();
+  
   for (const item of allItems) {
     const value = getSaveDataValue(saveData, saveDataFlags, item);
-    if (
-      typeof item.group === "string"
-      && item.group.trim() !== ""
-      && getUnlocked(item, value)
-    ) {
+    const unlocked = getUnlocked(item, value);
+    
+    if (unlocked && typeof item.group === "string" && item.group.trim() !== "") {
       obtainedGroups.add(item.group);
+    }
+    
+    // Track shared count groups (only count first obtained)
+    if (unlocked && item.exclusiveGroup && SHARED_COUNT_GROUPS.has(item.exclusiveGroup)) {
+      obtainedSharedGroups.add(item.exclusiveGroup);
     }
   }
 
   for (const item of allItems) {
-    // Skip tool upgrades (they don't count toward completion)
-    if (item.type === "tool" && item.upgradeOf !== undefined) {
-      continue;
-    }
+    const category = getItemCategory(item);
+    if (!category) continue;
 
     const value = getSaveDataValue(saveData, saveDataFlags, item);
     const unlocked = getUnlocked(item, value);
@@ -151,16 +316,49 @@ export function updateCompletionPercentage(): void {
     ) {
       continue;
     }
+    
+    // Handle shared count groups - only count first one
+    if (item.exclusiveGroup && SHARED_COUNT_GROUPS.has(item.exclusiveGroup)) {
+      if (obtainedSharedGroups.has(item.exclusiveGroup)) {
+        // Only count once per group
+        if (unlocked) {
+          // If this is the first unlocked in the group
+          const firstUnlocked = !Array.from(allItems).some((otherItem) => {
+            if (otherItem.id === item.id) return false;
+            if (otherItem.exclusiveGroup !== item.exclusiveGroup) return false;
+            const otherValue = getSaveDataValue(saveData, saveDataFlags, otherItem);
+            return getUnlocked(otherItem, otherValue);
+          });
+          
+          if (firstUnlocked) {
+            categoryProgress[category].total++;
+            categoryProgress[category].completed++;
+          }
+        }
+        continue;
+      }
+    }
 
-    totalItems++;
+    categoryProgress[category].total++;
     if (unlocked) {
-      completedItems++;
+      categoryProgress[category].completed++;
     }
   }
 
-  // Calculate percentage
-  const percentage =
-    totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+  // Calculate weighted percentage
+  let totalPercentage = 0;
+  
+  for (const [categoryKey, weight] of Object.entries(CATEGORY_WEIGHTS)) {
+    const progress = categoryProgress[categoryKey];
+    if (progress.total > 0) {
+      const categoryCompletion = progress.completed / progress.total;
+      const weightedPercentage = categoryCompletion * weight.totalPercent;
+      totalPercentage += weightedPercentage;
+    }
+  }
+
+  // Round to nearest integer
+  const percentage = Math.round(totalPercentage);
 
   // Update the display
   completionValue.textContent = `${percentage}%`;
