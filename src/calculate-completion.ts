@@ -112,7 +112,7 @@ function getItemCategory(item: Item): string | null {
   }
   
   // Silk Hearts
-  if (item.flag?.includes("Silk Heart") || item.label?.includes("Silk Heart")) {
+  if (item.flag?.includes("Silk Heart") || item.label?.includes("Silk Heart") || item.mapCategory === "silk-hearts") {
     return "silk-regen-max";
   }
   
