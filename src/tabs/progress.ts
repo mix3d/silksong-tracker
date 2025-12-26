@@ -1508,6 +1508,14 @@ export function initWorldMapPins(): void {
     applyPinsVisibility();
   }
 
+  // Attach search input listener
+  const searchInput = document.querySelector<HTMLInputElement>("#map-search");
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      renderWorldMapPins();
+    });
+  }
+
   // eslint-disable-next-line unicorn/prefer-spread
   const categoryFilters = Array.from(
     document.querySelectorAll<HTMLInputElement>("#map-filters input"),
