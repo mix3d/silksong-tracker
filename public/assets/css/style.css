@@ -2971,6 +2971,14 @@ label.filter-label-desktop,
   transform: translateX(0);
 }
 
+/* Hide mobile drawers completely on desktop */
+@media (min-width: 1025px) {
+  .mobile-drawer,
+  .mobile-drawer-backdrop {
+    display: none !important;
+  }
+}
+
 /* Drawer header */
 .mobile-drawer-header {
   display: flex;
