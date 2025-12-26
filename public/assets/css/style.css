@@ -259,6 +259,62 @@ button,
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
 }
 
+/* ------------------
+   SIDEBAR: ACTION BUTTON (Upload/Reset)
+------------------- */
+
+.sidebar-action-section {
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-action-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  background: var(--bg-3);
+  color: var(--ink-1);
+  font-size: 0.87rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sidebar-action-btn:hover {
+  background: rgba(255, 153, 51, 0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(255, 153, 51, 0.2);
+}
+
+.sidebar-action-btn:active {
+  transform: translateY(0);
+}
+
+/* Reset state styling */
+.sidebar-action-btn.btn-reset {
+  background: rgba(255, 77, 77, 0.1);
+  color: #ff4d4d;
+  border-color: rgba(255, 77, 77, 0.3);
+}
+
+.sidebar-action-btn.btn-reset:hover {
+  background: #ff4d4d;
+  color: #fff;
+  border-color: #ff4d4d;
+  box-shadow: 0 2px 12px rgba(255, 77, 77, 0.4);
+}
+
+.sidebar-action-btn i {
+  font-size: 1rem;
+}
+
 a {
   color: var(--accent);
   text-decoration: none;
