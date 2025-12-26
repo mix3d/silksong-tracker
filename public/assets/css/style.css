@@ -2880,17 +2880,13 @@ label.filter-label-desktop,
   display: none !important;
 }
 
-/* Context toggle visibility controlled by JS based on active tab */
-.mobile-context-toggle {
-  display: none !important;
-}
-
-.mobile-context-toggle.visible {
-  display: inline-flex !important;
-}
-
 @media (max-width: 1024px) {
   .mobile-tabs-toggle {
+    display: inline-flex !important;
+  }
+
+  /* Context toggle visibility controlled by JS based on active tab */
+  .mobile-context-toggle.visible {
     display: inline-flex !important;
   }
 }
