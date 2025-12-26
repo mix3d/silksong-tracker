@@ -2068,6 +2068,30 @@ main::-webkit-scrollbar-thumb:hover {
   filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.4));
 }
 
+/* ------------------
+   RESPONSIVE FILTERS
+------------------- */
+
+/* Desktop: Show individual labels, hide dropdown */
+.filters-dropdown-mobile {
+  display: none;
+}
+
+.filter-label-desktop {
+  display: inline-flex;
+}
+
+/* Tablet and below: Hide individual labels, show dropdown */
+@media (max-width: 1024px) {
+  .filters-dropdown-mobile {
+    display: block;
+  }
+
+  .filter-label-desktop {
+    display: none;
+  }
+}
+
 .rawsave-container {
   padding: 20px 25px;
   color: var(--ink-2);
