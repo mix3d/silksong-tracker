@@ -1644,6 +1644,17 @@ input[type="checkbox"]:focus-visible {
     margin-right: 0 !important;
   }
 
+  /* Stack map header on mobile */
+  .map-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .map-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   /* Topbar adjustments */
   .topbar {
     width: 100%;
@@ -1683,6 +1694,12 @@ input[type="checkbox"]:focus-visible {
     padding: 6px 10px;
   }
 
+  .mobile-tabs-toggle img {
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+
   /* Simplify button labels on very small screens (phones) */
   @media (max-width: 480px) {
     .topbar {
@@ -1706,6 +1723,11 @@ input[type="checkbox"]:focus-visible {
     .mobile-tabs-toggle {
       height: 30px;
       padding: 5px 7px;
+    }
+
+    .mobile-tabs-toggle img {
+      width: 18px;
+      height: 18px;
     }
 
     .topbar-end .btn-icon span:not(#mobile-context-label) {
@@ -2958,6 +2980,39 @@ label.filter-label-desktop,
   justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+/* Mobile drawer actions (upload/reset) */
+.mobile-drawer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 1rem;
+}
+
+.mobile-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-3);
+  color: var(--ink-1);
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.mobile-action-btn:hover {
+  background: rgba(255, 153, 51, 0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.mobile-action-btn i {
+  font-size: 1rem;
 }
 
 /* ==================== RIGHT DRAWER - TOC (Progress tab) ==================== */
