@@ -1116,10 +1116,6 @@ main a:hover,
   font-size: 0.95rem;
 }
 
-.toggle input {
-  /* Inherits unified checkbox styles from input[type="checkbox"] */
-}
-
 .main-stats div {
   background: rgba(255, 255, 255, 0.05);
   padding: 6px 12px;
@@ -3138,11 +3134,6 @@ label.filter-label-desktop,
   color: #fff;
   border-color: #ff4d4d;
   box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
-}
-
-/* Mobile action button - Upload state (default styling already applied) */
-.mobile-action-btn.mobile-action-upload {
-  /* Uses default mobile-action-btn styles */
 }
 
 /* ==================== RIGHT DRAWER - TOC (Progress tab) ==================== */
