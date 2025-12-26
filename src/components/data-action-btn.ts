@@ -19,14 +19,14 @@ function updateButtonState(): void {
 
   if (hasData) {
     // Show Reset button
-    dataActionBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i> <span>Reset</span>';
-    dataActionBtn.className = "btn-reset";
+    dataActionBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i> <span>Reset Data</span>';
+    dataActionBtn.className = "sidebar-action-btn btn-reset";
     dataActionBtn.title = "Reset all data";
     dataActionBtn.setAttribute("aria-label", "Reset all data");
   } else {
     // Show Upload button
-    dataActionBtn.innerHTML = '<i class="fa-solid fa-upload"></i> <span>Upload</span>';
-    dataActionBtn.className = "btn-icon";
+    dataActionBtn.innerHTML = '<i class="fa-solid fa-upload"></i> <span>Upload Save</span>';
+    dataActionBtn.className = "sidebar-action-btn";
     dataActionBtn.title = "Upload save";
     dataActionBtn.setAttribute("aria-label", "Upload save");
   }
