@@ -1679,20 +1679,18 @@ input[type="checkbox"]:focus-visible {
     margin-right: 0 !important;
   }
 
-  /* Stack map header on mobile */
+  /* Map header - allow natural wrapping on tablets */
   .map-header {
-    flex-direction: column;
-    align-items: stretch;
+    gap: 0.75rem;
   }
 
   .map-controls {
-    width: 100%;
     flex-wrap: wrap;
+    gap: 0.75rem;
   }
 
   .map-control-group {
-    flex: 1;
-    min-width: fit-content;
+    flex: 0 1 auto;
   }
 
   #desktop-pins-toggle {
