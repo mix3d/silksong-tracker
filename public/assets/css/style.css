@@ -3227,8 +3227,6 @@ label.filter-label-desktop,
   top: 9px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 5;
-  pointer-events: none;
   background: #181715;
   border: 2px solid #8a6a3a;
   color: #d7b98a;
