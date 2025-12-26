@@ -26,54 +26,40 @@ function initTabsDrawer(): void {
   const drawer = getHTMLElement("mobile-tabs-drawer");
   const backdrop = getHTMLElement("mobile-tabs-backdrop");
   const closeBtn = drawer.querySelector("[data-drawer='tabs']") as HTMLButtonElement;
-  
-  // Clone sidebar items into mobile drawer
-  const mobileTabItemsContainer = getHTMLElement("mobile-tab-items");
-  const desktopSidebarItems = document.querySelectorAll(".sidebar-item");
-  
-  for (const item of desktopSidebarItems) {
-    const clone = item.cloneNode(true) as HTMLAnchorElement;
 
-    // Sync active state
-    if (item.classList.contains("is-active")) {
-      clone.classList.add("is-active");
+  // Wire up mobile nav items (statically built in HTML)
+  const mobileTabItems = document.querySelectorAll(".mobile-tab-items .sidebar-item");
+  const desktopSidebarItems = document.querySelectorAll(".sidebar .sidebar-item");
+
+  for (const mobileItem of mobileTabItems) {
+    // Sync initial active state
+    const desktopItem = Array.from(desktopSidebarItems).find(
+      (item) => item.getAttribute("data-tab") === mobileItem.getAttribute("data-tab")
+    );
+
+    if (desktopItem && desktopItem.classList.contains("is-active")) {
+      mobileItem.classList.add("is-active");
     }
 
-    // Wire up click to trigger the original desktop item's click (which has navigation logic)
-    clone.addEventListener("click", (e) => {
+    // Wire up click to trigger the desktop item's click (which has navigation logic)
+    mobileItem.addEventListener("click", (e) => {
       e.preventDefault();
 
-      // Trigger click on the original desktop sidebar item (has the navigation logic)
-      const originalItem = item as HTMLAnchorElement;
-      originalItem.click();
+      // Trigger click on the corresponding desktop sidebar item
+      if (desktopItem) {
+        (desktopItem as HTMLAnchorElement).click();
+      }
 
       // Close drawer
       closeTabsDrawer();
     });
+  }
 
-    mobileTabItemsContainer.append(clone);
-  }
-  
-  // Clone external links
-  const mobileExternalLinksContainer = getHTMLElement("mobile-external-links");
-  const desktopSidebarLinks = document.querySelector(".sidebar-links");
-  const desktopSidebarActions = document.querySelector(".sidebar-actions");
-  
-  if (desktopSidebarLinks) {
-    const linksClone = desktopSidebarLinks.cloneNode(true);
-    mobileExternalLinksContainer.append(linksClone);
-  }
-  
-  if (desktopSidebarActions) {
-    const actionsClone = desktopSidebarActions.cloneNode(true);
-    mobileExternalLinksContainer.append(actionsClone);
-  }
-  
   // Event listeners
   toggleBtn.addEventListener("click", openTabsDrawer);
   closeBtn.addEventListener("click", closeTabsDrawer);
   backdrop.addEventListener("click", closeTabsDrawer);
-  
+
   // Sync active state with desktop
   observeSidebarActiveState();
 }
