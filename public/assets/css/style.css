@@ -1722,6 +1722,11 @@ input[type="checkbox"]:focus-visible {
     margin-right: 0 !important;
   }
 
+  /* Back to top button - adjust position when TOC is hidden */
+  #back-to-top {
+    right: 20px;
+  }
+
   /* Map section - full width on mobile/tablet */
   #map-section .map-wrapper {
     width: 100% !important;
