@@ -120,9 +120,8 @@ body {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-  flex: 1;
+  gap: 10px;
+  flex-wrap: nowrap;
 }
 
 /* Push data action button to the right */
@@ -1658,16 +1657,53 @@ input[type="checkbox"]:focus-visible {
   /* Topbar adjustments */
   .topbar {
     width: 100%;
-    padding: 0 0.75rem;
+    padding: 0 8px;
+  }
+
+  .topbar-left {
+    gap: 6px;
   }
 
   .topbar-right {
-    gap: 0.5rem;
+    gap: 6px;
+  }
+
+  /* Reduce button padding on mobile for better fit */
+  .btn-icon,
+  .dropdown-toggle {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+
+  .btn-icon i,
+  .dropdown-toggle i {
+    font-size: 13px;
   }
 
   /* Simplify button labels on very small screens (phones) */
   @media (max-width: 480px) {
+    .topbar {
+      padding: 0 6px;
+    }
+
+    .topbar-left,
+    .topbar-right {
+      gap: 4px;
+    }
+
+    .btn-icon,
+    .dropdown-toggle {
+      padding: 6px 8px;
+      font-size: 0.75rem;
+    }
+
     .topbar-right .btn-icon span:not(#mobile-context-label) {
+      display: none;
+    }
+
+    /* On very small screens, hide text labels completely */
+    .dropdown-toggle span,
+    #mobile-context-label {
       display: none;
     }
   }
@@ -2709,23 +2745,11 @@ label.filter-label-desktop,
   }
 }
 
-/* Topbar layout adjustments */
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
+/* Topbar left section for mobile hamburger */
 .topbar-left {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  gap: 8px;
 }
 
 /* Shared drawer backdrop */
