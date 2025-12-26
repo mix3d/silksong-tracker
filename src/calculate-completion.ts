@@ -65,8 +65,7 @@ const SHARED_COUNT_GROUPS = new Set([
 
 // Items with isCounted = false (don't count toward completion)
 const UNCOUNTED_ITEMS = new Set([
-  "Extractor", // Needle Phial
-  "Silk Snare", // Snare Setter
+  "Lifeblood Syringe", // Plasmium Phial - used only for collecting plasmium in wishes
 ]);
 
 function collectAllItems(): readonly Item[] {
