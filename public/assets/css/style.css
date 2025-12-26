@@ -2077,7 +2077,8 @@ main::-webkit-scrollbar-thumb:hover {
   display: none !important;
 }
 
-.filter-label-desktop {
+label.filter-label-desktop,
+.toggle.filter-label-desktop {
   display: inline-flex;
 }
 
@@ -2087,8 +2088,9 @@ main::-webkit-scrollbar-thumb:hover {
     display: inline-block !important;
   }
 
-  .filter-label-desktop {
-    display: none;
+  label.filter-label-desktop,
+  .toggle.filter-label-desktop {
+    display: none !important;
   }
 }
 
