@@ -5,6 +5,7 @@ import {
   includes,
 } from "complete-common";
 import { getHTMLElement, getHTMLElements } from "../elements.ts";
+import { updateContextButton } from "./mobile-drawers.ts";
 import type { Tab } from "../render-tab.ts";
 import { renderActiveTab, TABS } from "../render-tab.ts";
 
@@ -84,6 +85,11 @@ function onClick(pointerEvent: PointerEvent) {
   document.documentElement.style.overflowY = "auto";
 
   renderActiveTab();
+
+  // Update mobile context button
+  if (window.innerWidth <= 768) {
+    updateContextButton();
+  }
 }
 
 export function getStoredActiveTab(): Tab {
