@@ -125,10 +125,7 @@ body {
   flex-wrap: nowrap;
 }
 
-/* Push data action button to the right */
-#data-action-btn {
-  margin-left: auto;
-}
+/* Data action button is now in topbar-end section */
 
 .section {
   max-width: 980px;
@@ -3238,6 +3235,8 @@ label.filter-label-desktop,
   top: 9px;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 5;
+  pointer-events: none;
   background: #181715;
   border: 2px solid #8a6a3a;
   color: #d7b98a;
