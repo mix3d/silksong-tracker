@@ -3183,16 +3183,16 @@ label.filter-label-desktop,
 
 /* ==================== RIGHT DRAWER - MAP FILTERS (Map tab) ==================== */
 
-#mobile-map-filters-container {
+#map-filters-container {
   padding: 0 1rem;
 }
 
 /* Search box in mobile drawer */
-#mobile-map-filters-container .search-container {
+#map-filters-container .search-container {
   margin-bottom: 1rem;
 }
 
-#mobile-map-filters-container #mobile-map-search {
+#map-filters-container #mobile-map-search {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid var(--stroke);
@@ -3202,18 +3202,18 @@ label.filter-label-desktop,
   font-size: 0.95rem;
 }
 
-#mobile-map-filters-container #mobile-map-search::placeholder {
+#map-filters-container #mobile-map-search::placeholder {
   color: var(--ink-3);
 }
 
 /* Show/Hide All buttons */
-#mobile-map-filters-container .filter-controls {
+#map-filters-container .filter-controls {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.25rem;
 }
 
-#mobile-map-filters-container .btn-small {
+#map-filters-container .btn-small {
   flex: 1;
   padding: 0.625rem;
   border: 1px solid var(--stroke);
@@ -3227,19 +3227,19 @@ label.filter-label-desktop,
     color 0.2s;
 }
 
-#mobile-map-filters-container .btn-small:hover {
+#map-filters-container .btn-small:hover {
   background: rgba(255, 153, 51, 0.1);
   color: var(--ink-1);
 }
 
 /* Filter checkboxes list */
-#mobile-map-filters-container #mobile-map-filters {
+#map-filters-container #mobile-map-filters {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-#mobile-map-filters-container .filter-item {
+#map-filters-container .filter-item {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -3253,35 +3253,35 @@ label.filter-label-desktop,
     border-color 0.2s;
 }
 
-#mobile-map-filters-container .filter-item:hover {
+#map-filters-container .filter-item:hover {
   background: rgba(255, 153, 51, 0.05);
   border-color: rgba(255, 153, 51, 0.2);
 }
 
-#mobile-map-filters-container .filter-item input[type="checkbox"] {
+#map-filters-container .filter-item input[type="checkbox"] {
   width: 18px;
   height: 18px;
   cursor: pointer;
 }
 
-#mobile-map-filters-container .filter-item span {
+#map-filters-container .filter-item span {
   flex: 1;
   font-size: 0.9rem;
   color: var(--ink-1);
 }
 
 /* Map toggle section (room names) */
-#mobile-map-filters-container .map-toggle-divider {
+#map-filters-container .map-toggle-divider {
   height: 1px;
   background: var(--stroke);
   margin: 1.5rem 0 1rem;
 }
 
-#mobile-map-filters-container .map-toggle-section {
+#map-filters-container .map-toggle-section {
   padding: 0;
 }
 
-#mobile-map-filters-container .map-toggle-label {
+#map-filters-container .map-toggle-label {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -3295,19 +3295,19 @@ label.filter-label-desktop,
     border-color 0.2s;
 }
 
-#mobile-map-filters-container .map-toggle-label:hover {
+#map-filters-container .map-toggle-label:hover {
   background: rgba(255, 153, 51, 0.05);
   border-color: rgba(255, 153, 51, 0.2);
 }
 
-#mobile-map-filters-container .map-toggle-label input[type="checkbox"] {
+#map-filters-container .map-toggle-label input[type="checkbox"] {
   width: 18px;
   height: 18px;
   cursor: pointer;
   flex-shrink: 0;
 }
 
-#mobile-map-filters-container .map-toggle-label span {
+#map-filters-container .map-toggle-label span {
   flex: 1;
   font-size: 0.9rem;
   color: var(--ink-1);
