@@ -86,10 +86,8 @@ function onClick(pointerEvent: PointerEvent) {
 
   renderActiveTab();
 
-  // Update mobile/tablet context button
-  if (window.innerWidth <= 1024) {
-    updateContextButton();
-  }
+  // Update context button (needed on all screen sizes for map filters)
+  updateContextButton();
 }
 
 export function getStoredActiveTab(): Tab {

@@ -66,10 +66,8 @@ function initComponents() {
   // Other
   initBackToTop();
 
-  // Mobile/tablet drawers (up to 1024px)
-  if (window.innerWidth <= 1024) {
-    initMobileDrawers();
-  }
+  // Initialize drawers (context drawer needed on all screens for map filters)
+  initMobileDrawers();
 
   // Handle resize across mobile/tablet/desktop threshold
   let wasMobileOrTablet = window.innerWidth <= 1024;

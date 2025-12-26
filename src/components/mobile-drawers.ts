@@ -6,7 +6,13 @@ let tabsDrawerOpen = false;
 let contextDrawerOpen = false;
 
 export function initMobileDrawers(): void {
-  initTabsDrawer();
+  // Only init tabs drawer on mobile/tablet
+  const isMobileOrTablet = window.innerWidth <= 1024;
+  if (isMobileOrTablet) {
+    initTabsDrawer();
+  }
+
+  // Always init context drawer (needed for map filters on all screen sizes)
   initContextDrawer();
   updateContextButton();
 }
@@ -259,34 +265,36 @@ function moveContentToMobileDrawer(): void {
 }
 
 export function updateContextButton(): void {
-  if (window.innerWidth > 1024) {
-    return; // Desktop - button not used
-  }
-  
   const activeTab = getStoredActiveTab();
   const contextToggleBtn = getHTMLElement("mobile-context-toggle");
   const contextLabel = getHTMLElement("mobile-context-label");
   const contextTitle = getHTMLElement("mobile-context-title");
   const tocContainer = getHTMLElement("mobile-toc-container");
   const mapFiltersContainer = getHTMLElement("mobile-map-filters-container");
-  
+
+  const isMobileOrTablet = window.innerWidth <= 1024;
+
   if (activeTab === "allprogress") {
-    // Show TOC
-    contextToggleBtn.classList.add("visible");
-    contextToggleBtn.setAttribute("data-mode", "toc");
-    contextToggleBtn.setAttribute("title", "Table of Contents");
-    const icon = contextToggleBtn.querySelector("i");
-    if (icon) {
-      icon.className = "fa-solid fa-list";
+    // Show TOC (only on mobile/tablet, desktop has fixed TOC)
+    if (isMobileOrTablet) {
+      contextToggleBtn.classList.add("visible");
+      contextToggleBtn.setAttribute("data-mode", "toc");
+      contextToggleBtn.setAttribute("title", "Table of Contents");
+      const icon = contextToggleBtn.querySelector("i");
+      if (icon) {
+        icon.className = "fa-solid fa-list";
+      }
+      contextLabel.textContent = "Contents";
+      contextTitle.textContent = "Table of Contents";
+
+      tocContainer.classList.remove("hidden");
+      mapFiltersContainer.classList.add("hidden");
+    } else {
+      contextToggleBtn.classList.remove("visible");
     }
-    contextLabel.textContent = "Contents";
-    contextTitle.textContent = "Table of Contents";
-    
-    tocContainer.classList.remove("hidden");
-    mapFiltersContainer.classList.add("hidden");
-    
+
   } else if (activeTab === "map") {
-    // Show Map Filters
+    // Show Map Filters (ALL screen sizes - drawer is better than floating sidebar)
     contextToggleBtn.classList.add("visible");
     contextToggleBtn.setAttribute("data-mode", "filters");
     contextToggleBtn.setAttribute("title", "Map Filters");
@@ -296,14 +304,14 @@ export function updateContextButton(): void {
     }
     contextLabel.textContent = "Filters";
     contextTitle.textContent = "Map Filters";
-    
+
     tocContainer.classList.add("hidden");
     mapFiltersContainer.classList.remove("hidden");
-    
+
   } else {
     // Raw Save tab - hide context button
     contextToggleBtn.classList.remove("visible");
-    
+
     // Close drawer if open
     if (contextDrawerOpen) {
       closeContextDrawer();
@@ -314,34 +322,22 @@ export function updateContextButton(): void {
 // ==================== CLEANUP ====================
 
 export function cleanupMobileDrawers(): void {
-  // Move TOC back to desktop container
+  // Move TOC back to desktop container (only on resize to desktop)
   const desktopTocContainer = getHTMLElement("toc");
   const mobileTocContainer = getHTMLElement("mobile-toc-container");
   const tocList = getHTMLElement("toc-list");
   const tocLegend = mobileTocContainer.querySelector(".toc-legend");
-  
+
   if (mobileTocContainer.contains(tocList)) {
     desktopTocContainer.append(tocList);
   }
-  
+
   if (tocLegend) {
     desktopTocContainer.append(tocLegend);
   }
-  
-  // Move Map Filters back to desktop container
-  const desktopMapSidebar = document.querySelector(".map-sidebar");
-  const mobileMapFiltersContainer = getHTMLElement("mobile-map-filters-container");
-  const mapFilters = document.getElementById("map-filters");
-  
-  if (desktopMapSidebar && mapFilters && mobileMapFiltersContainer.contains(mapFilters)) {
-    // Find the desktop filter-list container and put map-filters back
-    const desktopFilterList = desktopMapSidebar.querySelector(".filter-list");
-    if (desktopFilterList) {
-      desktopFilterList.append(mapFilters);
-    }
-  }
-  
-  // Close any open drawers
+
+  // Map filters stay in drawer on all screen sizes (no need to move back)
+
+  // Close tabs drawer if open (context drawer stays available for map filters)
   if (tabsDrawerOpen) closeTabsDrawer();
-  if (contextDrawerOpen) closeContextDrawer();
 }
