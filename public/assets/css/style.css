@@ -2633,6 +2633,271 @@ label.filter-label-desktop,
   text-shadow: 0 0 6px rgba(227, 180, 123, 0.3) !important;
 }
 
+/* ==================== MOBILE DRAWERS (SHARED) ==================== */
+
+/* Toggle buttons - hidden on desktop */
+.mobile-tabs-toggle,
+.mobile-context-toggle {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .mobile-tabs-toggle {
+    display: inline-flex !important;
+  }
+
+  /* Context toggle visibility controlled by JS based on active tab */
+  .mobile-context-toggle {
+    display: none !important;
+  }
+
+  .mobile-context-toggle.visible {
+    display: inline-flex !important;
+  }
+}
+
+/* Topbar layout adjustments */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Shared drawer backdrop */
+.mobile-drawer-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-drawer-backdrop.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Shared drawer base */
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  width: 85%;
+  max-width: 340px;
+  height: 100vh;
+  background: var(--bg-2);
+  z-index: 1000;
+  overflow-y: auto;
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Left drawer (slides from left) */
+.mobile-drawer-left {
+  left: 0;
+  transform: translateX(-100%);
+  border-right: 1px solid var(--stroke);
+}
+
+.mobile-drawer-left.open {
+  transform: translateX(0);
+}
+
+/* Right drawer (slides from right) */
+.mobile-drawer-right {
+  right: 0;
+  transform: translateX(100%);
+  border-left: 1px solid var(--stroke);
+}
+
+.mobile-drawer-right.open {
+  transform: translateX(0);
+}
+
+/* Drawer header */
+.mobile-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid var(--stroke);
+  background: rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.mobile-drawer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink-1);
+}
+
+.mobile-drawer-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink-1);
+  margin: 0;
+}
+
+.mobile-drawer-close {
+  background: transparent;
+  border: none;
+  color: var(--ink-2);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.mobile-drawer-close:hover {
+  color: var(--ink-1);
+}
+
+/* Drawer content area */
+.mobile-drawer-content {
+  padding: 1rem 0;
+}
+
+.mobile-drawer-section-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+  margin: 0 0 0.75rem 0;
+  padding: 0 1rem;
+  font-weight: 600;
+}
+
+.mobile-drawer-divider {
+  height: 1px;
+  background: var(--stroke);
+  margin: 1.5rem 0;
+}
+
+/* Context content containers (TOC or Map Filters) */
+.mobile-context-content {
+  display: block;
+}
+
+.mobile-context-content.hidden {
+  display: none;
+}
+
+/* ==================== LEFT DRAWER (TABS) ==================== */
+
+.mobile-tab-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0 1rem;
+}
+
+.mobile-tab-items .sidebar-item {
+  padding: 0.875rem 1rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: background 0.2s, color 0.2s;
+  text-decoration: none;
+  display: block;
+}
+
+.mobile-tab-items .sidebar-item:hover {
+  background: rgba(255, 153, 51, 0.1);
+}
+
+.mobile-tab-items .sidebar-item.is-active {
+  background: rgba(197, 100, 50, 0.2);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.mobile-external-links {
+  padding: 0 1rem;
+}
+
+.mobile-external-links .sidebar-wiki-btn {
+  display: block;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.mobile-external-links .sidebar-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ==================== RIGHT DRAWER - TOC (Progress tab) ==================== */
+
+#mobile-toc-container {
+  padding: 0 1rem;
+}
+
+/* Adjust TOC styles for mobile drawer context */
+#mobile-toc-container .toc-category {
+  margin-bottom: 1rem;
+}
+
+#mobile-toc-container .toc-category > a {
+  font-size: 0.95rem;
+  padding: 0.625rem 0.75rem;
+  display: block;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
+
+#mobile-toc-container .toc-category > a:hover {
+  background: rgba(255, 153, 51, 0.08);
+}
+
+#mobile-toc-container .toc-sublist {
+  margin-left: 0.5rem;
+  margin-top: 0.5rem;
+  padding-left: 0.75rem;
+  gap: 0.35rem;
+}
+
+#mobile-toc-container .toc-item a {
+  font-size: 0.875rem;
+  padding: 0.5rem 0.625rem;
+  display: block;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+}
+
+#mobile-toc-container .toc-item a:hover {
+  background: rgba(255, 153, 51, 0.05);
+}
+
+/* TOC Legend in mobile drawer */
+#mobile-toc-container .toc-legend {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--stroke);
+}
+
 /* === DROPDOWN MULTISELECT === */
 .dropdown {
   position: relative;
