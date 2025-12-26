@@ -3524,6 +3524,7 @@ label.filter-label-desktop,
   background: #000;
   cursor: grab;
   touch-action: none;
+  border-radius: 8px;
 }
 
 #worldMapInner {
