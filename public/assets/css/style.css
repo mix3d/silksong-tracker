@@ -3191,7 +3191,8 @@ label.filter-label-desktop,
 #modeBanner {
   position: absolute;
   top: 9px;
-  left: 14px;
+  left: 50%;
+  transform: translateX(-50%);
   background: #181715;
   border: 2px solid #8a6a3a;
   color: #d7b98a;
