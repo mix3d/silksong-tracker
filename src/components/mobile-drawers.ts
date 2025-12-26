@@ -301,16 +301,16 @@ export function updateContextButton(): void {
     }
 
   } else if (activeTab === "map") {
-    // Show Map Filters (ALL screen sizes - drawer is better than floating sidebar)
+    // Show Pins (ALL screen sizes - drawer is better than floating sidebar)
     contextToggleBtn.classList.add("visible");
-    contextToggleBtn.setAttribute("data-mode", "filters");
-    contextToggleBtn.setAttribute("title", "Map Filters");
+    contextToggleBtn.setAttribute("data-mode", "pins");
+    contextToggleBtn.setAttribute("title", "Pins");
     const icon = contextToggleBtn.querySelector("i");
     if (icon) {
-      icon.className = "fa-solid fa-layer-group";
+      icon.className = "fa-solid fa-map-pin";
     }
-    contextLabel.textContent = "Map Filters";
-    contextTitle.textContent = "Map Filters";
+    contextLabel.textContent = "Pins";
+    contextTitle.textContent = "Pins";
 
     tocContainer.classList.add("hidden");
     mapFiltersContainer.classList.remove("hidden");

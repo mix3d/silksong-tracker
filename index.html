@@ -116,7 +116,7 @@
         <div class="topbar-left">
           <button id="mobile-tabs-toggle" class="btn-icon mobile-tabs-toggle"
                   title="Menu" aria-label="Open navigation menu">
-            <i class="fa-solid fa-bars"></i>
+            <img src="/assets/misc/favicon.png" alt="Menu" width="20" height="20">
           </button>
         </div>
 
@@ -164,19 +164,17 @@
         </div>
 
         <div class="topbar-end">
-          <!-- Mobile context toggle (TOC/Map Filters) -->
+          <!-- Mobile context toggle (TOC/Pins) -->
           <button id="mobile-context-toggle" class="btn-icon mobile-context-toggle"
                   data-mode="toc"
                   title="Table of Contents"
                   aria-label="Open table of contents">
             <i class="fa-solid fa-list"></i> <span id="mobile-context-label">Contents</span>
           </button>
-
-          <button id="data-action-btn" class="btn-icon" title="Upload save" aria-label="Upload save">
-            <i class="fa-solid fa-upload"></i> <span>Upload</span>
-          </button>
-          <input type="file" id="fileInput" hidden />
         </div>
+
+        <!-- Upload button moved to main content (will be in mobile drawer) -->
+        <input type="file" id="fileInput" hidden />
       </header>
 
       <main id="main">
@@ -231,17 +229,27 @@
         </section>
 
         <section id="map-section" class="tab hidden">
-          <h2>Interactive Map</h2>
-          <div class="map-controls">
-            <label for="map-act-select">Select Map:</label>
-            <select id="map-act-select" aria-label="Select map act">
-              <option value="/silksong-tracker/assets/ui/labelled_map_act3.png">
-                Act 3
-              </option>
-              <option value="/silksong-tracker/assets/ui/scene's_name_map.png">
-                Room's Name
-              </option>
-            </select>
+          <div class="map-header">
+            <h2>Interactive Map</h2>
+            <div class="map-controls">
+              <div class="map-control-group">
+                <label for="map-act-select">Select Map:</label>
+                <select id="map-act-select" aria-label="Select map act">
+                  <option value="/silksong-tracker/assets/ui/labelled_map_act3.png">
+                    Act 3
+                  </option>
+                  <option value="/silksong-tracker/assets/ui/scene's_name_map.png">
+                    Room's Name
+                  </option>
+                </select>
+              </div>
+
+              <button id="desktop-pins-toggle" class="btn-icon"
+                      title="Toggle Pins"
+                      aria-label="Toggle map pins">
+                <i class="fa-solid fa-map-pin"></i> <span>Pins</span>
+              </button>
+            </div>
           </div>
 
           <div class="map-wrapper">
