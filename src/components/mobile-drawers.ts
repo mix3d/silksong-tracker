@@ -1,7 +1,6 @@
 import { getHTMLElement, uploadOverlay, dropzone } from "../elements.ts";
 import { getStoredActiveTab } from "./sidebar-items.ts";
 import { getSaveData, clearAllData } from "../save-data.ts";
-import type { Tab } from "../render-tab.ts";
 
 let tabsDrawerOpen = false;
 let contextDrawerOpen = false;
