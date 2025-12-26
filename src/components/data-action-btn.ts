@@ -1,6 +1,6 @@
 /**
  * Combined Upload/Reset button that switches based on whether data is loaded
- * (Desktop only - mobile uses drawer actions)
+ * (Desktop sidebar - mobile uses mobile-drawers.ts for the drawer action button)
  */
 
 import { getDataActionBtn, uploadOverlay, dropzone } from "../elements.ts";
