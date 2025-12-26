@@ -130,13 +130,28 @@
             </div>
           </div>
 
-          <label class="toggle">
+          <!--  Filters Dropdown (mobile/tablet only) -->
+          <div id="filters-dropdown" class="dropdown filters-dropdown-mobile">
+            <button class="dropdown-toggle" id="filters-dropdown-button">
+              <i class="fa-solid fa-filter"></i> Filters
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+
+            <div id="filters-dropdown-menu" class="dropdown-menu hidden">
+              <label><input type="checkbox" id="show-only-missing-mobile" /> Show only missing</label>
+              <label><input type="checkbox" id="show-progress-only-mobile" /> Progress only</label>
+              <label><input type="checkbox" id="show-spoilers-mobile" /> Show spoilers</label>
+            </div>
+          </div>
+
+          <!-- Individual filter labels (desktop only) -->
+          <label class="toggle filter-label-desktop">
             <input type="checkbox" id="show-only-missing" /> Show only missing
           </label>
-          <label
+          <label class="filter-label-desktop"
             ><input type="checkbox" id="show-progress-only" /> Progress only</label
           >
-          <label
+          <label class="filter-label-desktop"
             ><input type="checkbox" id="show-spoilers" /> Show spoilers</label
           >
           <button id="data-action-btn" class="btn-icon" title="Upload save" aria-label="Upload save">
