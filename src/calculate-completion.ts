@@ -299,9 +299,18 @@ export function updateCompletionPercentage(): void {
   }
 
   const toolsList: string[] = []; // Debug: track ALL counted tools
+  const saveDataMode = getSaveDataMode();
+
   for (const item of allItems) {
     const category = getItemCategory(item);
     if (!category) continue;
+
+    // Skip items that don't match the current save mode
+    if (item.mode !== undefined && saveData !== undefined) {
+      if (item.mode !== saveDataMode) {
+        continue;
+      }
+    }
 
     const value = getSaveDataValue(saveData, saveDataFlags, item);
     const unlocked = getUnlocked(item, value);
