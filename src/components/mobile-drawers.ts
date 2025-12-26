@@ -297,7 +297,7 @@ export function updateContextButton(): void {
   const contextToggleBtn = getHTMLElement("mobile-context-toggle");
   const contextLabel = getHTMLElement("mobile-context-label");
   const contextTitle = getHTMLElement("mobile-context-title");
-  const mapFiltersContainer = getHTMLElement("mobile-map-filters-container");
+  const mapFiltersContainer = getHTMLElement("map-filters-container");
 
   const isMobileOrTablet = window.innerWidth <= 1024;
 

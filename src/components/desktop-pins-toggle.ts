@@ -9,7 +9,7 @@ export function initDesktopPinsToggle(): void {
   const contextDrawer = getHTMLElement("mobile-context-drawer");
   const contextBackdrop = getHTMLElement("mobile-context-backdrop");
   const contextTitle = getHTMLElement("mobile-context-title");
-  const pinsContainer = getHTMLElement("mobile-map-filters-container");
+  const pinsContainer = getHTMLElement("map-filters-container");
 
   desktopPinsToggle.addEventListener("click", () => {
     // Toggle drawer
