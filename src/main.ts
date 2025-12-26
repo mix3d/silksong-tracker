@@ -49,7 +49,7 @@ function initComponents() {
   initShowOnlyMissing();
   initShowProgressOnly();
   initShowSpoilers();
-  initUploadSave();
+  initDataActionBtn();
 
   // Left-nav
   initSidebarItems();
