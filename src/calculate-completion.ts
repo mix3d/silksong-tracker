@@ -148,8 +148,8 @@ function getItemCategory(item: Item): string | null {
   }
   
   // Abilities
-  const abilityFlags = ["Clawline", "Wallcling", "Needle Strike", "Needolin", "Silk Soar", "Swift Step"];
-  if (abilityFlags.includes(item.flag)) {
+  const abilityFlags = ["hasDash", "hasWalljump", "hasNeedolin", "hasHarpoonDash", "hasSuperJump", "hasChargeSlash"];
+  if (abilityFlags.includes(item.flag) || item.mapCategory === "ability") {
     return "abilities";
   }
   
