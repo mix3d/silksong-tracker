@@ -1536,17 +1536,13 @@ function formatLabel(slug: string): string {
 }
 
 function generateFilterCheckboxes() {
-  const desktopContainer = document.querySelector<HTMLElement>("#map-filters");
-  const mobileContainer = document.querySelector<HTMLElement>("#mobile-map-filters");
+  const container = document.querySelector<HTMLElement>("#map-filters");
 
-  if (!desktopContainer) {
+  if (!container) {
     return;
   }
 
-  desktopContainer.innerHTML = "";
-  if (mobileContainer) {
-    mobileContainer.innerHTML = "";
-  }
+  container.innerHTML = "";
 
   const allItems = collectAllItems();
   const uniqueCategories = new Set<string>();
@@ -1563,7 +1559,6 @@ function generateFilterCheckboxes() {
   const categoriesList = [...uniqueCategories];
 
   for (const category of categoriesList) {
-    // Create desktop version
     const label = document.createElement("label");
     label.className = "filter-item";
 
@@ -1576,35 +1571,7 @@ function generateFilterCheckboxes() {
     span.textContent = formatLabel(category);
 
     label.append(input, span);
-    desktopContainer.append(label);
-
-    // Create mobile version
-    if (mobileContainer) {
-      const mobileLabel = document.createElement("label");
-      mobileLabel.className = "filter-item";
-
-      const mobileInput = document.createElement("input");
-      mobileInput.type = "checkbox";
-      mobileInput.dataset["category"] = category;
-      mobileInput.checked = true;
-
-      const mobileSpan = document.createElement("span");
-      mobileSpan.textContent = formatLabel(category);
-
-      mobileLabel.append(mobileInput, mobileSpan);
-      mobileContainer.append(mobileLabel);
-
-      // Sync mobile checkbox with desktop checkbox
-      input.addEventListener("change", () => {
-        mobileInput.checked = input.checked;
-      });
-
-      mobileInput.addEventListener("change", () => {
-        input.checked = mobileInput.checked;
-        // Trigger change event on desktop to update pins
-        renderWorldMapPins();
-      });
-    }
+    container.append(label);
   }
 }
 export function initWorldMapPins(): void {
