@@ -2,6 +2,10 @@ import { initActsDropdown } from "./components/acts-dropdown.ts";
 import { initBackToTop } from "./components/back-to-top.ts";
 import { initDataActionBtn } from "./components/data-action-btn.ts";
 import { initFiltersDropdown } from "./components/filters-dropdown.ts";
+import {
+  cleanupMobileDrawers,
+  initMobileDrawers,
+} from "./components/mobile-drawers.ts";
 import { initShowOnlyMissing } from "./components/show-only-missing.ts";
 import { initShowProgressOnly } from "./components/show-progress-only.ts";
 import { initShowSpoilers } from "./components/show-spoilers.ts";
@@ -61,6 +65,27 @@ function initComponents() {
 
   // Other
   initBackToTop();
+
+  // Mobile drawers (only on mobile)
+  if (window.innerWidth <= 768) {
+    initMobileDrawers();
+  }
+
+  // Handle resize across mobile/desktop threshold
+  let wasMobile = window.innerWidth <= 768;
+  window.addEventListener("resize", () => {
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile !== wasMobile) {
+      wasMobile = isMobile;
+
+      if (isMobile) {
+        initMobileDrawers();
+      } else {
+        cleanupMobileDrawers();
+      }
+    }
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
