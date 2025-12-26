@@ -1724,7 +1724,7 @@ input[type="checkbox"]:focus-visible {
 
   /* Back to top button - adjust position when TOC is hidden */
   #back-to-top {
-    right: 20px;
+    right: 20px !important;
   }
 
   /* Map section - full width on mobile/tablet */
