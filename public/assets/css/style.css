@@ -3227,7 +3227,7 @@ label.filter-label-desktop,
   margin-bottom: 1rem;
 }
 
-#mobile-map-filters-container #map-search {
+#mobile-map-filters-container #mobile-map-search {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid var(--stroke);
@@ -3237,7 +3237,7 @@ label.filter-label-desktop,
   font-size: 0.95rem;
 }
 
-#mobile-map-filters-container #map-search::placeholder {
+#mobile-map-filters-container #mobile-map-search::placeholder {
   color: var(--ink-3);
 }
 
@@ -3268,7 +3268,7 @@ label.filter-label-desktop,
 }
 
 /* Filter checkboxes list */
-#mobile-map-filters-container #map-filters {
+#mobile-map-filters-container #mobile-map-filters {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
