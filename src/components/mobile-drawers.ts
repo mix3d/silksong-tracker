@@ -297,13 +297,12 @@ export function updateContextButton(): void {
   const contextToggleBtn = getHTMLElement("mobile-context-toggle");
   const contextLabel = getHTMLElement("mobile-context-label");
   const contextTitle = getHTMLElement("mobile-context-title");
-  const tocContainer = getHTMLElement("mobile-toc-container");
   const mapFiltersContainer = getHTMLElement("mobile-map-filters-container");
 
   const isMobileOrTablet = window.innerWidth <= 1024;
 
   if (activeTab === "allprogress") {
-    // Show TOC (only on mobile/tablet, desktop has fixed TOC)
+    // Show TOC button (only on mobile/tablet, desktop has fixed TOC sidebar)
     if (isMobileOrTablet) {
       contextToggleBtn.classList.add("visible");
       contextToggleBtn.dataset.mode = "toc";
@@ -315,7 +314,6 @@ export function updateContextButton(): void {
       contextLabel.textContent = "Contents";
       contextTitle.textContent = "Table of Contents";
 
-      tocContainer.classList.remove("hidden");
       mapFiltersContainer.classList.add("hidden");
     } else {
       contextToggleBtn.classList.remove("visible");
@@ -324,7 +322,6 @@ export function updateContextButton(): void {
     // Map tab: no topbar button (uses desktop-pins-toggle in map header for all screen sizes)
     contextToggleBtn.classList.remove("visible");
 
-    tocContainer.classList.add("hidden");
     mapFiltersContainer.classList.remove("hidden");
   } else {
     // Raw Save tab - hide context button
