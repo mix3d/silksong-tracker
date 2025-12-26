@@ -1610,25 +1610,60 @@ export function initWorldMapPins(): void {
   }
 
   // eslint-disable-next-line unicorn/prefer-spread
-  const categoryFilters = Array.from(
+  const desktopCategoryFilters = Array.from(
     document.querySelectorAll<HTMLInputElement>("#map-filters input"),
   );
+  const mobileCategoryFilters = Array.from(
+    document.querySelectorAll<HTMLInputElement>("#mobile-map-filters input"),
+  );
 
-  for (const input of categoryFilters) {
+  for (const input of desktopCategoryFilters) {
     input.addEventListener("change", () => {
       renderWorldMapPins();
     });
   }
 
+  // Desktop show/hide all buttons
   document.querySelector("#hide-all-filters")?.addEventListener("click", () => {
-    for (const categoryFilter of categoryFilters) {
+    for (const categoryFilter of desktopCategoryFilters) {
+      categoryFilter.checked = false;
+    }
+    // Sync with mobile
+    for (const categoryFilter of mobileCategoryFilters) {
       categoryFilter.checked = false;
     }
     renderWorldMapPins();
   });
 
   document.querySelector("#show-all-filters")?.addEventListener("click", () => {
-    for (const categoryFilter of categoryFilters) {
+    for (const categoryFilter of desktopCategoryFilters) {
+      categoryFilter.checked = true;
+    }
+    // Sync with mobile
+    for (const categoryFilter of mobileCategoryFilters) {
+      categoryFilter.checked = true;
+    }
+    renderWorldMapPins();
+  });
+
+  // Mobile show/hide all buttons
+  document.querySelector("#mobile-hide-all-filters")?.addEventListener("click", () => {
+    for (const categoryFilter of mobileCategoryFilters) {
+      categoryFilter.checked = false;
+    }
+    // Sync with desktop
+    for (const categoryFilter of desktopCategoryFilters) {
+      categoryFilter.checked = false;
+    }
+    renderWorldMapPins();
+  });
+
+  document.querySelector("#mobile-show-all-filters")?.addEventListener("click", () => {
+    for (const categoryFilter of mobileCategoryFilters) {
+      categoryFilter.checked = true;
+    }
+    // Sync with desktop
+    for (const categoryFilter of desktopCategoryFilters) {
       categoryFilter.checked = true;
     }
     renderWorldMapPins();
