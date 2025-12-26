@@ -1805,6 +1805,18 @@ input[type="checkbox"]:focus-visible {
     padding: 0.8rem 1rem;
   }
 
+  /* Main stats cards - 2 columns on medium tablets */
+  @media (max-width: 768px) {
+    .main-stats {
+      gap: 0.875rem;
+    }
+
+    .main-stats div {
+      flex: 1 1 calc(50% - 0.5rem);
+      min-width: 140px;
+    }
+  }
+
   /* Simplify button labels on very small screens (phones) */
   @media (max-width: 480px) {
     .topbar {
