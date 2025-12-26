@@ -1524,6 +1524,9 @@ input[type="checkbox"] {
   display: grid;
   place-content: center;
   margin: 0; /* Reset browser default margins */
+
+  /* Prevent squishing in flex containers */
+  flex-shrink: 0;
 }
 
 /* 1. Define the Checkmark as an SVG image */
