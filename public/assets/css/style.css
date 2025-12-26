@@ -117,14 +117,6 @@ body {
   position: relative;
 }
 
-.topbar-right {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: nowrap;
-}
-
 /* Data action button is now in topbar-end section */
 
 .section {
@@ -1716,7 +1708,7 @@ input[type="checkbox"]:focus-visible {
       padding: 5px 7px;
     }
 
-    .topbar-right .btn-icon span:not(#mobile-context-label) {
+    .topbar-end .btn-icon span:not(#mobile-context-label) {
       display: none;
     }
 
