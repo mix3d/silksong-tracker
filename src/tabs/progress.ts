@@ -431,70 +431,10 @@ export function updateTabProgress(): void {
   buildDynamicTOC();
   initScrollSpy();
 
-  // Calculate completion percentage inline
-  const allItems = collectAllItems();
-  const saveDataForCalc = getSaveData();
-  const saveDataFlagsForCalc = getSaveDataFlags();
-  let totalItems = 0;
-  let completedItems = 0;
-
-  const obtainedGroupsForCalc = new Set<string>();
-  for (const item of allItems) {
-    const val = getSaveDataValue(saveDataForCalc, saveDataFlagsForCalc, item);
-    if (
-      typeof item.group === "string"
-      && item.group.trim() !== ""
-      && getUnlocked(item, val)
-    ) {
-      obtainedGroupsForCalc.add(item.group);
-    }
-  }
-
-  const countedGroupsForCalc = new Set<string>();
-  for (const item of allItems) {
-    // Skip tool upgrades (they don't count toward completion)
-    if (item.type === "tool" && item.upgradeOf !== undefined) {
-      continue;
-    }
-
-    const val = getSaveDataValue(saveDataForCalc, saveDataFlagsForCalc, item);
-    const unlocked = getUnlocked(item, val);
-
-    // Handle mutually exclusive (unobtainable) groups
-    if (
-      item.unobtainable === true
-      && typeof item.group === "string"
-      && item.group.trim() !== ""
-    ) {
-      // If we've already counted this group, skip this item
-      if (countedGroupsForCalc.has(item.group)) {
-        continue;
-      }
-
-      // Mark this group as counted
-      countedGroupsForCalc.add(item.group);
-
-      // Count this group as 1 total
-      totalItems++;
-
-      // Check if ANY item in this group is unlocked
-      if (obtainedGroupsForCalc.has(item.group)) {
-        completedItems++;
-      }
-
-      continue;
-    }
-
-    totalItems++;
-    if (unlocked) {
-      completedItems++;
-    }
-  }
-
-  // Calculate and update percentage
-  const percentage =
-    totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
-  completionValue.textContent = `${percentage}%`;
+  // Use the weighted completion calculation from calculate-completion.ts
+  // This properly weights categories (e.g. 18 spool fragments = 9%, 20 mask shards = 5%)
+  // instead of treating all items equally
+  updateCompletionPercentage();
 }
 
 let progressListenerRegistered = false;
