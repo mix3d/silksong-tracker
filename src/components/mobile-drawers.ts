@@ -224,9 +224,6 @@ function initContextDrawer() {
   const backdrop = getHTMLElement("mobile-context-backdrop");
   const closeBtn = drawer.querySelector("[data-drawer='context']")!;
 
-  // Move TOC and Map Filters into mobile drawer
-  moveContentToMobileDrawer();
-
   // Event listeners
   toggleBtn.addEventListener("click", openContextDrawer);
   closeBtn.addEventListener("click", closeContextDrawer);
