@@ -7,6 +7,8 @@ export function initDesktopPinsToggle(): void {
   const contextDrawer = getHTMLElement("mobile-context-drawer");
   const contextBackdrop = getHTMLElement("mobile-context-backdrop");
   const contextTitle = getHTMLElement("mobile-context-title");
+  const tocContainer = getHTMLElement("mobile-toc-container");
+  const pinsContainer = getHTMLElement("mobile-map-filters-container");
 
   desktopPinsToggle.addEventListener("click", () => {
     // Toggle drawer
@@ -17,8 +19,10 @@ export function initDesktopPinsToggle(): void {
       contextBackdrop.classList.remove("active");
       document.body.style.overflow = "";
     } else {
-      // Set drawer title to "Pins"
+      // Set drawer title and content
       contextTitle.textContent = "Pins";
+      tocContainer.classList.add("hidden");
+      pinsContainer.classList.remove("hidden");
 
       contextDrawer.classList.add("open");
       contextBackdrop.classList.add("active");
