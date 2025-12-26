@@ -264,16 +264,24 @@ function closeContextDrawer(): void {
 }
 
 function moveContentToMobileDrawer(): void {
-  // Move TOC into mobile container
-  const desktopTocList = getHTMLElement("toc-list");
-  const mobileTocContainer = getHTMLElement("mobile-toc-container");
-  mobileTocContainer.append(desktopTocList);
-  
-  // Move TOC legend if it exists
-  const desktopTocContainer = getHTMLElement("toc");
-  const tocLegend = desktopTocContainer.querySelector(".toc-legend");
-  if (tocLegend) {
-    mobileTocContainer.append(tocLegend);
+  const isMobileOrTablet = window.innerWidth <= 1024;
+
+  // Only move TOC on mobile/tablet (desktop has fixed TOC sidebar)
+  if (isMobileOrTablet) {
+    const desktopTocList = getHTMLElement("toc-list");
+    const mobileTocContainer = getHTMLElement("mobile-toc-container");
+
+    // Only move if not already in mobile container
+    if (!mobileTocContainer.contains(desktopTocList)) {
+      mobileTocContainer.append(desktopTocList);
+    }
+
+    // Move TOC legend if it exists
+    const desktopTocContainer = getHTMLElement("toc");
+    const tocLegend = desktopTocContainer.querySelector(".toc-legend");
+    if (tocLegend && !mobileTocContainer.contains(tocLegend)) {
+      mobileTocContainer.append(tocLegend);
+    }
   }
   
   // Move Map Filters into mobile container
@@ -410,11 +418,12 @@ export function cleanupMobileDrawers(): void {
   const tocList = getHTMLElement("toc-list");
   const tocLegend = mobileTocContainer.querySelector(".toc-legend");
 
+  // Move TOC back to desktop container
   if (mobileTocContainer.contains(tocList)) {
     desktopTocContainer.append(tocList);
   }
 
-  if (tocLegend) {
+  if (tocLegend && mobileTocContainer.contains(tocLegend)) {
     desktopTocContainer.append(tocLegend);
   }
 
