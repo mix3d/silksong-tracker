@@ -1545,30 +1545,13 @@ export function initWorldMapPins(): void {
     renderWorldMapPins();
   });
 
-  const setMapFromSelect = () => {
-    const v = select.value.trim();
-    img.src =
-      v.startsWith("http") || v.startsWith("/") ? v : resolveMapImageSrc(v);
-  };
-
-  select.addEventListener("change", () => {
-    setMapFromSelect();
-    img.addEventListener(
-      "load",
-      () => {
-        renderWorldMapPins();
-      },
-      { once: true },
-    );
-  });
-
+  // Render pins when map image loads
   img.addEventListener("load", () => {
     renderWorldMapPins();
   });
 
+  // Initial render if image already loaded
   if (img.complete) {
     renderWorldMapPins();
-  } else {
-    setMapFromSelect();
   }
 }
