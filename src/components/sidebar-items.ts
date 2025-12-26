@@ -86,8 +86,8 @@ function onClick(pointerEvent: PointerEvent) {
 
   renderActiveTab();
 
-  // Update mobile context button
-  if (window.innerWidth <= 768) {
+  // Update mobile/tablet context button
+  if (window.innerWidth <= 1024) {
     updateContextButton();
   }
 }

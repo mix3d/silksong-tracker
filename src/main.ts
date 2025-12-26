@@ -66,20 +66,20 @@ function initComponents() {
   // Other
   initBackToTop();
 
-  // Mobile drawers (only on mobile)
-  if (window.innerWidth <= 768) {
+  // Mobile/tablet drawers (up to 1024px)
+  if (window.innerWidth <= 1024) {
     initMobileDrawers();
   }
 
-  // Handle resize across mobile/desktop threshold
-  let wasMobile = window.innerWidth <= 768;
+  // Handle resize across mobile/tablet/desktop threshold
+  let wasMobileOrTablet = window.innerWidth <= 1024;
   window.addEventListener("resize", () => {
-    const isMobile = window.innerWidth <= 768;
+    const isMobileOrTablet = window.innerWidth <= 1024;
 
-    if (isMobile !== wasMobile) {
-      wasMobile = isMobile;
+    if (isMobileOrTablet !== wasMobileOrTablet) {
+      wasMobileOrTablet = isMobileOrTablet;
 
-      if (isMobile) {
+      if (isMobileOrTablet) {
         initMobileDrawers();
       } else {
         cleanupMobileDrawers();

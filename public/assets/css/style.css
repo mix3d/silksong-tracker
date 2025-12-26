@@ -1620,8 +1620,8 @@ input[type="checkbox"]:focus-visible {
   }
 }
 
-/* Mobile: Hide desktop sidebars, use mobile drawers */
-@media (max-width: 768px) {
+/* Mobile/Tablet: Hide desktop sidebars, use mobile drawers */
+@media (max-width: 1024px) {
   /* Hide desktop left sidebar */
   .sidebar {
     display: none !important;
@@ -2691,7 +2691,7 @@ label.filter-label-desktop,
   display: none !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .mobile-tabs-toggle {
     display: inline-flex !important;
   }

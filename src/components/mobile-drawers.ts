@@ -138,10 +138,12 @@ function initContextDrawer(): void {
   tocContainer.addEventListener("click", (e) => {
     const target = e.target as HTMLElement;
     if (target.tagName === "A") {
-      // Small delay to allow smooth scroll
-      setTimeout(() => {
-        closeContextDrawer();
-      }, 300);
+      // Small delay to allow smooth scroll (only on mobile/tablet)
+      if (window.innerWidth <= 1024) {
+        setTimeout(() => {
+          closeContextDrawer();
+        }, 300);
+      }
     }
   });
 }
@@ -257,7 +259,7 @@ function moveContentToMobileDrawer(): void {
 }
 
 export function updateContextButton(): void {
-  if (window.innerWidth > 768) {
+  if (window.innerWidth > 1024) {
     return; // Desktop - button not used
   }
   
