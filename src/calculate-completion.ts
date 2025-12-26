@@ -298,7 +298,6 @@ export function updateCompletionPercentage(): void {
     }
   }
 
-  const toolsList: string[] = []; // Debug: track ALL counted tools
   const saveDataMode = getSaveDataMode();
 
   for (const item of allItems) {
@@ -343,27 +342,16 @@ export function updateCompletionPercentage(): void {
           if (firstUnlocked) {
             categoryProgress[category].total++;
             categoryProgress[category].completed++;
-            if (category === "tools") toolsList.push(`${item.label ?? item.id} (shared)`);
           }
         }
         continue;
       }
     }
 
-    // Debug: track ALL items counted in tools (before incrementing)
-    if (category === "tools") {
-      toolsList.push(`${item.label ?? item.id}${unlocked ? ' ✓' : ' ✗'}`);
-    }
-
     categoryProgress[category].total++;
     if (unlocked) {
       categoryProgress[category].completed++;
     }
-  }
-
-  // Debug: log all tools
-  if (toolsList.length > 0) {
-    console.log(`ALL Tools being counted (${toolsList.length} items):`, toolsList.sort());
   }
 
   // Calculate weighted percentage
