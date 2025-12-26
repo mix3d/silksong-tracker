@@ -1502,12 +1502,11 @@ function generateFilterCheckboxes() {
 export function initWorldMapPins(): void {
   initWorldMapListeners();
 
-  const select = document.querySelector<HTMLSelectElement>("#map-act-select");
   const img = document.querySelector<HTMLImageElement>("#worldMap");
   const overlay = document.querySelector<HTMLDivElement>("#mapPinsOverlay");
   const pinsToggle = document.querySelector<HTMLInputElement>("#show-map-pins");
 
-  if (!select || !img || !overlay) {
+  if (!img || !overlay) {
     return;
   }
 
