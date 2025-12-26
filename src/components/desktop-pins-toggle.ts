@@ -6,16 +6,20 @@ export function initDesktopPinsToggle(): void {
 
   const contextDrawer = getHTMLElement("mobile-context-drawer");
   const contextBackdrop = getHTMLElement("mobile-context-backdrop");
+  const contextTitle = getHTMLElement("mobile-context-title");
 
   desktopPinsToggle.addEventListener("click", () => {
     // Toggle drawer
     const isOpen = contextDrawer.classList.contains("open");
-    
+
     if (isOpen) {
       contextDrawer.classList.remove("open");
       contextBackdrop.classList.remove("active");
       document.body.style.overflow = "";
     } else {
+      // Set drawer title to "Pins"
+      contextTitle.textContent = "Pins";
+
       contextDrawer.classList.add("open");
       contextBackdrop.classList.add("active");
       document.body.style.overflow = "hidden";
