@@ -357,7 +357,6 @@ export function updateCompletionPercentage(): void {
   // Calculate weighted percentage
   let totalPercentage = 0;
 
-  console.log('=== COMPLETION CALCULATION ===');
   for (const [categoryKey, weight] of Object.entries(CATEGORY_WEIGHTS)) {
     const progress = categoryProgress[categoryKey];
 
@@ -365,13 +364,8 @@ export function updateCompletionPercentage(): void {
       const categoryCompletion = progress.completed / progress.total;
       const weightedPercentage = categoryCompletion * weight.totalPercent;
       totalPercentage += weightedPercentage;
-      console.log(`${categoryKey}: ${progress.completed}/${progress.total} items = ${(categoryCompletion * 100).toFixed(1)}% → ${weightedPercentage.toFixed(2)}% of total`);
-    } else {
-      console.log(`${categoryKey}: 0/0 items (expected ${weight.itemCount}) → MISSING ${weight.totalPercent}%`);
     }
   }
-  console.log(`Total: ${totalPercentage.toFixed(2)}% (rounded to ${Math.round(totalPercentage)}%)`);
-  console.log('==============================');
 
   // Round to nearest integer
   const percentage = Math.round(totalPercentage);
