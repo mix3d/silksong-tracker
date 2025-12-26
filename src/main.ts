@@ -1,6 +1,7 @@
 import { initActsDropdown } from "./components/acts-dropdown.ts";
 import { initBackToTop } from "./components/back-to-top.ts";
 import { initDataActionBtn } from "./components/data-action-btn.ts";
+import { initDesktopPinsToggle } from "./components/desktop-pins-toggle.ts";
 import { initFiltersDropdown } from "./components/filters-dropdown.ts";
 import {
   cleanupMobileDrawers,
@@ -69,6 +70,9 @@ function initComponents() {
   // Initialize drawers (context drawer needed on all screens for map filters)
   initMobileDrawers();
 
+  // Desktop pins toggle
+  initDesktopPinsToggle();
+
   // Handle resize across mobile/tablet/desktop threshold
   let wasMobileOrTablet = window.innerWidth <= 1024;
   window.addEventListener("resize", () => {
@@ -87,6 +91,36 @@ function initComponents() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Wire mobile upload and reset buttons
+  const mobileUploadBtn = document.getElementById("mobile-upload-btn");
+  const mobileResetBtn = document.getElementById("mobile-reset-btn");
+
+  if (mobileUploadBtn) {
+    mobileUploadBtn.addEventListener("click", () => {
+      uploadOverlay.classList.remove("hidden");
+      // Close mobile drawer
+      const mobileDrawer = document.getElementById("mobile-tabs-drawer");
+      const mobileBackdrop = document.getElementById("mobile-tabs-backdrop");
+      if (mobileDrawer) mobileDrawer.classList.remove("open");
+      if (mobileBackdrop) mobileBackdrop.classList.remove("active");
+      document.body.style.overflow = "";
+    });
+  }
+
+  if (mobileResetBtn) {
+    mobileResetBtn.addEventListener("click", () => {
+      if (confirm("Are you sure you want to reset all data? This cannot be undone.")) {
+        clearAllData();
+        // Close mobile drawer
+        const mobileDrawer = document.getElementById("mobile-tabs-drawer");
+        const mobileBackdrop = document.getElementById("mobile-tabs-backdrop");
+        if (mobileDrawer) mobileDrawer.classList.remove("open");
+        if (mobileBackdrop) mobileBackdrop.classList.remove("active");
+        document.body.style.overflow = "";
+      }
+    });
+  }
+
   function closeUploadModalFunc() {
     uploadOverlay.classList.add("hidden");
   }
