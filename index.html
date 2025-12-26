@@ -490,7 +490,7 @@
           <!-- TOC legend will be added by JS if needed -->
         </div>
 
-        <!-- Pins content (shown on Map tab) -->
+        <!-- Map Filters content (shared by both mobile and desktop) -->
         <div
           id="mobile-map-filters-container"
           class="mobile-context-content hidden"
@@ -498,28 +498,24 @@
           <div class="search-container">
             <input
               type="text"
-              id="mobile-map-search"
+              id="map-search"
               placeholder="Search item..."
               autocomplete="off"
             />
           </div>
 
           <div class="filter-controls">
-            <button id="mobile-show-all-filters" class="btn-small">
-              Show All
-            </button>
-            <button id="mobile-hide-all-filters" class="btn-small">
-              Hide All
-            </button>
+            <button id="show-all-filters" class="btn-small">Show All</button>
+            <button id="hide-all-filters" class="btn-small">Hide All</button>
           </div>
 
-          <div id="mobile-map-filters" class="filter-list"></div>
+          <div id="map-filters" class="filter-list"></div>
 
           <div class="map-toggle-divider"></div>
 
           <div class="map-toggle-section">
             <label class="map-toggle-label">
-              <input type="checkbox" id="mobile-show-room-names" />
+              <input type="checkbox" id="show-room-names" />
               <span>Show room names</span>
             </label>
           </div>
