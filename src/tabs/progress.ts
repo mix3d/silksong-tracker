@@ -581,25 +581,15 @@ function getUnlocked(item: Item, value: unknown): boolean {
 }
 
 function buildDynamicTOC() {
-  // Get both desktop and mobile TOC lists
-  const desktopTocList = tocList;
-  const mobileTocList = document.querySelector("#mobile-toc-list");
-
-  // Clear both lists
-  desktopTocList.innerHTML = "";
-  if (mobileTocList) {
-    mobileTocList.innerHTML = "";
-  }
+  tocList.innerHTML = "";
 
   const headers = getHTMLElements(
     document,
     "#allprogress-grid h2, #allprogress-grid h3",
   );
 
-  let currentDesktopCategory: HTMLLIElement | undefined;
-  let currentDesktopSubList: HTMLUListElement | undefined;
-  let currentMobileCategory: HTMLLIElement | undefined;
-  let currentMobileSubList: HTMLUListElement | undefined;
+  let currentCategory: HTMLLIElement | undefined;
+  let currentSubList: HTMLUListElement | undefined;
 
   for (const header of headers) {
     const tag = header.tagName.toLowerCase();
@@ -617,7 +607,6 @@ function buildDynamicTOC() {
     }
 
     if (tag === "h2") {
-      // Create desktop version
       const li = document.createElement("li");
       li.className = "toc-category";
       li.dataset["manual"] = "false";
@@ -646,84 +635,31 @@ function buildDynamicTOC() {
       });
 
       li.append(a);
-      currentDesktopSubList = document.createElement("ul");
-      currentDesktopSubList.className = "toc-sublist hidden";
-      li.append(currentDesktopSubList);
-      desktopTocList.append(li);
-      currentDesktopCategory = li;
-
-      // Create mobile version (clone the desktop version)
-      if (mobileTocList) {
-        const mobileLi = li.cloneNode(true) as HTMLLIElement;
-        currentMobileSubList = mobileLi.querySelector(".toc-sublist")!;
-        mobileTocList.append(mobileLi);
-        currentMobileCategory = mobileLi;
-
-        // Re-attach event listener to mobile version
-        const mobileA = mobileLi.querySelector("a")!;
-        mobileA.addEventListener("click", (e) => {
-          e.preventDefault();
-          const target = getHTMLElement(header.id);
-          target.scrollIntoView({
-            behavior: "instant",
-            block: "start",
-          });
-
-          const wasOpen = mobileLi.classList.contains("open");
-          const mobileTocCategories = mobileTocList.querySelectorAll(
-            ".toc-category",
-          );
-          for (const cat of mobileTocCategories) {
-            cat.classList.remove("open");
-            cat.querySelector(".toc-sublist")?.classList.add("hidden");
-          }
-          if (!wasOpen) {
-            mobileLi.classList.add("open");
-            mobileLi.querySelector(".toc-sublist")?.classList.remove("hidden");
-          }
-        });
-      }
+      currentSubList = document.createElement("ul");
+      currentSubList.className = "toc-sublist hidden";
+      li.append(currentSubList);
+      tocList.append(li);
+      currentCategory = li;
     } else if (
       tag === "h3"
-      && currentDesktopCategory !== undefined
-      && currentDesktopSubList !== undefined
+      && currentCategory !== undefined
+      && currentSubList !== undefined
     ) {
-      // Create desktop version
       const subLi = document.createElement("li");
       subLi.className = "toc-item";
       const a = document.createElement("a");
       a.href = `#${header.id}`;
       a.textContent = text;
       subLi.append(a);
-      currentDesktopSubList.append(subLi);
-
-      // Create mobile version
-      if (
-        mobileTocList
-        && currentMobileCategory !== undefined
-        && currentMobileSubList !== undefined
-      ) {
-        const mobileSubLi = subLi.cloneNode(true) as HTMLLIElement;
-        currentMobileSubList.append(mobileSubLi);
-      }
+      currentSubList.append(subLi);
     }
   }
 
-  // Add legend to desktop TOC (only if it doesn't exist)
-  if (!document.querySelector("#toc .toc-legend")) {
-    const legendBlock = createTOCLegend();
-    desktopTocList.parentElement?.append(legendBlock);
+  if (document.querySelector(".toc-legend")) {
+    return;
   }
 
-  // Add legend to mobile TOC (only if it doesn't exist)
-  if (mobileTocList && !document.querySelector("#mobile-toc-container .toc-legend")) {
-    const mobileLegendBlock = createTOCLegend();
-    mobileTocList.parentElement?.append(mobileLegendBlock);
-  }
-}
-
-/** Helper function to create the TOC legend */
-function createTOCLegend(): HTMLDivElement {
+  // Append legend block at the bottom of the TOC.
   const legendBlock = document.createElement("div");
   legendBlock.className = "toc-legend";
 
@@ -746,6 +682,7 @@ function createTOCLegend(): HTMLDivElement {
       <li><span class="legend-missable">!</span> Missable item</li>
     </ul>
   `;
+  tocList.parentElement?.append(legendBlock);
 
   // Add click handler to toggle collapsed state
   const legendHeader = legendBlock.querySelector(".legend-header");
@@ -762,8 +699,6 @@ function createTOCLegend(): HTMLDivElement {
         : "fa-solid fa-chevron-down";
     }
   });
-
-  return legendBlock;
 }
 
 function resolveIconSrc(icon: string | undefined): string {
