@@ -1,5 +1,6 @@
 import { initActsDropdown } from "./components/acts-dropdown.ts";
 import { initBackToTop } from "./components/back-to-top.ts";
+import { initDataActionBtn } from "./components/data-action-btn.ts";
 import { initShowOnlyMissing } from "./components/show-only-missing.ts";
 import { initShowProgressOnly } from "./components/show-progress-only.ts";
 import { initShowSpoilers } from "./components/show-spoilers.ts";
@@ -8,9 +9,7 @@ import {
   initSidebarItems,
   toggleTocVisibility,
 } from "./components/sidebar-items.ts";
-import { initUploadSave } from "./components/upload-save.ts";
 import {
-  clearDataBtn,
   closeInfoModal,
   closeUploadModal,
   dropzone,
@@ -32,11 +31,6 @@ import { showToast } from "./utils.ts";
 initWorldMapPins();
 
 logoLink.addEventListener("click", (e) => {
-  e.preventDefault();
-  clearAllData();
-});
-
-clearDataBtn.addEventListener("click", (e) => {
   e.preventDefault();
   clearAllData();
 });
