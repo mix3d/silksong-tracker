@@ -3063,6 +3063,25 @@ label.filter-label-desktop,
   font-size: 1rem;
 }
 
+/* Mobile action button - Reset state (red styling) */
+.mobile-action-btn.mobile-action-reset {
+  background: rgba(255, 77, 77, 0.1);
+  color: #ff4d4d;
+  border-color: rgba(255, 77, 77, 0.3);
+}
+
+.mobile-action-btn.mobile-action-reset:hover {
+  background: #ff4d4d;
+  color: #fff;
+  border-color: #ff4d4d;
+  box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
+}
+
+/* Mobile action button - Upload state (default styling already applied) */
+.mobile-action-btn.mobile-action-upload {
+  /* Uses default mobile-action-btn styles */
+}
+
 /* ==================== RIGHT DRAWER - TOC (Progress tab) ==================== */
 
 #mobile-toc-container {
