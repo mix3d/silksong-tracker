@@ -116,12 +116,9 @@ function getItemCategory(item: Item): string | null {
     return "silk-regen-max";
   }
   
-  // Miscellaneous
-  if (item.flag === "EVAHEAL" || item.flag === "BoundCrestUpgrader") {
-    return "miscellaneous"; // Sylphsong
-  }
-  if (item.flag === "WhiteFlower") {
-    return "miscellaneous"; // Everbloom
+  // Miscellaneous (Everbloom and Bind Eva)
+  if (item.flag === "White Flower" || item.flag === "HasBoundCrestUpgrader" || item.mapCategory === "miscellaneous") {
+    return "miscellaneous";
   }
   
   // Crests
