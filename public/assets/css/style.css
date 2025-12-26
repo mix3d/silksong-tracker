@@ -1646,7 +1646,7 @@ input[type="checkbox"]:focus-visible {
     margin-right: 0 !important;
   }
 
-  /* Map section - full width on mobile */
+  /* Map section - full width on mobile/tablet */
   #map-section .map-wrapper {
     width: 100% !important;
     margin-right: 0 !important;
@@ -2683,9 +2683,9 @@ label.filter-label-desktop,
   text-shadow: 0 0 6px rgba(227, 180, 123, 0.3) !important;
 }
 
-/* ==================== MOBILE DRAWERS (SHARED) ==================== */
+/* ==================== MOBILE/TABLET DRAWERS (SHARED) ==================== */
 
-/* Toggle buttons - hidden on desktop */
+/* Toggle buttons - hidden on desktop (shown on mobile/tablet ≤1024px) */
 .mobile-tabs-toggle,
 .mobile-context-toggle {
   display: none !important;
