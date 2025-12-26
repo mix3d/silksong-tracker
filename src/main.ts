@@ -1,6 +1,7 @@
 import { initActsDropdown } from "./components/acts-dropdown.ts";
 import { initBackToTop } from "./components/back-to-top.ts";
 import { initDataActionBtn } from "./components/data-action-btn.ts";
+import { initFiltersDropdown } from "./components/filters-dropdown.ts";
 import { initShowOnlyMissing } from "./components/show-only-missing.ts";
 import { initShowProgressOnly } from "./components/show-progress-only.ts";
 import { initShowSpoilers } from "./components/show-spoilers.ts";
