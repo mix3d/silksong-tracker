@@ -1412,10 +1412,29 @@ function renderWorldMapPins() {
   const img = document.querySelector<HTMLImageElement>("#worldMap");
   const overlay = document.querySelector<HTMLDivElement>("#mapPinsOverlay");
 
-  const searchInput = document.querySelector<HTMLInputElement>("#map-search");
-  if (searchInput) {
-    searchInput.addEventListener("input", renderWorldMapPins);
+  const desktopSearchInput = document.querySelector<HTMLInputElement>("#map-search");
+  const mobileSearchInput = document.querySelector<HTMLInputElement>("#mobile-map-search");
+
+  if (desktopSearchInput) {
+    desktopSearchInput.addEventListener("input", () => {
+      // Sync with mobile
+      if (mobileSearchInput) {
+        mobileSearchInput.value = desktopSearchInput.value;
+      }
+      renderWorldMapPins();
+    });
   }
+
+  if (mobileSearchInput) {
+    mobileSearchInput.addEventListener("input", () => {
+      // Sync with desktop
+      if (desktopSearchInput) {
+        desktopSearchInput.value = mobileSearchInput.value;
+      }
+      renderWorldMapPins();
+    });
+  }
+
   if (!img || !overlay) {
     return;
   }
@@ -1425,7 +1444,7 @@ function renderWorldMapPins() {
   const currentSrc = img.getAttribute("src") ?? "";
   const currentResolved = resolveMapImageSrc(currentSrc);
 
-  const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : "";
+  const searchTerm = desktopSearchInput ? desktopSearchInput.value.trim().toLowerCase() : "";
 
   const items = collectAllItems();
   const saveData = getSaveData();
