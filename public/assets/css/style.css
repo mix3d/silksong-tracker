@@ -103,9 +103,10 @@ body {
 }
 
 .topbar {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px;
   top: 0;
   z-index: 10;
   height: 44px;
@@ -117,9 +118,9 @@ body {
 }
 
 .topbar-right {
-  margin-left: auto;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   flex-wrap: nowrap;
 }
@@ -1658,13 +1659,19 @@ input[type="checkbox"]:focus-visible {
   .topbar {
     width: 100%;
     padding: 0 8px;
+    grid-template-columns: auto 1fr auto;
+    gap: 8px;
   }
 
   .topbar-left {
     gap: 6px;
   }
 
-  .topbar-right {
+  .topbar-center {
+    gap: 6px;
+  }
+
+  .topbar-end {
     gap: 6px;
   }
 
@@ -1691,10 +1698,12 @@ input[type="checkbox"]:focus-visible {
   @media (max-width: 480px) {
     .topbar {
       padding: 0 6px;
+      gap: 6px;
     }
 
     .topbar-left,
-    .topbar-right {
+    .topbar-center,
+    .topbar-end {
       gap: 4px;
     }
 
@@ -2768,6 +2777,24 @@ label.filter-label-desktop,
   display: flex;
   align-items: center;
   gap: 8px;
+  justify-self: start;
+}
+
+/* Topbar center section for dropdowns/filters */
+.topbar-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+
+/* Topbar end section for context button + upload */
+.topbar-end {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-self: end;
 }
 
 /* Shared drawer backdrop */
