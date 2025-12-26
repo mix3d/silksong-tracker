@@ -31,17 +31,24 @@ function initTabsDrawer(): void {
   
   for (const item of desktopSidebarItems) {
     const clone = item.cloneNode(true) as HTMLAnchorElement;
-    
+
     // Sync active state
     if (item.classList.contains("is-active")) {
       clone.classList.add("is-active");
     }
-    
-    // Close drawer when clicking nav item
-    clone.addEventListener("click", () => {
+
+    // Wire up click to trigger the original desktop item's click (which has navigation logic)
+    clone.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Trigger click on the original desktop sidebar item (has the navigation logic)
+      const originalItem = item as HTMLAnchorElement;
+      originalItem.click();
+
+      // Close drawer
       closeTabsDrawer();
     });
-    
+
     mobileTabItemsContainer.append(clone);
   }
   
@@ -300,9 +307,9 @@ export function updateContextButton(): void {
     contextToggleBtn.setAttribute("title", "Map Filters");
     const icon = contextToggleBtn.querySelector("i");
     if (icon) {
-      icon.className = "fa-solid fa-filter";
+      icon.className = "fa-solid fa-layer-group";
     }
-    contextLabel.textContent = "Filters";
+    contextLabel.textContent = "Map Filters";
     contextTitle.textContent = "Map Filters";
 
     tocContainer.classList.add("hidden");
