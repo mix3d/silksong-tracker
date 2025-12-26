@@ -11,6 +11,7 @@ export function initMobileDrawers(): void {
   const isMobileOrTablet = window.innerWidth <= 1024;
   if (isMobileOrTablet) {
     initTabsDrawer();
+    initMobileActionButton();
   }
 
   // Always init context drawer (needed for map filters on all screen sizes)
