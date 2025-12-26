@@ -420,6 +420,36 @@ main a:hover,
   transform: scale(0.97);
 }
 
+.btn-reset {
+  background: #c74444;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: "TrajanPro", serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+  transition:
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.btn-reset:hover {
+  background: #a93939;
+  box-shadow: 0 0 12px rgba(199, 68, 68, 0.4);
+}
+
+.btn-reset:active {
+  transform: scale(0.97);
+}
+
 .topbar label {
   margin: 0;
   font-size: 0.9rem;
