@@ -54,4 +54,12 @@ export const uploadOverlay = getHTMLElement("uploadOverlay");
 export const mapActSelector = getHTMLElement("map-act-select");
 export const worldMap = getHTMLElement("worldMap");
 export const logoLink = getHTMLElement("logo-link") as HTMLAnchorElement;
-export const dataActionBtn = getHTMLElement("data-action-btn") as HTMLButtonElement;
+
+// Desktop-only element (may not exist on mobile)
+export function getDataActionBtn(): HTMLButtonElement | null {
+  try {
+    return getHTMLElement("data-action-btn") as HTMLButtonElement;
+  } catch {
+    return null;
+  }
+}
