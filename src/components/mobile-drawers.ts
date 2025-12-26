@@ -192,16 +192,21 @@ function handleMobileActionClick(e: Event): void {
   const hasData = getSaveData() !== undefined;
 
   if (hasData) {
-    // Reset action
-    clearAllData();
-    // Close drawer after reset
-    closeTabsDrawer();
+    // Reset action - ask for confirmation
+    if (confirm("Are you sure you want to reset all data? This cannot be undone.")) {
+      clearAllData();
+      // Close drawer after reset
+      closeTabsDrawer();
+    }
   } else {
     // Upload action
-    uploadOverlay.classList.remove("hidden");
-    dropzone.focus();
-    // Close drawer to show upload overlay
+    // Close drawer first
     closeTabsDrawer();
+    // Open upload overlay after drawer closes
+    setTimeout(() => {
+      uploadOverlay.classList.remove("hidden");
+      dropzone.focus();
+    }, 100);
   }
 }
 
