@@ -24,9 +24,9 @@ import {
   getHTMLElements,
   infoOverlay,
   logoLink,
-  mapActSelector,
   uploadOverlay,
   worldMap,
+  getShowRoomNamesToggle,
 } from "./elements.ts";
 import { renderActiveTab } from "./render-tab.ts";
 import { clearAllData, handleSaveFile } from "./save-data.ts";
