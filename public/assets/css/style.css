@@ -1647,12 +1647,21 @@ input[type="checkbox"]:focus-visible {
   /* Stack map header on mobile */
   .map-header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
   }
 
   .map-controls {
     width: 100%;
-    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .map-control-group {
+    flex: 1;
+    min-width: fit-content;
+  }
+
+  #desktop-pins-toggle {
+    flex-shrink: 0;
   }
 
   /* Topbar adjustments */
