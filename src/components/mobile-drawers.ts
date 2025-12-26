@@ -5,17 +5,24 @@ import type { Tab } from "../render-tab.ts";
 
 let tabsDrawerOpen = false;
 let contextDrawerOpen = false;
+let tabsDrawerInitialized = false;
+let contextDrawerInitialized = false;
 
 export function initMobileDrawers(): void {
-  // Only init tabs drawer on mobile/tablet
+  // Only init tabs drawer once on mobile/tablet
   const isMobileOrTablet = window.innerWidth <= 1024;
-  if (isMobileOrTablet) {
+  if (isMobileOrTablet && !tabsDrawerInitialized) {
     initTabsDrawer();
     initMobileActionButton();
+    tabsDrawerInitialized = true;
   }
 
-  // Always init context drawer (needed for map filters on all screen sizes)
-  initContextDrawer();
+  // Init context drawer once (needed for map filters on all screen sizes)
+  if (!contextDrawerInitialized) {
+    initContextDrawer();
+    contextDrawerInitialized = true;
+  }
+
   updateContextButton();
 }
 
