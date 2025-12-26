@@ -301,16 +301,21 @@ export function updateContextButton(): void {
     }
 
   } else if (activeTab === "map") {
-    // Show Pins (ALL screen sizes - drawer is better than floating sidebar)
-    contextToggleBtn.classList.add("visible");
-    contextToggleBtn.setAttribute("data-mode", "pins");
-    contextToggleBtn.setAttribute("title", "Pins");
-    const icon = contextToggleBtn.querySelector("i");
-    if (icon) {
-      icon.className = "fa-solid fa-map-pin";
+    // Show Pins on mobile/tablet only (desktop uses desktop-pins-toggle in map header)
+    if (isMobileOrTablet) {
+      contextToggleBtn.classList.add("visible");
+      contextToggleBtn.setAttribute("data-mode", "pins");
+      contextToggleBtn.setAttribute("title", "Pins");
+      const icon = contextToggleBtn.querySelector("i");
+      if (icon) {
+        icon.className = "fa-solid fa-map-pin";
+      }
+      contextLabel.textContent = "Pins";
+      contextTitle.textContent = "Pins";
+    } else {
+      // Desktop: hide topbar Pins button (uses desktop-pins-toggle in map header instead)
+      contextToggleBtn.classList.remove("visible");
     }
-    contextLabel.textContent = "Pins";
-    contextTitle.textContent = "Pins";
 
     tocContainer.classList.add("hidden");
     mapFiltersContainer.classList.remove("hidden");
