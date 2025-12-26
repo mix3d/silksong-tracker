@@ -14,6 +14,7 @@ import { completionValue } from "./elements.ts";
 import {
   getSaveData,
   getSaveDataFlags,
+  getSaveDataMode,
   getSaveDataValue,
 } from "./save-data.ts";
 import type { Category } from "./types/Category.ts";
