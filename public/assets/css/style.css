@@ -99,7 +99,6 @@ body {
 
 .main-wrapper {
   margin-left: 220px;
-  /* width calc removed to prevent layout breakages with fixed sidebar */
 }
 
 .topbar {
@@ -118,8 +117,6 @@ body {
   width: 100%;
   box-sizing: border-box;
 }
-
-/* Data action button is now in topbar-end section */
 
 .section {
   max-width: 980px;
@@ -199,9 +196,7 @@ button,
   transform: scale(0.97);
 }
 
-/* Support legacy classes used in your markup */
-.sidebar-links,
-.sidebar-links.compact-icons {
+.sidebar-links {
   display: flex;
   justify-content: flex-start;
   gap: 12px;
