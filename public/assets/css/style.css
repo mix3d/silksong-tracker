@@ -1662,7 +1662,7 @@ input[type="checkbox"]:focus-visible {
     gap: 0.5rem;
   }
 
-  /* Simplify button labels on very small screens */
+  /* Simplify button labels on very small screens (phones) */
   @media (max-width: 480px) {
     .topbar-right .btn-icon span:not(#mobile-context-label) {
       display: none;
