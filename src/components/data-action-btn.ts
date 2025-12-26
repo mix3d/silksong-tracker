@@ -53,12 +53,12 @@ function handleClick(e: Event): void {
 }
 
 /**
- * Initialize the data action button (desktop only)
+ * Initialize the data action button (desktop sidebar)
  */
 export function initDataActionBtn(): void {
   dataActionBtn = getDataActionBtn();
 
-  // Skip if button doesn't exist (mobile view)
+  // Skip if button doesn't exist (may not be rendered in some views)
   if (!dataActionBtn) {
     return;
   }
