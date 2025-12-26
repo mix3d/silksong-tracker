@@ -1347,10 +1347,6 @@ function renderWorldMapPins() {
   const img = document.querySelector<HTMLImageElement>("#worldMap");
   const overlay = document.querySelector<HTMLDivElement>("#mapPinsOverlay");
 
-  const searchInput = document.querySelector<HTMLInputElement>("#map-search");
-  if (searchInput) {
-    searchInput.addEventListener("input", renderWorldMapPins);
-  }
   if (!img || !overlay) {
     return;
   }
@@ -1360,6 +1356,7 @@ function renderWorldMapPins() {
   const currentSrc = img.getAttribute("src") ?? "";
   const currentResolved = resolveMapImageSrc(currentSrc);
 
+  const searchInput = document.querySelector<HTMLInputElement>("#map-search");
   const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : "";
 
   const items = collectAllItems();
