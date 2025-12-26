@@ -3083,10 +3083,9 @@ label.filter-label-desktop,
 }
 
 .mobile-external-links .sidebar-actions {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
-  flex-wrap: wrap;
 }
 
 /* Mobile drawer actions (upload/reset) */
