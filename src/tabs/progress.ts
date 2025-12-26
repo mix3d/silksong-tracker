@@ -1,9 +1,12 @@
 import { assertArray } from "complete-common";
+import {
+  itemCountsTowardCompletion,
+  updateCompletionPercentage,
+} from "../calculate-completion.ts";
 import { getStoredActFilter } from "../components/acts-dropdown.ts";
 import { showOnlyMissing } from "../components/show-only-missing.ts";
 import { showProgressOnly } from "../components/show-progress-only.ts";
 import { showSpoilers } from "../components/show-spoilers.ts";
-import { itemCountsTowardCompletion, updateCompletionPercentage } from "../calculate-completion.ts";
 import { BASE_PATH } from "../constants.ts";
 import bossesJSON from "../data/bosses.json" with { type: "json" };
 import completionJSON from "../data/completion.json" with { type: "json" };
@@ -16,7 +19,6 @@ import wishesJSON from "../data/wishes.json" with { type: "json" };
 
 import {
   allProgressGrid,
-  completionValue,
   getHTMLElement,
   getHTMLElements,
   infoContent,
@@ -38,9 +40,7 @@ import { createCheckbox, getCompletedValueForItem } from "../utils/checkbox.ts";
 let tocObserver: IntersectionObserver | undefined;
 let isManualScroll = false; // prevent observer interference
 
-/**
- * Get all items that belong to a specific group (for mutual exclusivity)
- */
+/** Get all items that belong to a specific group (for mutual exclusivity) */
 function getItemsByGroup(group: string): Item[] {
   const allItems = collectAllItems();
   return allItems.filter(
@@ -48,9 +48,7 @@ function getItemsByGroup(group: string): Item[] {
   );
 }
 
-/**
- * Get items related by upgrades (base and its upgrades, or upgrade and its base)
- */
+/** Get items related by upgrades (base and its upgrades, or upgrade and its base) */
 function getUpgradeRelatedItems(item: Item): Item[] {
   const allItems = collectAllItems();
   const relatedItems: Item[] = [];
@@ -254,7 +252,10 @@ export function updateTabProgress(): void {
       const categoryCheckbox = document.createElement("input");
       categoryCheckbox.type = "checkbox";
       categoryCheckbox.className = "category-checkbox";
-      categoryCheckbox.setAttribute("aria-label", `Toggle all ${category.label}`);
+      categoryCheckbox.setAttribute(
+        "aria-label",
+        `Toggle all ${category.label}`,
+      );
       heading.append(categoryCheckbox);
 
       // Update checkbox state based on obtained/total
@@ -274,16 +275,18 @@ export function updateTabProgress(): void {
       // Add click handler to toggle all items in category
       categoryCheckbox.addEventListener("click", (e) => {
         e.stopPropagation();
-        // Note: checkbox state is already toggled when click event fires
-        // If checkbox is now checked, we should check all items
-        // If checkbox is now unchecked, we should uncheck all items
+        // Note: checkbox state is already toggled when click event fires If checkbox is now
+        // checked, we should check all items If checkbox is now unchecked, we should uncheck all
+        // items
         const shouldCheck = categoryCheckbox.checked;
 
         // Check if this is a mutually exclusive group (all items share same unobtainable group)
         const firstGroup = filteredItems[0]?.group;
-        const isAllSameGroup = firstGroup && filteredItems.every(
-          item => item.unobtainable === true && item.group === firstGroup
-        );
+        const isAllSameGroup =
+          firstGroup
+          && filteredItems.every(
+            (item) => item.unobtainable === true && item.group === firstGroup,
+          );
 
         if (isAllSameGroup) {
           // For mutually exclusive groups (like quills)
@@ -297,7 +300,13 @@ export function updateTabProgress(): void {
           } else {
             // Uncheck whichever item is currently selected
             for (const item of filteredItems) {
-              const uncompletedValue = item.type === "collectable" || item.type === "level" || item.type === "journal" || item.type === "quill" ? 0 : false;
+              const uncompletedValue =
+                item.type === "collectable"
+                || item.type === "level"
+                || item.type === "journal"
+                || item.type === "quill"
+                  ? 0
+                  : false;
               setManualProgress(item, uncompletedValue);
             }
           }
@@ -320,7 +329,8 @@ export function updateTabProgress(): void {
                 const relatedItems = getUpgradeRelatedItems(item);
                 for (const relatedItem of relatedItems) {
                   if (relatedItem.id === item.upgradeOf) {
-                    const baseCompletedValue = getCompletedValueForItem(relatedItem);
+                    const baseCompletedValue =
+                      getCompletedValueForItem(relatedItem);
                     setManualProgress(relatedItem, baseCompletedValue);
                   }
                 }
@@ -332,14 +342,24 @@ export function updateTabProgress(): void {
                 for (const groupItem of groupItems) {
                   if (groupItem.id !== item.id) {
                     // Set to uncompleted value (0 or false)
-                    const uncompletedValue = groupItem.type === "collectable" || groupItem.type === "level" || groupItem.type === "journal" ? 0 : false;
+                    const uncompletedValue =
+                      groupItem.type === "collectable"
+                      || groupItem.type === "level"
+                      || groupItem.type === "journal"
+                        ? 0
+                        : false;
                     setManualProgress(groupItem, uncompletedValue);
                   }
                 }
               }
             } else {
               // Uncheck item (set to uncompleted value)
-              const uncompletedValue = item.type === "collectable" || item.type === "level" || item.type === "journal" ? 0 : false;
+              const uncompletedValue =
+                item.type === "collectable"
+                || item.type === "level"
+                || item.type === "journal"
+                  ? 0
+                  : false;
               setManualProgress(item, uncompletedValue);
 
               // If upgrade, also uncheck base
@@ -347,7 +367,12 @@ export function updateTabProgress(): void {
                 const relatedItems = getUpgradeRelatedItems(item);
                 for (const relatedItem of relatedItems) {
                   if (relatedItem.id === item.upgradeOf) {
-                    const uncompletedValue = relatedItem.type === "collectable" || relatedItem.type === "level" || relatedItem.type === "journal" ? 0 : false;
+                    const uncompletedValue =
+                      relatedItem.type === "collectable"
+                      || relatedItem.type === "level"
+                      || relatedItem.type === "journal"
+                        ? 0
+                        : false;
                     setManualProgress(relatedItem, uncompletedValue);
                   }
                 }
@@ -384,8 +409,8 @@ export function updateTabProgress(): void {
       collapsibleContent.className = "category-content";
 
       // Move description and grid into collapsible content
-      section.removeChild(desc);
-      section.removeChild(subgrid);
+      desc.remove();
+      subgrid.remove();
       collapsibleContent.append(desc);
       collapsibleContent.append(subgrid);
       section.append(collapsibleContent);
@@ -408,11 +433,9 @@ export function updateTabProgress(): void {
         const isCurrentlyCollapsed = section.classList.toggle("collapsed");
 
         // Update icon
-        if (isCurrentlyCollapsed) {
-          collapseIcon.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
-        } else {
-          collapseIcon.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
-        }
+        collapseIcon.innerHTML = isCurrentlyCollapsed
+          ? '<i class="fa-solid fa-chevron-right"></i>'
+          : '<i class="fa-solid fa-chevron-down"></i>';
 
         // Save state to localStorage
         localStorage.setItem(collapsedKey, isCurrentlyCollapsed.toString());
@@ -431,9 +454,9 @@ export function updateTabProgress(): void {
   buildDynamicTOC();
   initScrollSpy();
 
-  // Use the weighted completion calculation from calculate-completion.ts
-  // This properly weights categories (e.g. 18 spool fragments = 9%, 20 mask shards = 5%)
-  // instead of treating all items equally
+  // Use the weighted completion calculation from calculate-completion.ts This properly weights
+  // categories (e.g. 18 spool fragments = 9%, 20 mask shards = 5%) instead of treating all items
+  // equally
   updateCompletionPercentage();
 }
 
@@ -483,8 +506,8 @@ function initWorldMapListeners() {
 }
 
 function getUnlocked(item: Item, value: unknown): boolean {
-  // Manual progress is now integrated into the save data directly,
-  // so we don't need to check it separately
+  // Manual progress is now integrated into the save data directly, so we don't need to check it
+  // separately
 
   if (item.type === "quest") {
     return value === "completed" || value === true;
@@ -846,9 +869,15 @@ ${(() => {
     // Add checkbox in label for larger click area
     const checkboxLabel = document.createElement("label");
     checkboxLabel.className = "modal-checkbox-label";
-    const checkbox = createCheckbox(item, isCompleted, () => {
-      infoOverlay.classList.add("hidden");
-    }, getItemsByGroup, getUpgradeRelatedItems);
+    const checkbox = createCheckbox(
+      item,
+      isCompleted,
+      () => {
+        infoOverlay.classList.add("hidden");
+      },
+      getItemsByGroup,
+      getUpgradeRelatedItems,
+    );
     checkboxLabel.append(checkbox);
     rightControls.append(checkboxLabel);
 
@@ -965,7 +994,6 @@ ${(() => {
       }
     }
   }
-
 }
 
 /**
@@ -1042,13 +1070,28 @@ function renderGenericGrid(
     // Check for "accepted" state (in-progress items)
     let isAccepted = false;
 
-    if (item.type === "quest") {
-      isAccepted = value === "accepted";
-    } else if (item.type === "relic" || item.type === "materium" || item.type === "device") {
-      isAccepted = value === "collected";
-    } else if (item.type === "journal") {
-      const current = Number.isFinite(Number(value)) ? Number(value) : 0;
-      isAccepted = current > 0 && current < item.required;
+    switch (item.type) {
+      case "quest": {
+        isAccepted = value === "accepted";
+
+        break;
+      }
+
+      case "relic":
+      case "materium":
+      case "device": {
+        isAccepted = value === "collected";
+
+        break;
+      }
+
+      case "journal": {
+        const current = Number.isFinite(Number(value)) ? Number(value) : 0;
+        isAccepted = current > 0 && current < item.required;
+
+        break;
+      }
+      // No default
     }
 
     // Unobtainable icon
@@ -1144,7 +1187,13 @@ function renderGenericGrid(
     }
 
     // Add checkbox toggle (top-right)
-    const checkbox = createCheckbox(item, isDone, undefined, getItemsByGroup, getUpgradeRelatedItems);
+    const checkbox = createCheckbox(
+      item,
+      isDone,
+      undefined,
+      getItemsByGroup,
+      getUpgradeRelatedItems,
+    );
     checkbox.classList.add("tile-checkbox");
     div.append(checkbox);
 
@@ -1366,9 +1415,10 @@ function renderWorldMapPins() {
     pin.style.top = `${item.mapViewer.y * 100}%`;
 
     // Check if item is unlocked (either from save data or manual progress)
-    const value = saveData !== undefined
-      ? getSaveDataValue(saveData, saveDataFlags, item)
-      : undefined;
+    const value =
+      saveData === undefined
+        ? undefined
+        : getSaveDataValue(saveData, saveDataFlags, item);
     const unlocked = getUnlocked(item, value);
 
     if (unlocked) {

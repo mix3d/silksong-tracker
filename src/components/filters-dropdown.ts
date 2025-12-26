@@ -1,7 +1,4 @@
-/**
- * Filters dropdown component (mobile/tablet only)
- * Syncs with the desktop filter checkboxes
- */
+/** Filters dropdown component (mobile/tablet only) Syncs with the desktop filter checkboxes */
 
 import { getHTMLElement, getHTMLInputElement } from "../elements.ts";
 
@@ -33,8 +30,8 @@ export function initFiltersDropdown(): void {
   // Close dropdown when clicking outside
   document.addEventListener("click", (e) => {
     if (
-      !filtersDropdownMenu.contains(e.target as Node) &&
-      !filtersDropdownButton.contains(e.target as Node)
+      !filtersDropdownMenu.contains(e.target as Node)
+      && !filtersDropdownButton.contains(e.target as Node)
     ) {
       filtersDropdownMenu.classList.add("hidden");
     }

@@ -5,9 +5,9 @@ import {
   includes,
 } from "complete-common";
 import { getHTMLElement, getHTMLElements } from "../elements.ts";
-import { updateContextButton } from "./mobile-drawers.ts";
 import type { Tab } from "../render-tab.ts";
 import { renderActiveTab, TABS } from "../render-tab.ts";
+import { updateContextButton } from "./mobile-drawers.ts";
 
 const LOCAL_STORAGE_KEY = "activeTab";
 

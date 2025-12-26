@@ -1,21 +1,18 @@
 /**
  * Save Data Updater
- * 
- * This module handles updating the save data structure when users manually check/uncheck items.
- * All manual changes modify the actual save data object, ensuring a single source of truth.
+ *
+ * This module handles updating the save data structure when users manually check/uncheck items. All
+ * manual changes modify the actual save data object, ensuring a single source of truth.
  */
 
-import type { Item } from "./types/Item.ts";
-import type { ObjectWithSavedData, SilksongSave } from "./save-parser";
-import { getSaveDataFlags } from "./save-parser.ts";
-import { normalizeString, normalizeStringWithUnderscores } from "./utils.ts";
 import { isObject } from "complete-common";
+import type { SilksongSave } from "./save-parser";
+import type { Item } from "./types/Item.ts";
+import { normalizeString, normalizeStringWithUnderscores } from "./utils.ts";
 
 const MANUAL_SAVE_KEY = "silksong-manual-save";
 
-/**
- * Create an empty save data structure for manual tracking
- */
+/** Create an empty save data structure for manual tracking */
 export function createEmptySaveData(): SilksongSave {
   return {
     playerData: {
@@ -33,7 +30,7 @@ export function createEmptySaveData(): SilksongSave {
       ShellShards: 0,
       ToolEquips: { savedData: [] },
       Tools: { savedData: [] },
-      
+
       // Keys
       PurchasedBonebottomFaithToken: false,
       CollectedDustCageKey: false,
@@ -45,7 +42,7 @@ export function createEmptySaveData(): SilksongSave {
       HasSlabKeyA: false,
       HasSlabKeyB: false,
       PurchasedArchitectKey: false,
-    } as SilksongSave['playerData'],
+    } as SilksongSave["playerData"],
     sceneData: {
       persistentBools: { serializedList: [] },
       persistentInts: { serializedList: [] },
@@ -53,9 +50,7 @@ export function createEmptySaveData(): SilksongSave {
   };
 }
 
-/**
- * Update save data for a specific item with a new value
- */
+/** Update save data for a specific item with a new value */
 export function updateSaveDataForItem(
   saveData: SilksongSave,
   saveDataFlags: Record<string, unknown> | undefined,
@@ -63,7 +58,8 @@ export function updateSaveDataForItem(
   value: unknown,
 ): void {
   const { playerData, sceneData } = saveData;
-  const playerDataExpanded: Record<string, unknown> = playerData as unknown as Record<string, unknown>;
+  const playerDataExpanded: Record<string, unknown> =
+    playerData as unknown as Record<string, unknown>;
   const sceneDataExpanded = sceneData as unknown as Record<string, unknown>;
 
   switch (item.type) {
@@ -91,28 +87,30 @@ export function updateSaveDataForItem(
     case "collectable": {
       const { flag } = item;
       const collectables = playerData.Collectables;
-      
+
       let entry = collectables.savedData.find((e) => e.Name === flag);
       if (!entry) {
         entry = { Name: flag, Data: {} };
         collectables.savedData.push(entry);
       }
-      
-      entry.Data["Amount"] = typeof value === "number" ? value : (value ? 1 : 0);
+
+      entry.Data["Amount"] = typeof value === "number" ? value : value ? 1 : 0;
       break;
     }
 
     case "tool": {
       const { flag } = item;
       const normalizedFlag = normalizeString(flag);
-      
+
       const tools = playerData.Tools;
-      let entry = tools.savedData.find((e) => normalizeString(e.Name) === normalizedFlag);
+      let entry = tools.savedData.find(
+        (e) => normalizeString(e.Name) === normalizedFlag,
+      );
       if (!entry) {
         entry = { Name: flag, Data: {} };
         tools.savedData.push(entry);
       }
-      
+
       entry.Data["IsUnlocked"] = value === true;
       break;
     }
@@ -120,14 +118,16 @@ export function updateSaveDataForItem(
     case "quest": {
       const { flag } = item;
       const normalizedFlag = normalizeString(flag);
-      
+
       const quests = playerData.QuestCompletionData;
-      let entry = quests.savedData.find((e) => normalizeString(e.Name) === normalizedFlag);
+      let entry = quests.savedData.find(
+        (e) => normalizeString(e.Name) === normalizedFlag,
+      );
       if (!entry) {
         entry = { Name: flag, Data: {} };
         quests.savedData.push(entry);
       }
-      
+
       if (value === "completed" || value === true) {
         entry.Data["IsCompleted"] = true;
         entry.Data["IsAccepted"] = true;
@@ -162,7 +162,7 @@ export function updateSaveDataForItem(
     case "journal": {
       const { flag, required } = item;
       const journal = playerData.EnemyJournalKillData;
-      
+
       let entry = journal.list.find((e) => e.Name === flag);
       if (!entry) {
         entry = {
@@ -171,7 +171,7 @@ export function updateSaveDataForItem(
         };
         journal.list.push(entry);
       }
-      
+
       if (value === true) {
         entry.Record.Kills = required;
         entry.Record.HasBeenSeen = true;
@@ -189,7 +189,7 @@ export function updateSaveDataForItem(
         }
       } else {
         const index = playerData.scenesVisited.indexOf(scene);
-        if (index > -1) {
+        if (index !== -1) {
           playerData.scenesVisited.splice(index, 1);
         }
       }
@@ -200,17 +200,18 @@ export function updateSaveDataForItem(
       const { scene, flag } = item;
       const normalizedScene = normalizeStringWithUnderscores(scene);
       const normalizedFlag = normalizeStringWithUnderscores(flag);
-      
+
       // Update in sceneData flags
-      if (!sceneDataExpanded.persistentBools) {
-        sceneDataExpanded.persistentBools = { serializedList: [] };
-      }
-      
-      const persistentBools = sceneDataExpanded.persistentBools as { serializedList: unknown[] };
+      sceneDataExpanded.persistentBools ||= { serializedList: [] };
+
+      const persistentBools = sceneDataExpanded.persistentBools as {
+        serializedList: unknown[];
+      };
       const existingEntry = persistentBools.serializedList.find(
-        (e: unknown) => isObject(e) && e["SceneName"] === scene && e["ID"] === flag
+        (e: unknown) =>
+          isObject(e) && e["SceneName"] === scene && e["ID"] === flag,
       );
-      
+
       if (value === true) {
         if (!existingEntry) {
           persistentBools.serializedList.push({
@@ -221,7 +222,7 @@ export function updateSaveDataForItem(
         }
       } else if (existingEntry) {
         const index = persistentBools.serializedList.indexOf(existingEntry);
-        if (index > -1) {
+        if (index !== -1) {
           persistentBools.serializedList.splice(index, 1);
         }
       }
@@ -231,13 +232,13 @@ export function updateSaveDataForItem(
     case "relic": {
       const { flag } = item;
       const relics = playerData.Relics;
-      
+
       let entry = relics.savedData.find((e) => e.Name === flag);
       if (!entry) {
         entry = { Name: flag, Data: {} };
         relics.savedData.push(entry);
       }
-      
+
       if (value === "deposited") {
         entry.Data["IsDeposited"] = true;
         entry.Data["IsCollected"] = true;
@@ -257,13 +258,13 @@ export function updateSaveDataForItem(
     case "materium": {
       const { flag } = item;
       const materium = playerData.MateriumCollected;
-      
+
       let entry = materium.savedData.find((e) => e.Name === flag);
       if (!entry) {
         entry = { Name: flag, Data: {} };
         materium.savedData.push(entry);
       }
-      
+
       if (value === "deposited") {
         entry.Data["IsCollected"] = true;
         entry.Data["HasSeenInRelicBoard"] = true;
@@ -281,17 +282,18 @@ export function updateSaveDataForItem(
       const { scene, flag, relatedFlag } = item;
       const normalizedScene = normalizeStringWithUnderscores(scene);
       const normalizedFlag = normalizeStringWithUnderscores(flag);
-      
+
       if (value === "deposited") {
         playerDataExpanded[relatedFlag] = true;
-        
+
         // Also set in scene data
-        if (!sceneDataExpanded.persistentBools) {
-          sceneDataExpanded.persistentBools = { serializedList: [] };
-        }
-        const persistentBools = sceneDataExpanded.persistentBools as { serializedList: unknown[] };
+        sceneDataExpanded.persistentBools ||= { serializedList: [] };
+        const persistentBools = sceneDataExpanded.persistentBools as {
+          serializedList: unknown[];
+        };
         const existingEntry = persistentBools.serializedList.find(
-          (e: unknown) => isObject(e) && e["SceneName"] === scene && e["ID"] === flag
+          (e: unknown) =>
+            isObject(e) && e["SceneName"] === scene && e["ID"] === flag,
         );
         if (!existingEntry) {
           persistentBools.serializedList.push({
@@ -302,13 +304,14 @@ export function updateSaveDataForItem(
         }
       } else if (value === "collected") {
         playerDataExpanded[relatedFlag] = false;
-        
-        if (!sceneDataExpanded.persistentBools) {
-          sceneDataExpanded.persistentBools = { serializedList: [] };
-        }
-        const persistentBools = sceneDataExpanded.persistentBools as { serializedList: unknown[] };
+
+        sceneDataExpanded.persistentBools ||= { serializedList: [] };
+        const persistentBools = sceneDataExpanded.persistentBools as {
+          serializedList: unknown[];
+        };
         const existingEntry = persistentBools.serializedList.find(
-          (e: unknown) => isObject(e) && e["SceneName"] === scene && e["ID"] === flag
+          (e: unknown) =>
+            isObject(e) && e["SceneName"] === scene && e["ID"] === flag,
         );
         if (!existingEntry) {
           persistentBools.serializedList.push({
@@ -319,15 +322,18 @@ export function updateSaveDataForItem(
         }
       } else {
         playerDataExpanded[relatedFlag] = false;
-        
+
         if (sceneDataExpanded.persistentBools) {
-          const persistentBools = sceneDataExpanded.persistentBools as { serializedList: unknown[] };
+          const persistentBools = sceneDataExpanded.persistentBools as {
+            serializedList: unknown[];
+          };
           const existingEntry = persistentBools.serializedList.find(
-            (e: unknown) => isObject(e) && e["SceneName"] === scene && e["ID"] === flag
+            (e: unknown) =>
+              isObject(e) && e["SceneName"] === scene && e["ID"] === flag,
           );
           if (existingEntry) {
             const index = persistentBools.serializedList.indexOf(existingEntry);
-            if (index > -1) {
+            if (index !== -1) {
               persistentBools.serializedList.splice(index, 1);
             }
           }
@@ -338,14 +344,15 @@ export function updateSaveDataForItem(
 
     case "flagInt": {
       const { flag } = item;
-      playerDataExpanded[flag] = typeof value === "number" ? value : (value ? 1 : 0);
+      playerDataExpanded[flag] =
+        typeof value === "number" ? value : value ? 1 : 0;
       break;
     }
 
     case "anyOf": {
-      // For anyOf items, we need to update all the conditions
-      // If setting to "completed/true", we set the first condition to true
-      // If setting to "uncompleted/false", we set all conditions to false
+      // For anyOf items, we need to update all the conditions If setting to "completed/true", we
+      // set the first condition to true If setting to "uncompleted/false", we set all conditions to
+      // false
       const isCompleting = value === true || value === "completed";
 
       for (let i = 0; i < item.anyOf.length; i++) {
@@ -360,16 +367,26 @@ export function updateSaveDataForItem(
           required: "required" in check ? check.required : undefined,
         } as Item;
 
-        // For completing, only set the first condition to true (to avoid conflicts)
-        // For uncompleting, set all conditions to false
+        // For completing, only set the first condition to true (to avoid conflicts) For
+        // uncompleting, set all conditions to false
         if (isCompleting && i === 0) {
           // Set first condition to completed value
           const completedValue = check.type === "level" ? check.required : true;
-          updateSaveDataForItem(saveData, saveDataFlags, mockItem, completedValue);
+          updateSaveDataForItem(
+            saveData,
+            saveDataFlags,
+            mockItem,
+            completedValue,
+          );
         } else if (!isCompleting) {
           // Set all conditions to uncompleted value
           const uncompletedValue = check.type === "level" ? 0 : false;
-          updateSaveDataForItem(saveData, saveDataFlags, mockItem, uncompletedValue);
+          updateSaveDataForItem(
+            saveData,
+            saveDataFlags,
+            mockItem,
+            uncompletedValue,
+          );
         }
       }
       break;
@@ -377,9 +394,7 @@ export function updateSaveDataForItem(
   }
 }
 
-/**
- * Save manual save data to localStorage
- */
+/** Save manual save data to localStorage */
 export function saveManualSaveData(saveData: SilksongSave): void {
   try {
     localStorage.setItem(MANUAL_SAVE_KEY, JSON.stringify(saveData));
@@ -388,9 +403,7 @@ export function saveManualSaveData(saveData: SilksongSave): void {
   }
 }
 
-/**
- * Load manual save data from localStorage
- */
+/** Load manual save data from localStorage */
 export function loadManualSaveData(): SilksongSave | undefined {
   try {
     const stored = localStorage.getItem(MANUAL_SAVE_KEY);
@@ -404,9 +417,7 @@ export function loadManualSaveData(): SilksongSave | undefined {
   }
 }
 
-/**
- * Clear manual save data from localStorage
- */
+/** Clear manual save data from localStorage */
 export function clearManualSaveData(): void {
   try {
     localStorage.removeItem(MANUAL_SAVE_KEY);

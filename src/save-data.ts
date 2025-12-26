@@ -1,15 +1,21 @@
 import { assertObject, isArray, isObject } from "complete-common";
 import { BASE_PATH } from "./constants.ts";
-import { clearManualProgress } from "./manual-progress.ts";
 import {
-  completionValue,
   modeBanner,
   playtimeValue,
   rosariesValue,
   shardsValue,
   uploadOverlay,
 } from "./elements.ts";
+import { clearManualProgress } from "./manual-progress.ts";
 import { renderActiveTab } from "./render-tab.ts";
+import {
+  clearManualSaveData,
+  createEmptySaveData,
+  loadManualSaveData,
+  saveManualSaveData,
+  updateSaveDataForItem,
+} from "./save-data-updater.ts";
 import { decodeSilksongSave } from "./save-decoder.ts";
 import type { ObjectWithSavedData, SilksongSave } from "./save-parser";
 import { getSaveFileFlags, parseSilksongSave } from "./save-parser.ts";
@@ -20,34 +26,29 @@ import {
   normalizeStringWithUnderscores,
   showToast,
 } from "./utils.ts";
-import {
-  createEmptySaveData,
-  loadManualSaveData,
-  clearManualSaveData,
-  saveManualSaveData,
-  updateSaveDataForItem,
-} from "./save-data-updater.ts";
 
 let currentLoadedSaveData: SilksongSave | undefined;
 let currentLoadedSaveDataMode: Mode = "normal";
 let currentLoadedSaveDataFlags: Record<string, unknown> | undefined;
 let isUsingManualSave = false;
 
-/**
- * Initialize save data - either load from manual save or create empty
- */
+/** Initialize save data - either load from manual save or create empty */
 export function initializeSaveData(): void {
   if (currentLoadedSaveData === undefined) {
     // Try to load manual save data
     const manualSave = loadManualSaveData();
     if (manualSave) {
       currentLoadedSaveData = manualSave;
-      currentLoadedSaveDataFlags = getSaveFileFlags(manualSave as unknown as Record<string, unknown>);
+      currentLoadedSaveDataFlags = getSaveFileFlags(
+        manualSave as unknown as Record<string, unknown>,
+      );
       isUsingManualSave = true;
     } else {
       // Create empty save data for manual tracking
       currentLoadedSaveData = createEmptySaveData();
-      currentLoadedSaveDataFlags = getSaveFileFlags(currentLoadedSaveData as unknown as Record<string, unknown>);
+      currentLoadedSaveDataFlags = getSaveFileFlags(
+        currentLoadedSaveData as unknown as Record<string, unknown>,
+      );
       isUsingManualSave = true;
     }
   }
@@ -71,19 +72,24 @@ export function getSaveDataFlags(): Record<string, unknown> | undefined {
   return currentLoadedSaveDataFlags;
 }
 
-/**
- * Update a value in the current save data
- */
+/** Update a value in the current save data */
 export function updateSaveDataValue(item: Item, value: unknown): void {
   if (currentLoadedSaveData === undefined) {
     initializeSaveData();
   }
 
   if (currentLoadedSaveData) {
-    updateSaveDataForItem(currentLoadedSaveData, currentLoadedSaveDataFlags, item, value);
+    updateSaveDataForItem(
+      currentLoadedSaveData,
+      currentLoadedSaveDataFlags,
+      item,
+      value,
+    );
 
     // Refresh flags after update
-    currentLoadedSaveDataFlags = getSaveFileFlags(currentLoadedSaveData as unknown as Record<string, unknown>);
+    currentLoadedSaveDataFlags = getSaveFileFlags(
+      currentLoadedSaveData as unknown as Record<string, unknown>,
+    );
 
     // Save to localStorage if using manual save
     if (isUsingManualSave) {
@@ -469,7 +475,9 @@ export function clearAllData(): void {
 
   // Reset to empty save data
   currentLoadedSaveData = createEmptySaveData();
-  currentLoadedSaveDataFlags = getSaveFileFlags(currentLoadedSaveData as unknown as Record<string, unknown>);
+  currentLoadedSaveDataFlags = getSaveFileFlags(
+    currentLoadedSaveData as unknown as Record<string, unknown>,
+  );
   currentLoadedSaveDataMode = "normal";
   isUsingManualSave = true;
 

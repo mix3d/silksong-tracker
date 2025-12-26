@@ -1,8 +1,10 @@
 import { getHTMLElement } from "../elements.ts";
 
 export function initDesktopPinsToggle(): void {
-  const desktopPinsToggle = document.getElementById("desktop-pins-toggle");
-  if (!desktopPinsToggle) return;
+  const desktopPinsToggle = document.querySelector("#desktop-pins-toggle");
+  if (!desktopPinsToggle) {
+    return;
+  }
 
   const contextDrawer = getHTMLElement("mobile-context-drawer");
   const contextBackdrop = getHTMLElement("mobile-context-backdrop");

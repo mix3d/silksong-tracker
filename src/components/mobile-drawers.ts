@@ -1,6 +1,6 @@
-import { getHTMLElement, uploadOverlay, dropzone } from "../elements.ts";
+import { dropzone, getHTMLElement, uploadOverlay } from "../elements.ts";
+import { clearAllData, getSaveData } from "../save-data.ts";
 import { getStoredActiveTab } from "./sidebar-items.ts";
-import { getSaveData, clearAllData } from "../save-data.ts";
 
 let tabsDrawerOpen = false;
 let contextDrawerOpen = false;
@@ -27,20 +27,24 @@ export function initMobileDrawers(): void {
 
 // ==================== TABS DRAWER (LEFT) ====================
 
-function initTabsDrawer(): void {
+function initTabsDrawer() {
   const toggleBtn = getHTMLElement("mobile-tabs-toggle");
   const drawer = getHTMLElement("mobile-tabs-drawer");
   const backdrop = getHTMLElement("mobile-tabs-backdrop");
-  const closeBtn = drawer.querySelector("[data-drawer='tabs']") as HTMLButtonElement;
+  const closeBtn = drawer.querySelector("[data-drawer='tabs']")!;
 
   // Wire up mobile nav items (statically built in HTML)
-  const mobileTabItems = document.querySelectorAll(".mobile-tab-items .sidebar-item");
-  const desktopSidebarItems = document.querySelectorAll(".sidebar .sidebar-item");
+  const mobileTabItems = document.querySelectorAll(
+    ".mobile-tab-items .sidebar-item",
+  );
+  const desktopSidebarItems = document.querySelectorAll(
+    ".sidebar .sidebar-item",
+  );
 
   for (const mobileItem of mobileTabItems) {
     // Sync initial active state
-    const desktopItem = Array.from(desktopSidebarItems).find(
-      (item) => item.getAttribute("data-tab") === mobileItem.getAttribute("data-tab")
+    const desktopItem = [...desktopSidebarItems].find(
+      (item) => item.dataset.tab === mobileItem.dataset.tab,
     );
 
     if (desktopItem && desktopItem.classList.contains("is-active")) {
@@ -70,55 +74,63 @@ function initTabsDrawer(): void {
   observeSidebarActiveState();
 }
 
-function openTabsDrawer(): void {
+function openTabsDrawer() {
   // Close context drawer if open
   if (contextDrawerOpen) {
     closeContextDrawer();
   }
-  
+
   const drawer = getHTMLElement("mobile-tabs-drawer");
   const backdrop = getHTMLElement("mobile-tabs-backdrop");
-  
+
   drawer.classList.add("open");
   backdrop.classList.add("active");
   tabsDrawerOpen = true;
-  
+
   // Prevent body scroll
   document.body.style.overflow = "hidden";
 }
 
-function closeTabsDrawer(): void {
+function closeTabsDrawer() {
   const drawer = getHTMLElement("mobile-tabs-drawer");
   const backdrop = getHTMLElement("mobile-tabs-backdrop");
-  
+
   drawer.classList.remove("open");
   backdrop.classList.remove("active");
   tabsDrawerOpen = false;
-  
+
   // Restore body scroll
   document.body.style.overflow = "";
 }
 
-function observeSidebarActiveState(): void {
+function observeSidebarActiveState() {
   // Sync desktop sidebar active state to mobile
   const observer = new MutationObserver(() => {
-    const desktopActiveItem = document.querySelector(".sidebar .sidebar-item.is-active");
-    const mobileItems = document.querySelectorAll(".mobile-tab-items .sidebar-item");
-    
+    const desktopActiveItem = document.querySelector(
+      ".sidebar .sidebar-item.is-active",
+    );
+    const mobileItems = document.querySelectorAll(
+      ".mobile-tab-items .sidebar-item",
+    );
+
     for (const mobileItem of mobileItems) {
       mobileItem.classList.remove("is-active");
-      
-      if (desktopActiveItem && 
-          mobileItem.getAttribute("data-tab") === desktopActiveItem.getAttribute("data-tab")) {
+
+      if (
+        desktopActiveItem
+        && mobileItem.dataset.tab === desktopActiveItem.dataset.tab
+      ) {
         mobileItem.classList.add("is-active");
       }
     }
-    
+
     // Update context button when tab changes
     updateContextButton();
   });
-  
-  const desktopSidebarItems = document.querySelectorAll(".sidebar .sidebar-item");
+
+  const desktopSidebarItems = document.querySelectorAll(
+    ".sidebar .sidebar-item",
+  );
   for (const item of desktopSidebarItems) {
     observer.observe(item, { attributes: true, attributeFilter: ["class"] });
   }
@@ -128,12 +140,10 @@ function observeSidebarActiveState(): void {
 
 let mobileActionBtn: HTMLButtonElement | null = null;
 
-/**
- * Initialize the mobile drawer action button with Upload/Reset toggle logic
- */
-function initMobileActionButton(): void {
+/** Initialize the mobile drawer action button with Upload/Reset toggle logic */
+function initMobileActionButton() {
   try {
-    mobileActionBtn = document.getElementById("mobile-data-action-btn") as HTMLButtonElement;
+    mobileActionBtn = document.querySelector("#mobile-data-action-btn")!;
 
     if (!mobileActionBtn) {
       return;
@@ -146,53 +156,57 @@ function initMobileActionButton(): void {
     mobileActionBtn.addEventListener("click", handleMobileActionClick);
 
     // Listen for data changes to update button state
-    globalThis.addEventListener("save-data-changed", updateMobileActionButtonState);
+    globalThis.addEventListener(
+      "save-data-changed",
+      updateMobileActionButtonState,
+    );
   } catch (error) {
     console.warn("Mobile action button not found:", error);
   }
 }
 
-/**
- * Update the mobile button to show Upload or Reset based on data state
- */
-function updateMobileActionButtonState(): void {
-  if (!mobileActionBtn) return;
+/** Update the mobile button to show Upload or Reset based on data state */
+function updateMobileActionButtonState() {
+  if (!mobileActionBtn) {
+    return;
+  }
 
   const hasData = getSaveData() !== undefined;
 
   if (hasData) {
     // Show Reset button
-    mobileActionBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i> <span>Reset Data</span>';
+    mobileActionBtn.innerHTML =
+      '<i class="fa-solid fa-trash-can"></i> <span>Reset Data</span>';
     mobileActionBtn.className = "mobile-action-btn mobile-action-reset";
     mobileActionBtn.title = "Reset all data";
     mobileActionBtn.setAttribute("aria-label", "Reset all data");
   } else {
     // Show Upload button
-    mobileActionBtn.innerHTML = '<i class="fa-solid fa-upload"></i> <span>Upload Save</span>';
+    mobileActionBtn.innerHTML =
+      '<i class="fa-solid fa-upload"></i> <span>Upload Save</span>';
     mobileActionBtn.className = "mobile-action-btn mobile-action-upload";
     mobileActionBtn.title = "Upload save";
     mobileActionBtn.setAttribute("aria-label", "Upload save");
   }
 }
 
-/**
- * Handle mobile action button click - either upload or reset based on current state
- */
-function handleMobileActionClick(e: Event): void {
+/** Handle mobile action button click - either upload or reset based on current state */
+function handleMobileActionClick(e: Event) {
   e.preventDefault();
 
   const hasData = getSaveData() !== undefined;
 
   if (hasData) {
     // Reset action - ask for confirmation
-    if (confirm("Are you sure you want to reset all data? This cannot be undone.")) {
+    if (
+      confirm("Are you sure you want to reset all data? This cannot be undone.")
+    ) {
       clearAllData();
       // Close drawer after reset
       closeTabsDrawer();
     }
   } else {
-    // Upload action
-    // Close drawer first
+    // Upload action Close drawer first
     closeTabsDrawer();
     // Open upload overlay after drawer closes
     setTimeout(() => {
@@ -204,65 +218,65 @@ function handleMobileActionClick(e: Event): void {
 
 // ==================== CONTEXT DRAWER (RIGHT) ====================
 
-function initContextDrawer(): void {
+function initContextDrawer() {
   const toggleBtn = getHTMLElement("mobile-context-toggle");
   const drawer = getHTMLElement("mobile-context-drawer");
   const backdrop = getHTMLElement("mobile-context-backdrop");
-  const closeBtn = drawer.querySelector("[data-drawer='context']") as HTMLButtonElement;
-  
+  const closeBtn = drawer.querySelector("[data-drawer='context']")!;
+
   // Move TOC and Map Filters into mobile drawer
   moveContentToMobileDrawer();
-  
+
   // Event listeners
   toggleBtn.addEventListener("click", openContextDrawer);
   closeBtn.addEventListener("click", closeContextDrawer);
   backdrop.addEventListener("click", closeContextDrawer);
-  
+
   // Close drawer when clicking TOC link
   const tocContainer = getHTMLElement("mobile-toc-container");
   tocContainer.addEventListener("click", (e) => {
     const target = e.target as HTMLElement;
-    if (target.tagName === "A") {
-      // Small delay to allow smooth scroll (only on mobile/tablet)
-      if (window.innerWidth <= 1024) {
-        setTimeout(() => {
-          closeContextDrawer();
-        }, 300);
-      }
+    if (
+      target.tagName === "A" // Small delay to allow smooth scroll (only on mobile/tablet)
+      && window.innerWidth <= 1024
+    ) {
+      setTimeout(() => {
+        closeContextDrawer();
+      }, 300);
     }
   });
 }
 
-function openContextDrawer(): void {
+function openContextDrawer() {
   // Close tabs drawer if open
   if (tabsDrawerOpen) {
     closeTabsDrawer();
   }
-  
+
   const drawer = getHTMLElement("mobile-context-drawer");
   const backdrop = getHTMLElement("mobile-context-backdrop");
-  
+
   drawer.classList.add("open");
   backdrop.classList.add("active");
   contextDrawerOpen = true;
-  
+
   // Prevent body scroll
   document.body.style.overflow = "hidden";
 }
 
-function closeContextDrawer(): void {
+function closeContextDrawer() {
   const drawer = getHTMLElement("mobile-context-drawer");
   const backdrop = getHTMLElement("mobile-context-backdrop");
-  
+
   drawer.classList.remove("open");
   backdrop.classList.remove("active");
   contextDrawerOpen = false;
-  
+
   // Restore body scroll
   document.body.style.overflow = "";
 }
 
-function moveContentToMobileDrawer(): void {
+function moveContentToMobileDrawer() {
   const isMobileOrTablet = window.innerWidth <= 1024;
 
   // Only move TOC on mobile/tablet (desktop has fixed TOC sidebar)
@@ -282,11 +296,13 @@ function moveContentToMobileDrawer(): void {
       mobileTocContainer.append(tocLegend);
     }
   }
-  
+
   // Move Map Filters into mobile container
-  const mobileMapFiltersContainer = getHTMLElement("mobile-map-filters-container");
+  const mobileMapFiltersContainer = getHTMLElement(
+    "mobile-map-filters-container",
+  );
   const desktopMapSidebar = document.querySelector(".map-sidebar");
-  
+
   if (desktopMapSidebar) {
     // Clone search box (we'll use the same ID, visibility handled by CSS)
     const mapSearch = desktopMapSidebar.querySelector(".search-container");
@@ -294,64 +310,76 @@ function moveContentToMobileDrawer(): void {
       const searchClone = mapSearch.cloneNode(true) as HTMLElement;
       mobileMapFiltersContainer.append(searchClone);
     }
-    
+
     // Clone filter controls (Show All / Hide All)
     const filterControls = desktopMapSidebar.querySelector(".filter-controls");
     if (filterControls) {
       const controlsClone = filterControls.cloneNode(true) as HTMLElement;
       mobileMapFiltersContainer.append(controlsClone);
-      
+
       // Re-wire the cloned buttons
       const showAllBtn = controlsClone.querySelector("#show-all-filters");
       const hideAllBtn = controlsClone.querySelector("#hide-all-filters");
-      
+
       if (showAllBtn && hideAllBtn) {
         // Remove IDs to avoid conflicts
         showAllBtn.removeAttribute("id");
         hideAllBtn.removeAttribute("id");
-        
+
         // Add event listeners
         showAllBtn.addEventListener("click", () => {
-          const mapFilters = document.getElementById("map-filters");
+          const mapFilters = document.querySelector("#map-filters");
           if (mapFilters) {
-            const checkboxes = mapFilters.querySelectorAll("input[type='checkbox']");
+            const checkboxes = mapFilters.querySelectorAll(
+              "input[type='checkbox']",
+            );
             for (const checkbox of checkboxes) {
               (checkbox as HTMLInputElement).checked = true;
             }
             // Trigger change event to update pins
             const firstCheckbox = checkboxes[0] as HTMLInputElement;
             if (firstCheckbox) {
-              firstCheckbox.dispatchEvent(new Event("change", { bubbles: true }));
+              firstCheckbox.dispatchEvent(
+                new Event("change", { bubbles: true }),
+              );
             }
           }
         });
-        
+
         hideAllBtn.addEventListener("click", () => {
-          const mapFilters = document.getElementById("map-filters");
+          const mapFilters = document.querySelector("#map-filters");
           if (mapFilters) {
-            const checkboxes = mapFilters.querySelectorAll("input[type='checkbox']");
+            const checkboxes = mapFilters.querySelectorAll(
+              "input[type='checkbox']",
+            );
             for (const checkbox of checkboxes) {
               (checkbox as HTMLInputElement).checked = false;
             }
             // Trigger change event to update pins
             const firstCheckbox = checkboxes[0] as HTMLInputElement;
             if (firstCheckbox) {
-              firstCheckbox.dispatchEvent(new Event("change", { bubbles: true }));
+              firstCheckbox.dispatchEvent(
+                new Event("change", { bubbles: true }),
+              );
             }
           }
         });
       }
     }
-    
+
     // Move filter list (checkboxes will be generated here by existing code)
-    const mapFilters = document.getElementById("map-filters");
+    const mapFilters = document.querySelector("#map-filters");
     if (mapFilters) {
       mobileMapFiltersContainer.append(mapFilters);
     }
 
     // Move map toggle section (room names toggle)
-    const mapToggleDivider = desktopMapSidebar.querySelector(".map-toggle-divider");
-    const mapToggleSection = desktopMapSidebar.querySelector(".map-toggle-section");
+    const mapToggleDivider = desktopMapSidebar.querySelector(
+      ".map-toggle-divider",
+    );
+    const mapToggleSection = desktopMapSidebar.querySelector(
+      ".map-toggle-section",
+    );
     if (mapToggleDivider) {
       mobileMapFiltersContainer.append(mapToggleDivider);
     }
@@ -375,7 +403,7 @@ export function updateContextButton(): void {
     // Show TOC (only on mobile/tablet, desktop has fixed TOC)
     if (isMobileOrTablet) {
       contextToggleBtn.classList.add("visible");
-      contextToggleBtn.setAttribute("data-mode", "toc");
+      contextToggleBtn.dataset.mode = "toc";
       contextToggleBtn.setAttribute("title", "Table of Contents");
       const icon = contextToggleBtn.querySelector("i");
       if (icon) {
@@ -389,14 +417,12 @@ export function updateContextButton(): void {
     } else {
       contextToggleBtn.classList.remove("visible");
     }
-
   } else if (activeTab === "map") {
     // Map tab: no topbar button (uses desktop-pins-toggle in map header for all screen sizes)
     contextToggleBtn.classList.remove("visible");
 
     tocContainer.classList.add("hidden");
     mapFiltersContainer.classList.remove("hidden");
-
   } else {
     // Raw Save tab - hide context button
     contextToggleBtn.classList.remove("visible");
@@ -429,5 +455,7 @@ export function cleanupMobileDrawers(): void {
   // Map filters stay in drawer on all screen sizes (no need to move back)
 
   // Close tabs drawer if open (context drawer stays available for map filters)
-  if (tabsDrawerOpen) closeTabsDrawer();
+  if (tabsDrawerOpen) {
+    closeTabsDrawer();
+  }
 }

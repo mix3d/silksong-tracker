@@ -1,62 +1,75 @@
-/**
- * Checkbox utility functions
- */
+/** Checkbox utility functions */
 
-import type { Item } from "../types/Item.ts";
 import { setManualProgress } from "../manual-progress.ts";
-import { getSaveData, getSaveDataValue, getSaveDataFlags } from "../save-data.ts";
+import {
+  getSaveData,
+  getSaveDataFlags,
+  getSaveDataValue,
+} from "../save-data.ts";
+import type { Item } from "../types/Item.ts";
 
-/**
- * Determine the "completed" value for an item based on its type
- */
+/** Determine the "completed" value for an item based on its type */
 export function getCompletedValueForItem(item: Item): unknown {
   switch (item.type) {
-    case "level":
+    case "level": {
       return item.required;
-    case "collectable":
+    }
+
+    case "collectable": {
       return 1;
-    case "journal":
+    }
+
+    case "journal": {
       return item.required;
-    case "quest":
+    }
+
+    case "quest": {
       return "completed";
+    }
+
     case "relic":
     case "materium":
-    case "device":
+    case "device": {
       return "deposited";
+    }
+
     case "quill": {
       // Extract the quill number from the ID (QuillState_1 -> 1)
       const match = item.id.match(/QuillState_(\d+)/);
       return match ? Number.parseInt(match[1], 10) : 1;
     }
-    default:
+
+    default: {
       return true;
+    }
   }
 }
 
-/**
- * Get the "uncompleted" value for an item (what to set when unchecking)
- */
+/** Get the "uncompleted" value for an item (what to set when unchecking) */
 function getUncompletedValueForItem(item: Item): unknown {
   switch (item.type) {
     case "level":
     case "collectable":
     case "journal":
     case "flagInt":
-    case "quill":
+    case "quill": {
       return 0;
+    }
+
     case "quest":
     case "relic":
     case "materium":
-    case "device":
+    case "device": {
       return false;
-    default:
+    }
+
+    default: {
       return false;
+    }
   }
 }
 
-/**
- * Check if an item is currently completed based on save data
- */
+/** Check if an item is currently completed based on save data */
 function isItemCompleted(item: Item): boolean {
   const saveData = getSaveData();
   const saveDataFlags = getSaveDataFlags();
@@ -100,9 +113,7 @@ function getUnlocked(item: Item, value: unknown): boolean {
   return value === true || value === "collected" || value === "deposited";
 }
 
-/**
- * Create a reusable checkbox element
- */
+/** Create a reusable checkbox element */
 export function createCheckbox(
   item: Item,
   isCompleted: boolean,
@@ -136,7 +147,10 @@ export function createCheckbox(
         const relatedItems = getUpgradeRelated(item);
         for (const relatedItem of relatedItems) {
           if (relatedItem.id === item.upgradeOf) {
-            setManualProgress(relatedItem, getUncompletedValueForItem(relatedItem));
+            setManualProgress(
+              relatedItem,
+              getUncompletedValueForItem(relatedItem),
+            );
           }
         }
       }
@@ -155,9 +169,14 @@ export function createCheckbox(
         }
       }
 
-      // If this is a mutually exclusive item, clear others in the group
-      // EXCEPT for quills, which all share the same flag and setting one automatically "clears" others
-      if (item.unobtainable && item.group && getGroupItems && item.type !== "quill") {
+      // If this is a mutually exclusive item, clear others in the group EXCEPT for quills, which
+      // all share the same flag and setting one automatically "clears" others
+      if (
+        item.unobtainable
+        && item.group
+        && getGroupItems
+        && item.type !== "quill"
+      ) {
         const groupItems = getGroupItems(item.group);
         for (const groupItem of groupItems) {
           if (groupItem.id !== item.id) {
@@ -171,7 +190,10 @@ export function createCheckbox(
         const relatedItems = getUpgradeRelated(item);
         for (const relatedItem of relatedItems) {
           if (relatedItem.id !== item.id && relatedItem.upgradeOf === item.id) {
-            setManualProgress(relatedItem, getUncompletedValueForItem(relatedItem));
+            setManualProgress(
+              relatedItem,
+              getUncompletedValueForItem(relatedItem),
+            );
           }
         }
       }

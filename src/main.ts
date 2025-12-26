@@ -22,11 +22,11 @@ import {
   fileInput,
   getHTMLElement,
   getHTMLElements,
+  getShowRoomNamesToggle,
   infoOverlay,
   logoLink,
   uploadOverlay,
   worldMap,
-  getShowRoomNamesToggle,
 } from "./elements.ts";
 import { renderActiveTab } from "./render-tab.ts";
 import { clearAllData, handleSaveFile } from "./save-data.ts";
@@ -142,13 +142,12 @@ document.addEventListener("DOMContentLoaded", () => {
     handleSaveFile(firstFile);
   });
 
-  // Map Act Selector.
-  // Handle map toggle: Show room names vs Act 3 map
+  // Map Act Selector. Handle map toggle: Show room names vs Act 3 map
   const img = worldMap as HTMLImageElement;
   const roomNamesToggle = getShowRoomNamesToggle();
 
   if (roomNamesToggle) {
-    roomNamesToggle.addEventListener("change", function onMapToggleChange() {
+    roomNamesToggle.addEventListener("change", () => {
       if (roomNamesToggle.checked) {
         // Show room names map
         img.src = "/silksong-tracker/assets/ui/scene's_name_map.png";

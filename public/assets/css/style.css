@@ -1536,7 +1536,9 @@ main a:hover,
 .category-content {
   max-height: 5000px;
   overflow: hidden;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.3s ease;
   opacity: 1;
 }
 
@@ -3079,7 +3081,9 @@ label.filter-label-desktop,
   padding: 0.875rem 1rem;
   border-radius: 6px;
   font-size: 1rem;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
   text-decoration: none;
   display: block;
 }
@@ -3130,7 +3134,9 @@ label.filter-label-desktop,
   border-radius: 6px;
   font-size: 0.9rem;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
 }
 
 .mobile-action-btn:hover {
@@ -3173,7 +3179,9 @@ label.filter-label-desktop,
   padding: 0.625rem 0.75rem;
   display: block;
   border-radius: 6px;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 #mobile-toc-container .toc-category > a:hover {
@@ -3192,7 +3200,9 @@ label.filter-label-desktop,
   padding: 0.5rem 0.625rem;
   display: block;
   border-radius: 4px;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 #mobile-toc-container .toc-item a:hover {
@@ -3247,7 +3257,9 @@ label.filter-label-desktop,
   color: var(--ink-2);
   font-size: 0.85rem;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 #mobile-map-filters-container .btn-small:hover {
@@ -3271,7 +3283,9 @@ label.filter-label-desktop,
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid transparent;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
 }
 
 #mobile-map-filters-container .filter-item:hover {
@@ -3311,7 +3325,9 @@ label.filter-label-desktop,
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid transparent;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
 }
 
 #mobile-map-filters-container .map-toggle-label:hover {
