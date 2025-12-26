@@ -47,6 +47,7 @@ function main() {
 function initComponents() {
   // Top-nav
   initActsDropdown();
+  initFiltersDropdown();
   initShowOnlyMissing();
   initShowProgressOnly();
   initShowSpoilers();
