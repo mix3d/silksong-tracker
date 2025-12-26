@@ -321,23 +321,6 @@ export function updateContextButton(): void {
 // ==================== CLEANUP ====================
 
 export function cleanupMobileDrawers(): void {
-  // Move TOC back to desktop container (only on resize to desktop)
-  const desktopTocContainer = getHTMLElement("toc");
-  const mobileTocContainer = getHTMLElement("mobile-toc-container");
-  const tocList = getHTMLElement("toc-list");
-  const tocLegend = mobileTocContainer.querySelector(".toc-legend");
-
-  // Move TOC back to desktop container
-  if (mobileTocContainer.contains(tocList)) {
-    desktopTocContainer.append(tocList);
-  }
-
-  if (tocLegend && mobileTocContainer.contains(tocLegend)) {
-    desktopTocContainer.append(tocLegend);
-  }
-
-  // Map filters stay in drawer on all screen sizes (no need to move back)
-
   // Close tabs drawer if open (context drawer stays available for map filters)
   if (tabsDrawerOpen) {
     closeTabsDrawer();
