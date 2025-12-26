@@ -122,6 +122,12 @@ body {
   align-items: center;
   gap: 14px;
   flex-wrap: wrap;
+  flex: 1;
+}
+
+/* Push data action button to the right */
+#data-action-btn {
+  margin-left: auto;
 }
 
 .section {
