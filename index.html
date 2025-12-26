@@ -113,6 +113,13 @@
 
     <div class="main-wrapper">
       <header class="topbar">
+        <div class="topbar-left">
+          <button id="mobile-tabs-toggle" class="btn-icon mobile-tabs-toggle"
+                  title="Menu" aria-label="Open navigation menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+
         <div id="modeBanner"></div>
 
         <div class="topbar-right">
@@ -154,6 +161,14 @@
           <label class="filter-label-desktop"
             ><input type="checkbox" id="show-spoilers" /> Show spoilers</label
           >
+          <!-- Mobile context toggle (TOC/Map Filters) -->
+          <button id="mobile-context-toggle" class="btn-icon mobile-context-toggle"
+                  data-mode="toc"
+                  title="Table of Contents"
+                  aria-label="Open table of contents">
+            <i class="fa-solid fa-list"></i> <span id="mobile-context-label">Contents</span>
+          </button>
+
           <button id="data-action-btn" class="btn-icon" title="Upload save" aria-label="Upload save">
             <i class="fa-solid fa-upload"></i> <span>Upload</span>
           </button>
@@ -311,5 +326,54 @@
         </nav>
       </main>
     </div>
+
+    <!-- Mobile Navigation Drawers -->
+
+    <!-- Left drawer backdrop -->
+    <div id="mobile-tabs-backdrop" class="mobile-drawer-backdrop"></div>
+
+    <!-- Left drawer (tabs + links) -->
+    <nav id="mobile-tabs-drawer" class="mobile-drawer mobile-drawer-left">
+      <div class="mobile-drawer-header">
+        <div class="mobile-drawer-logo">
+          <img src="/assets/misc/favicon.png" width="48" height="48" alt="Logo">
+          <span>Silksong Tracker</span>
+        </div>
+        <button class="mobile-drawer-close" data-drawer="tabs" aria-label="Close menu">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <div class="mobile-drawer-content">
+        <h4 class="mobile-drawer-section-title">Navigation</h4>
+        <div id="mobile-tab-items" class="mobile-tab-items"></div>
+
+        <div class="mobile-drawer-divider"></div>
+
+        <h4 class="mobile-drawer-section-title">Links</h4>
+        <div id="mobile-external-links" class="mobile-external-links"></div>
+      </div>
+    </nav>
+
+    <!-- Right drawer backdrop -->
+    <div id="mobile-context-backdrop" class="mobile-drawer-backdrop"></div>
+
+    <!-- Right drawer (contextual content: TOC or Map Filters) -->
+    <nav id="mobile-context-drawer" class="mobile-drawer mobile-drawer-right">
+      <div class="mobile-drawer-header">
+        <h3 class="mobile-drawer-title" id="mobile-context-title">Table of Contents</h3>
+        <button class="mobile-drawer-close" data-drawer="context" aria-label="Close">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <div class="mobile-drawer-content">
+        <!-- TOC content (shown on Progress tab) -->
+        <div id="mobile-toc-container" class="mobile-context-content"></div>
+
+        <!-- Map filters content (shown on Map tab) -->
+        <div id="mobile-map-filters-container" class="mobile-context-content hidden"></div>
+      </div>
+    </nav>
   </body>
 </html>
