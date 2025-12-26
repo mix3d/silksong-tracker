@@ -348,6 +348,16 @@ function moveContentToMobileDrawer(): void {
     if (mapFilters) {
       mobileMapFiltersContainer.append(mapFilters);
     }
+
+    // Move map toggle section (room names toggle)
+    const mapToggleDivider = desktopMapSidebar.querySelector(".map-toggle-divider");
+    const mapToggleSection = desktopMapSidebar.querySelector(".map-toggle-section");
+    if (mapToggleDivider) {
+      mobileMapFiltersContainer.append(mapToggleDivider);
+    }
+    if (mapToggleSection) {
+      mobileMapFiltersContainer.append(mapToggleSection);
+    }
   }
 }
 
