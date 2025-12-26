@@ -485,13 +485,45 @@
 
       <div class="mobile-drawer-content">
         <!-- TOC content (shown on Progress tab) -->
-        <div id="mobile-toc-container" class="mobile-context-content"></div>
+        <div id="mobile-toc-container" class="mobile-context-content">
+          <ul id="mobile-toc-list"></ul>
+          <!-- TOC legend will be added by JS if needed -->
+        </div>
 
         <!-- Pins content (shown on Map tab) -->
         <div
           id="mobile-map-filters-container"
           class="mobile-context-content hidden"
-        ></div>
+        >
+          <div class="search-container">
+            <input
+              type="text"
+              id="mobile-map-search"
+              placeholder="Search item..."
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="filter-controls">
+            <button id="mobile-show-all-filters" class="btn-small">
+              Show All
+            </button>
+            <button id="mobile-hide-all-filters" class="btn-small">
+              Hide All
+            </button>
+          </div>
+
+          <div id="mobile-map-filters" class="filter-list"></div>
+
+          <div class="map-toggle-divider"></div>
+
+          <div class="map-toggle-section">
+            <label class="map-toggle-label">
+              <input type="checkbox" id="mobile-show-room-names" />
+              <span>Show room names</span>
+            </label>
+          </div>
+        </div>
       </div>
     </nav>
   </body>
