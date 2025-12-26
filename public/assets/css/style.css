@@ -2971,11 +2971,24 @@ label.filter-label-desktop,
   transform: translateX(0);
 }
 
-/* Hide mobile drawers completely on desktop */
+/* Hide tabs drawer on desktop (left drawer), but allow context drawer for map filters */
 @media (min-width: 1025px) {
-  .mobile-drawer,
-  .mobile-drawer-backdrop {
+  .mobile-drawer-left,
+  #mobile-tabs-backdrop {
     display: none !important;
+  }
+
+  /* Keep context drawer available for desktop pins toggle */
+  .mobile-drawer-right {
+    display: block;
+  }
+
+  #mobile-context-backdrop {
+    display: none;
+  }
+
+  #mobile-context-backdrop.active {
+    display: block;
   }
 }
 
