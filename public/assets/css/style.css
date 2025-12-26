@@ -3187,12 +3187,12 @@ label.filter-label-desktop,
   padding: 0 1rem;
 }
 
-/* Search box in mobile drawer */
+/* Search box in map filters drawer */
 #map-filters-container .search-container {
   margin-bottom: 1rem;
 }
 
-#map-filters-container #mobile-map-search {
+#map-filters-container #map-search {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid var(--stroke);
@@ -3202,7 +3202,7 @@ label.filter-label-desktop,
   font-size: 0.95rem;
 }
 
-#map-filters-container #mobile-map-search::placeholder {
+#map-filters-container #map-search::placeholder {
   color: var(--ink-3);
 }
 
@@ -3233,7 +3233,7 @@ label.filter-label-desktop,
 }
 
 /* Filter checkboxes list */
-#map-filters-container #mobile-map-filters {
+#map-filters-container #map-filters {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
