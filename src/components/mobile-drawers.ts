@@ -132,6 +132,79 @@ function observeSidebarActiveState(): void {
   }
 }
 
+// ==================== MOBILE ACTION BUTTON (UPLOAD/RESET TOGGLE) ====================
+
+let mobileActionBtn: HTMLButtonElement | null = null;
+
+/**
+ * Initialize the mobile drawer action button with Upload/Reset toggle logic
+ */
+function initMobileActionButton(): void {
+  try {
+    mobileActionBtn = document.getElementById("mobile-data-action-btn") as HTMLButtonElement;
+
+    if (!mobileActionBtn) {
+      return;
+    }
+
+    // Set initial state
+    updateMobileActionButtonState();
+
+    // Add click handler
+    mobileActionBtn.addEventListener("click", handleMobileActionClick);
+
+    // Listen for data changes to update button state
+    globalThis.addEventListener("save-data-changed", updateMobileActionButtonState);
+  } catch (error) {
+    console.warn("Mobile action button not found:", error);
+  }
+}
+
+/**
+ * Update the mobile button to show Upload or Reset based on data state
+ */
+function updateMobileActionButtonState(): void {
+  if (!mobileActionBtn) return;
+
+  const hasData = getSaveData() !== undefined;
+
+  if (hasData) {
+    // Show Reset button
+    mobileActionBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i> <span>Reset Data</span>';
+    mobileActionBtn.className = "mobile-action-btn mobile-action-reset";
+    mobileActionBtn.title = "Reset all data";
+    mobileActionBtn.setAttribute("aria-label", "Reset all data");
+  } else {
+    // Show Upload button
+    mobileActionBtn.innerHTML = '<i class="fa-solid fa-upload"></i> <span>Upload Save</span>';
+    mobileActionBtn.className = "mobile-action-btn mobile-action-upload";
+    mobileActionBtn.title = "Upload save";
+    mobileActionBtn.setAttribute("aria-label", "Upload save");
+  }
+}
+
+/**
+ * Handle mobile action button click - either upload or reset based on current state
+ */
+function handleMobileActionClick(e: Event): void {
+  e.preventDefault();
+
+  const hasData = getSaveData() !== undefined;
+
+  if (hasData) {
+    // Reset action
+    clearAllData();
+    // Close drawer after reset
+    closeTabsDrawer();
+  } else {
+    // Upload action
+    uploadOverlay.classList.remove("hidden");
+    dropzone.focus();
+    // Close drawer to show upload overlay
+    closeTabsDrawer();
+  }
+}
+
 // ==================== CONTEXT DRAWER (RIGHT) ====================
 
 function initContextDrawer(): void {
