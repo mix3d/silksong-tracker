@@ -298,7 +298,7 @@ export function updateCompletionPercentage(): void {
     }
   }
 
-  const toolsList: string[] = []; // Debug: track tools
+  const toolsList: string[] = []; // Debug: track ALL counted tools
   for (const item of allItems) {
     const category = getItemCategory(item);
     if (!category) continue;
@@ -334,27 +334,27 @@ export function updateCompletionPercentage(): void {
           if (firstUnlocked) {
             categoryProgress[category].total++;
             categoryProgress[category].completed++;
-            if (category === "tools") toolsList.push(item.label ?? item.id);
+            if (category === "tools") toolsList.push(`${item.label ?? item.id} (shared)`);
           }
         }
         continue;
       }
     }
 
+    // Debug: track ALL items counted in tools (before incrementing)
+    if (category === "tools") {
+      toolsList.push(`${item.label ?? item.id}${unlocked ? ' ✓' : ' ✗'}`);
+    }
+
     categoryProgress[category].total++;
     if (unlocked) {
       categoryProgress[category].completed++;
-    }
-
-    // Debug: track which items go into tools category
-    if (category === "tools") {
-      toolsList.push(item.label ?? item.id);
     }
   }
 
   // Debug: log all tools
   if (toolsList.length > 0) {
-    console.log(`Tools list (${toolsList.length} items):`, toolsList.sort());
+    console.log(`ALL Tools being counted (${toolsList.length} items):`, toolsList.sort());
   }
 
   // Calculate weighted percentage
