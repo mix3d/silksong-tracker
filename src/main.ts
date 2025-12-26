@@ -36,9 +36,9 @@ import { showToast } from "./utils.ts";
 
 initWorldMapPins();
 
+// Logo link - prevent default navigation but don't clear data
 logoLink.addEventListener("click", (e) => {
   e.preventDefault();
-  clearAllData();
 });
 
 function main() {
