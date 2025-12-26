@@ -91,41 +91,7 @@ function initComponents() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Wire mobile upload and reset buttons (only exists in mobile drawer)
-  const mobileUploadBtn = document.getElementById("mobile-upload-btn");
-  const mobileResetBtn = document.getElementById("mobile-reset-btn");
-
-  if (mobileUploadBtn) {
-    mobileUploadBtn.addEventListener("click", () => {
-      // Close mobile drawer first
-      const mobileDrawer = document.getElementById("mobile-tabs-drawer");
-      const mobileBackdrop = document.getElementById("mobile-tabs-backdrop");
-      if (mobileDrawer) mobileDrawer.classList.remove("open");
-      if (mobileBackdrop) mobileBackdrop.classList.remove("active");
-      document.body.style.overflow = "";
-
-      // Open upload overlay
-      setTimeout(() => {
-        uploadOverlay.classList.remove("hidden");
-      }, 100);
-    });
-  }
-
-  if (mobileResetBtn) {
-    mobileResetBtn.addEventListener("click", () => {
-      if (confirm("Are you sure you want to reset all data? This cannot be undone.")) {
-        // Close mobile drawer
-        const mobileDrawer = document.getElementById("mobile-tabs-drawer");
-        const mobileBackdrop = document.getElementById("mobile-tabs-backdrop");
-        if (mobileDrawer) mobileDrawer.classList.remove("open");
-        if (mobileBackdrop) mobileBackdrop.classList.remove("active");
-        document.body.style.overflow = "";
-
-        // Clear data
-        clearAllData();
-      }
-    });
-  }
+  // Mobile action button (Upload/Reset toggle) is now handled by mobile-drawers.ts
 
   function closeUploadModalFunc() {
     uploadOverlay.classList.add("hidden");
