@@ -2073,8 +2073,8 @@ main::-webkit-scrollbar-thumb:hover {
 ------------------- */
 
 /* Desktop: Show individual labels, hide dropdown */
-.filters-dropdown-mobile {
-  display: none;
+.dropdown.filters-dropdown-mobile {
+  display: none !important;
 }
 
 .filter-label-desktop {
@@ -2083,8 +2083,8 @@ main::-webkit-scrollbar-thumb:hover {
 
 /* Tablet and below: Hide individual labels, show dropdown */
 @media (max-width: 1024px) {
-  .filters-dropdown-mobile {
-    display: block;
+  .dropdown.filters-dropdown-mobile {
+    display: inline-block !important;
   }
 
   .filter-label-desktop {
