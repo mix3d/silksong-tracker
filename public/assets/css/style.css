@@ -1565,7 +1565,7 @@ input[type="checkbox"]:focus-visible {
 /* --- FIX HOME LAYOUT ON SMALL SCREENS --- */
 @media (max-width: 1400px) {
   .main-wrapper {
-    margin-left: 240px; /* prevents text from going under sidebar */
+    margin-left: 220px; /* match sidebar width */
   }
 
   .home-content {
