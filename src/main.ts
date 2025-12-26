@@ -143,16 +143,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Map Act Selector.
+  // Handle map toggle: Show room names vs Act 3 map
   const img = worldMap as HTMLImageElement;
-  if (mapActSelector instanceof HTMLSelectElement) {
-    mapActSelector.addEventListener(
-      "change",
-      function onMapSelectChange(this: HTMLSelectElement) {
-        img.src = this.value;
-        img.alt = `Pharloom Map - Act ${this.selectedIndex === 0 ? "2" : "3"}`;
-        img.id = "worldMap";
-      },
-    );
+  const roomNamesToggle = getShowRoomNamesToggle();
+
+  if (roomNamesToggle) {
+    roomNamesToggle.addEventListener("change", function onMapToggleChange() {
+      if (roomNamesToggle.checked) {
+        // Show room names map
+        img.src = "/silksong-tracker/assets/ui/scene's_name_map.png";
+        img.alt = "Pharloom Map - Room Names";
+      } else {
+        // Show Act 3 map (default)
+        img.src = "/silksong-tracker/assets/ui/labelled_map_act3.png";
+        img.alt = "Pharloom Map - Act 3";
+      }
+    });
   }
 
   const paths: Record<string, string> = {
