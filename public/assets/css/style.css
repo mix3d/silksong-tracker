@@ -1629,6 +1629,11 @@ input[type="checkbox"]:focus-visible {
     display: none !important;
   }
 
+  /* Hide desktop-only elements (upload/reset button - uses drawer on mobile) */
+  .desktop-only {
+    display: none !important;
+  }
+
   /* Remove sidebar margins */
   .main-wrapper {
     margin-left: 0 !important;

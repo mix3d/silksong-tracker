@@ -1,17 +1,22 @@
 /**
  * Combined Upload/Reset button that switches based on whether data is loaded
+ * (Desktop only - mobile uses drawer actions)
  */
 
-import { dataActionBtn, uploadOverlay, dropzone } from "../elements.ts";
+import { getDataActionBtn, uploadOverlay, dropzone } from "../elements.ts";
 import { getSaveData } from "../save-data.ts";
 import { clearAllData } from "../save-data.ts";
+
+let dataActionBtn: HTMLButtonElement | null = null;
 
 /**
  * Update the button to show Upload or Reset based on data state
  */
 function updateButtonState(): void {
+  if (!dataActionBtn) return;
+
   const hasData = getSaveData() !== undefined;
-  
+
   if (hasData) {
     // Show Reset button
     dataActionBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i> <span>Reset</span>';
@@ -32,9 +37,9 @@ function updateButtonState(): void {
  */
 function handleClick(e: Event): void {
   e.preventDefault();
-  
+
   const hasData = getSaveData() !== undefined;
-  
+
   if (hasData) {
     // Reset action
     clearAllData();
@@ -46,15 +51,22 @@ function handleClick(e: Event): void {
 }
 
 /**
- * Initialize the data action button
+ * Initialize the data action button (desktop only)
  */
 export function initDataActionBtn(): void {
+  dataActionBtn = getDataActionBtn();
+
+  // Skip if button doesn't exist (mobile view)
+  if (!dataActionBtn) {
+    return;
+  }
+
   // Set initial state
   updateButtonState();
-  
+
   // Add click handler
   dataActionBtn.addEventListener("click", handleClick);
-  
+
   // Listen for data changes to update button state
   globalThis.addEventListener("save-data-changed", updateButtonState);
 }

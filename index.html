@@ -171,9 +171,15 @@
                   aria-label="Open table of contents">
             <i class="fa-solid fa-list"></i> <span id="mobile-context-label">Contents</span>
           </button>
+
+          <!-- Desktop upload/reset button (hidden on mobile - uses drawer instead) -->
+          <button id="data-action-btn" class="btn-icon desktop-only"
+                  title="Upload save"
+                  aria-label="Upload save">
+            <i class="fa-solid fa-upload"></i> <span>Upload</span>
+          </button>
         </div>
 
-        <!-- Upload button moved to main content (will be in mobile drawer) -->
         <input type="file" id="fileInput" hidden />
       </header>
 
