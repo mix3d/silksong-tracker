@@ -251,21 +251,39 @@ function openContextDrawer() {
     closeTabsDrawer();
   }
 
-  const drawer = getHTMLElement("mobile-context-drawer");
-  const backdrop = getHTMLElement("mobile-context-backdrop");
+  const activeTab = getStoredActiveTab();
 
-  drawer.classList.add("open");
-  backdrop.classList.add("active");
-  contextDrawerOpen = true;
+  if (activeTab === "allprogress") {
+    // Open TOC drawer on mobile
+    const tocContainer = getHTMLElement("toc");
+    const backdrop = getHTMLElement("mobile-context-backdrop");
 
-  // Prevent body scroll
-  document.body.style.overflow = "hidden";
+    tocContainer.classList.add("drawer-open");
+    backdrop.classList.add("active");
+    contextDrawerOpen = true;
+
+    // Prevent body scroll
+    document.body.style.overflow = "hidden";
+  } else if (activeTab === "map") {
+    // Open map filters drawer
+    const drawer = getHTMLElement("mobile-context-drawer");
+    const backdrop = getHTMLElement("mobile-context-backdrop");
+
+    drawer.classList.add("open");
+    backdrop.classList.add("active");
+    contextDrawerOpen = true;
+
+    // Prevent body scroll
+    document.body.style.overflow = "hidden";
+  }
 }
 
 function closeContextDrawer() {
+  const tocContainer = getHTMLElement("toc");
   const drawer = getHTMLElement("mobile-context-drawer");
   const backdrop = getHTMLElement("mobile-context-backdrop");
 
+  tocContainer.classList.remove("drawer-open");
   drawer.classList.remove("open");
   backdrop.classList.remove("active");
   contextDrawerOpen = false;
