@@ -220,8 +220,8 @@ function handleMobileActionClick(e: Event) {
 
 function initContextDrawer() {
   const toggleBtn = getHTMLElement("mobile-context-toggle");
-  const drawer = getHTMLElement("mobile-context-drawer");
   const backdrop = getHTMLElement("mobile-context-backdrop");
+  const drawer = getHTMLElement("mobile-context-drawer");
   const closeBtn = drawer.querySelector("[data-drawer='context']")!;
 
   // Event listeners
@@ -229,13 +229,14 @@ function initContextDrawer() {
   closeBtn.addEventListener("click", closeContextDrawer);
   backdrop.addEventListener("click", closeContextDrawer);
 
-  // Close drawer when clicking TOC link
-  const tocContainer = getHTMLElement("mobile-toc-container");
+  // Close TOC drawer when clicking TOC link (on mobile/tablet only)
+  const tocContainer = getHTMLElement("toc");
   tocContainer.addEventListener("click", (e) => {
     const target = e.target as HTMLElement;
     if (
       target.tagName === "A" // Small delay to allow smooth scroll (only on mobile/tablet)
       && window.innerWidth <= 1024
+      && contextDrawerOpen
     ) {
       setTimeout(() => {
         closeContextDrawer();
