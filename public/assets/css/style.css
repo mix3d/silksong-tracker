@@ -1951,14 +1951,18 @@ main::-webkit-scrollbar-thumb:hover {
   font-family: "TrajanPro", serif;
   font-size: 0.9rem;
   border-radius: 4px;
-  width: 80px;
+  min-width: 120px;
   background: var(--accent);
   color: var(--ink-2);
   cursor: pointer;
-  padding: 0.3rem;
+  padding: 0.5rem;
   font-weight: bold;
   border: 1px solid var(--accent);
   outline: none;
+}
+
+#desktop-pins-toggle {
+  white-space: nowrap;
 }
 
 #act-filter select {
@@ -3421,14 +3425,36 @@ label.filter-label-desktop,
   backdrop-filter: blur(2px);
 }
 
+/* Map header with title and controls */
+.map-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.map-header h2 {
+  margin: 0;
+}
+
 .map-controls {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding-bottom: 20px;
-  font-weight: bold;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.map-control-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.map-control-group label {
+  font-size: 0.9rem;
+  color: var(--ink-2);
 }
 
 .map-controls select option {
