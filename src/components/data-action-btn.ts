@@ -41,8 +41,10 @@ function handleClick(e: Event): void {
   const hasData = getSaveData() !== undefined;
 
   if (hasData) {
-    // Reset action
-    clearAllData();
+    // Reset action - ask for confirmation
+    if (confirm("Are you sure you want to reset all data? This cannot be undone.")) {
+      clearAllData();
+    }
   } else {
     // Upload action
     uploadOverlay.classList.remove("hidden");
