@@ -3181,59 +3181,6 @@ label.filter-label-desktop,
   box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
 }
 
-/* ==================== RIGHT DRAWER - TOC (Progress tab) ==================== */
-
-#mobile-toc-container {
-  padding: 0 1rem;
-}
-
-/* Adjust TOC styles for mobile drawer context */
-#mobile-toc-container .toc-category {
-  margin-bottom: 1rem;
-}
-
-#mobile-toc-container .toc-category > a {
-  font-size: 0.95rem;
-  padding: 0.625rem 0.75rem;
-  display: block;
-  border-radius: 6px;
-  transition:
-    background 0.2s,
-    color 0.2s;
-}
-
-#mobile-toc-container .toc-category > a:hover {
-  background: rgba(255, 153, 51, 0.08);
-}
-
-#mobile-toc-container .toc-sublist {
-  margin-left: 0.5rem;
-  margin-top: 0.5rem;
-  padding-left: 0.75rem;
-  gap: 0.35rem;
-}
-
-#mobile-toc-container .toc-item a {
-  font-size: 0.875rem;
-  padding: 0.5rem 0.625rem;
-  display: block;
-  border-radius: 4px;
-  transition:
-    background 0.2s,
-    color 0.2s;
-}
-
-#mobile-toc-container .toc-item a:hover {
-  background: rgba(255, 153, 51, 0.05);
-}
-
-/* TOC Legend in mobile drawer */
-#mobile-toc-container .toc-legend {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--stroke);
-}
-
 /* ==================== RIGHT DRAWER - MAP FILTERS (Map tab) ==================== */
 
 #mobile-map-filters-container {
