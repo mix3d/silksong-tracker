@@ -135,11 +135,15 @@ function getItemCategory(item: Item): string | null {
   
   // Crafting Kit
   if (item.flag?.includes("Crafting") || item.label?.includes("Crafting Kit") || item.mapCategory === "crafting-kit") {
+    // Skip base level (required: 0)
+    if (item.type === "level" && item.required === 0) return null;
     return "crafting-kit";
   }
 
   // Tool Pouch
   if (item.flag?.includes("Tool Pouch") || item.label?.includes("Tool Pouch") || item.mapCategory === "tool-pouch") {
+    // Skip base level (required: 0)
+    if (item.type === "level" && item.required === 0) return null;
     return "tool-pouch";
   }
   
