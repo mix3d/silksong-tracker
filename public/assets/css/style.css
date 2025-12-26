@@ -2009,13 +2009,6 @@ main::-webkit-scrollbar-thumb:hover {
   white-space: nowrap;
 }
 
-/* Hide desktop pins toggle on mobile/tablet (use topbar button instead) */
-@media (max-width: 1024px) {
-  #desktop-pins-toggle {
-    display: none !important;
-  }
-}
-
 #act-filter select {
   background: var(--bg-3);
   border: 1px solid var(--stroke);
@@ -2830,13 +2823,6 @@ label.filter-label-desktop,
 
 .mobile-context-toggle.visible {
   display: inline-flex !important;
-}
-
-/* Hide topbar Pins button on desktop (use map header button instead) */
-@media (min-width: 1025px) {
-  .mobile-context-toggle[data-mode="pins"] {
-    display: none !important;
-  }
 }
 
 @media (max-width: 1024px) {

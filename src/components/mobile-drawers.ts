@@ -301,16 +301,8 @@ export function updateContextButton(): void {
     }
 
   } else if (activeTab === "map") {
-    // Show Pins button (mobile uses topbar, desktop uses map header - CSS handles visibility)
-    contextToggleBtn.classList.add("visible");
-    contextToggleBtn.setAttribute("data-mode", "pins");
-    contextToggleBtn.setAttribute("title", "Pins");
-    const icon = contextToggleBtn.querySelector("i");
-    if (icon) {
-      icon.className = "fa-solid fa-map-pin";
-    }
-    contextLabel.textContent = "Pins";
-    contextTitle.textContent = "Pins";
+    // Map tab: no topbar button (uses desktop-pins-toggle in map header for all screen sizes)
+    contextToggleBtn.classList.remove("visible");
 
     tocContainer.classList.add("hidden");
     mapFiltersContainer.classList.remove("hidden");
