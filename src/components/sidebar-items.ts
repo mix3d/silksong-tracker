@@ -7,6 +7,7 @@ import {
 import { getHTMLElement, getHTMLElements } from "../elements.ts";
 import type { Tab } from "../render-tab.ts";
 import { renderActiveTab, TABS } from "../render-tab.ts";
+import { updateContextButton } from "./mobile-drawers.ts";
 
 const LOCAL_STORAGE_KEY = "activeTab";
 
@@ -84,6 +85,9 @@ function onClick(pointerEvent: PointerEvent) {
   document.documentElement.style.overflowY = "auto";
 
   renderActiveTab();
+
+  // Update context button (needed on all screen sizes for map filters)
+  updateContextButton();
 }
 
 export function getStoredActiveTab(): Tab {

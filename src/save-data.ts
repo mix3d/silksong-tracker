@@ -1,14 +1,21 @@
 import { assertObject, isArray, isObject } from "complete-common";
 import { BASE_PATH } from "./constants.ts";
 import {
-  completionValue,
   modeBanner,
   playtimeValue,
   rosariesValue,
   shardsValue,
   uploadOverlay,
 } from "./elements.ts";
+import { clearManualProgress } from "./manual-progress.ts";
 import { renderActiveTab } from "./render-tab.ts";
+import {
+  clearManualSaveData,
+  createEmptySaveData,
+  loadManualSaveData,
+  saveManualSaveData,
+  updateSaveDataForItem,
+} from "./save-data-updater.ts";
 import { decodeSilksongSave } from "./save-decoder.ts";
 import type { ObjectWithSavedData, SilksongSave } from "./save-parser";
 import { getSaveFileFlags, parseSilksongSave } from "./save-parser.ts";
@@ -23,8 +30,34 @@ import {
 let currentLoadedSaveData: SilksongSave | undefined;
 let currentLoadedSaveDataMode: Mode = "normal";
 let currentLoadedSaveDataFlags: Record<string, unknown> | undefined;
+let isUsingManualSave = false;
+
+/** Initialize save data - either load from manual save or create empty */
+export function initializeSaveData(): void {
+  if (currentLoadedSaveData === undefined) {
+    // Try to load manual save data
+    const manualSave = loadManualSaveData();
+    if (manualSave) {
+      currentLoadedSaveData = manualSave;
+      currentLoadedSaveDataFlags = getSaveFileFlags(
+        manualSave as unknown as Record<string, unknown>,
+      );
+      isUsingManualSave = true;
+    } else {
+      // Create empty save data for manual tracking
+      currentLoadedSaveData = createEmptySaveData();
+      currentLoadedSaveDataFlags = getSaveFileFlags(
+        currentLoadedSaveData as unknown as Record<string, unknown>,
+      );
+      isUsingManualSave = true;
+    }
+  }
+}
 
 export function getSaveData(): SilksongSave | undefined {
+  if (currentLoadedSaveData === undefined) {
+    initializeSaveData();
+  }
   return currentLoadedSaveData;
 }
 
@@ -33,7 +66,39 @@ export function getSaveDataMode(): Mode {
 }
 
 export function getSaveDataFlags(): Record<string, unknown> | undefined {
+  if (currentLoadedSaveDataFlags === undefined) {
+    initializeSaveData();
+  }
   return currentLoadedSaveDataFlags;
+}
+
+/** Update a value in the current save data */
+export function updateSaveDataValue(item: Item, value: unknown): void {
+  if (currentLoadedSaveData === undefined) {
+    initializeSaveData();
+  }
+
+  if (currentLoadedSaveData) {
+    updateSaveDataForItem(
+      currentLoadedSaveData,
+      currentLoadedSaveDataFlags,
+      item,
+      value,
+    );
+
+    // Refresh flags after update
+    currentLoadedSaveDataFlags = getSaveFileFlags(
+      currentLoadedSaveData as unknown as Record<string, unknown>,
+    );
+
+    // Save to localStorage if using manual save
+    if (isUsingManualSave) {
+      saveManualSaveData(currentLoadedSaveData);
+    }
+
+    // Dispatch event
+    globalThis.dispatchEvent(new Event("save-data-changed"));
+  }
 }
 
 export async function handleSaveFile(file: File | undefined): Promise<void> {
@@ -68,8 +133,8 @@ export async function handleSaveFile(file: File | undefined): Promise<void> {
 
     currentLoadedSaveData = saveDataRaw as unknown as SilksongSave;
     currentLoadedSaveDataFlags = getSaveFileFlags(saveDataRaw);
+    isUsingManualSave = false; // Mark that we're using a real save file
 
-    completionValue.textContent = `${saveData.playerData.completionPercentage}%`;
     const seconds = saveData.playerData.playTime;
     const hours = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
@@ -402,16 +467,25 @@ function checkSceneValue(
 }
 
 export function clearAllData(): void {
-  currentLoadedSaveData = undefined;
-  currentLoadedSaveDataFlags = undefined;
+  // Clear manual progress from old system (backward compatibility)
+  clearManualProgress();
+
+  // Clear manual save data
+  clearManualSaveData();
+
+  // Reset to empty save data
+  currentLoadedSaveData = createEmptySaveData();
+  currentLoadedSaveDataFlags = getSaveFileFlags(
+    currentLoadedSaveData as unknown as Record<string, unknown>,
+  );
   currentLoadedSaveDataMode = "normal";
+  isUsingManualSave = true;
 
   const cleanUrl = globalThis.location.origin + globalThis.location.pathname;
   globalThis.history.pushState({}, "", cleanUrl);
 
   modeBanner.classList.add("hidden");
   modeBanner.innerHTML = "";
-  completionValue.textContent = "0%";
   playtimeValue.textContent = "0h 00m";
   rosariesValue.textContent = "0";
   shardsValue.textContent = "0";

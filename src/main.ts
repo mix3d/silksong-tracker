@@ -1,24 +1,30 @@
 import { initActsDropdown } from "./components/acts-dropdown.ts";
 import { initBackToTop } from "./components/back-to-top.ts";
+import { initDataActionBtn } from "./components/data-action-btn.ts";
+import { initDesktopPinsToggle } from "./components/desktop-pins-toggle.ts";
+import { initFiltersDropdown } from "./components/filters-dropdown.ts";
+import {
+  cleanupMobileDrawers,
+  initMobileDrawers,
+} from "./components/mobile-drawers.ts";
 import { initShowOnlyMissing } from "./components/show-only-missing.ts";
+import { initShowProgressOnly } from "./components/show-progress-only.ts";
 import { initShowSpoilers } from "./components/show-spoilers.ts";
 import {
   getStoredActiveTab,
   initSidebarItems,
   toggleTocVisibility,
 } from "./components/sidebar-items.ts";
-import { initUploadSave } from "./components/upload-save.ts";
 import {
-  clearDataBtn,
   closeInfoModal,
   closeUploadModal,
   dropzone,
   fileInput,
   getHTMLElement,
   getHTMLElements,
+  getShowRoomNamesToggle,
   infoOverlay,
   logoLink,
-  mapActSelector,
   uploadOverlay,
   worldMap,
 } from "./elements.ts";
@@ -30,14 +36,9 @@ import { showToast } from "./utils.ts";
 
 initWorldMapPins();
 
+// Logo link - prevent default navigation but don't clear data
 logoLink.addEventListener("click", (e) => {
   e.preventDefault();
-  clearAllData();
-});
-
-clearDataBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  clearAllData();
 });
 
 function main() {
@@ -51,9 +52,11 @@ function main() {
 function initComponents() {
   // Top-nav
   initActsDropdown();
+  initFiltersDropdown();
   initShowOnlyMissing();
+  initShowProgressOnly();
   initShowSpoilers();
-  initUploadSave();
+  initDataActionBtn();
 
   // Left-nav
   initSidebarItems();
@@ -63,9 +66,33 @@ function initComponents() {
 
   // Other
   initBackToTop();
+
+  // Initialize drawers (context drawer needed on all screens for map filters)
+  initMobileDrawers();
+
+  // Desktop pins toggle
+  initDesktopPinsToggle();
+
+  // Handle resize across mobile/tablet/desktop threshold
+  let wasMobileOrTablet = window.innerWidth <= 1024;
+  window.addEventListener("resize", () => {
+    const isMobileOrTablet = window.innerWidth <= 1024;
+
+    if (isMobileOrTablet !== wasMobileOrTablet) {
+      wasMobileOrTablet = isMobileOrTablet;
+
+      if (isMobileOrTablet) {
+        initMobileDrawers();
+      } else {
+        cleanupMobileDrawers();
+      }
+    }
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Mobile action button (Upload/Reset toggle) is now handled by mobile-drawers.ts
+
   function closeUploadModalFunc() {
     uploadOverlay.classList.add("hidden");
   }
@@ -115,17 +142,22 @@ document.addEventListener("DOMContentLoaded", () => {
     handleSaveFile(firstFile);
   });
 
-  // Map Act Selector.
+  // Map Act Selector. Handle map toggle: Show room names vs Act 3 map
   const img = worldMap as HTMLImageElement;
-  if (mapActSelector instanceof HTMLSelectElement) {
-    mapActSelector.addEventListener(
-      "change",
-      function onMapSelectChange(this: HTMLSelectElement) {
-        img.src = this.value;
-        img.alt = `Pharloom Map - Act ${this.selectedIndex === 0 ? "2" : "3"}`;
-        img.id = "worldMap";
-      },
-    );
+  const roomNamesToggle = getShowRoomNamesToggle();
+
+  if (roomNamesToggle) {
+    roomNamesToggle.addEventListener("change", () => {
+      if (roomNamesToggle.checked) {
+        // Show room names map
+        img.src = "/silksong-tracker/assets/ui/scene's_name_map.png";
+        img.alt = "Pharloom Map - Room Names";
+      } else {
+        // Show Act 3 map (default)
+        img.src = "/silksong-tracker/assets/ui/labelled_map_act3.png";
+        img.alt = "Pharloom Map - Act 3";
+      }
+    });
   }
 
   const paths: Record<string, string> = {

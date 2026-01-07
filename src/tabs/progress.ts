@@ -1,6 +1,11 @@
 import { assertArray } from "complete-common";
+import {
+  itemCountsTowardCompletion,
+  updateCompletionPercentage,
+} from "../calculate-completion.ts";
 import { getStoredActFilter } from "../components/acts-dropdown.ts";
 import { showOnlyMissing } from "../components/show-only-missing.ts";
+import { showProgressOnly } from "../components/show-progress-only.ts";
 import { showSpoilers } from "../components/show-spoilers.ts";
 import { BASE_PATH } from "../constants.ts";
 import bossesJSON from "../data/bosses.json" with { type: "json" };
@@ -20,6 +25,8 @@ import {
   infoOverlay,
   tocList,
 } from "../elements.ts";
+// Manual progress is now integrated into save-data.ts
+import { setManualProgress } from "../manual-progress.ts";
 import {
   getSaveData,
   getSaveDataFlags,
@@ -28,9 +35,38 @@ import {
 } from "../save-data.ts";
 import type { Category } from "../types/Category.ts";
 import type { Item } from "../types/Item.ts";
+import { createCheckbox, getCompletedValueForItem } from "../utils/checkbox.ts";
 
 let tocObserver: IntersectionObserver | undefined;
 let isManualScroll = false; // prevent observer interference
+
+/** Get all items that belong to a specific group (for mutual exclusivity) */
+function getItemsByGroup(group: string): Item[] {
+  const allItems = collectAllItems();
+  return allItems.filter(
+    (item) => item.group === group && item.unobtainable === true,
+  );
+}
+
+/** Get items related by upgrades (base and its upgrades, or upgrade and its base) */
+function getUpgradeRelatedItems(item: Item): Item[] {
+  const allItems = collectAllItems();
+  const relatedItems: Item[] = [];
+
+  // If this is an upgrade, find its base
+  if (item.upgradeOf) {
+    const baseItem = allItems.find((i) => i.id === item.upgradeOf);
+    if (baseItem) {
+      relatedItems.push(baseItem);
+    }
+  }
+
+  // Find all upgrades of this item
+  const upgrades = allItems.filter((i) => i.upgradeOf === item.id);
+  relatedItems.push(...upgrades);
+
+  return relatedItems;
+}
 
 export function updateTabProgress(): void {
   initProgressListeners();
@@ -74,13 +110,28 @@ export function updateTabProgress(): void {
     categoryHeader.style.marginBottom = "1rem";
     allProgressGrid.append(categoryHeader);
 
+    // Track if any sections are visible in this category
+    let hasVisibleSections = false;
+
     for (const category of categories) {
       const section = document.createElement("div");
       section.className = "main-section-block";
 
       const heading = document.createElement("h3");
       heading.className = "category-title";
-      heading.textContent = category.label;
+      heading.style.cursor = "pointer";
+
+      // Add collapse icon
+      const collapseIcon = document.createElement("span");
+      collapseIcon.className = "collapse-icon";
+      collapseIcon.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+      heading.append(collapseIcon);
+
+      // Add label text wrapped in span for flex-grow
+      const labelSpan = document.createElement("span");
+      labelSpan.className = "category-label";
+      labelSpan.textContent = category.label;
+      heading.append(labelSpan);
 
       const { items } = category;
 
@@ -105,9 +156,12 @@ export function updateTabProgress(): void {
         (item: Item) => actFilter.includes(item.act) && matchMode(item),
       );
 
-      if (showMissingOnly && saveData !== undefined) {
+      if (showMissingOnly) {
         filteredItems = filteredItems.filter((item: Item) => {
-          const value = getSaveDataValue(saveData, saveDataFlags, item);
+          const value =
+            saveData === undefined
+              ? false
+              : getSaveDataValue(saveData, saveDataFlags, item);
 
           if (getUnlocked(item, value)) {
             return false;
@@ -139,6 +193,7 @@ export function updateTabProgress(): void {
 
       let obtained = 0;
       let total = 0;
+      const countedUnobtainableGroups = new Set<string>();
 
       for (const item of filteredItems) {
         const value =
@@ -151,22 +206,34 @@ export function updateTabProgress(): void {
           continue;
         }
 
-        if (saveData === undefined) {
-          total++;
-          continue;
-        }
-
+        // Handle mutually exclusive (unobtainable) groups
         if (
           item.unobtainable === true
           && typeof item.group === "string"
           && item.group.trim() !== ""
-          && filteredItems.some(
+        ) {
+          // If we've already counted this group, skip this item
+          if (countedUnobtainableGroups.has(item.group)) {
+            continue;
+          }
+
+          // Mark this group as counted
+          countedUnobtainableGroups.add(item.group);
+
+          // Count this group as 1 total
+          total++;
+
+          // Check if ANY item in this group is unlocked
+          const groupHasUnlocked = filteredItems.some(
             (i) =>
               i.group === item.group
               && getUnlocked(i, getSaveDataValue(saveData, saveDataFlags, i)),
-          )
-          && !unlocked
-        ) {
+          );
+
+          if (groupHasUnlocked) {
+            obtained++;
+          }
+
           continue;
         }
 
@@ -181,6 +248,143 @@ export function updateTabProgress(): void {
       count.textContent = ` ${obtained}/${total}`;
       heading.append(count);
 
+      // Create checkbox for toggling all items in category (append after count)
+      const categoryCheckbox = document.createElement("input");
+      categoryCheckbox.type = "checkbox";
+      categoryCheckbox.className = "category-checkbox";
+      categoryCheckbox.setAttribute(
+        "aria-label",
+        `Toggle all ${category.label}`,
+      );
+      heading.append(categoryCheckbox);
+
+      // Update checkbox state based on obtained/total
+      if (total > 0) {
+        if (obtained === total) {
+          categoryCheckbox.checked = true;
+          categoryCheckbox.indeterminate = false;
+        } else if (obtained > 0) {
+          categoryCheckbox.checked = false;
+          categoryCheckbox.indeterminate = true;
+        } else {
+          categoryCheckbox.checked = false;
+          categoryCheckbox.indeterminate = false;
+        }
+      }
+
+      // Add click handler to toggle all items in category
+      categoryCheckbox.addEventListener("click", (e) => {
+        e.stopPropagation();
+        // Note: checkbox state is already toggled when click event fires If checkbox is now
+        // checked, we should check all items If checkbox is now unchecked, we should uncheck all
+        // items
+        const shouldCheck = categoryCheckbox.checked;
+
+        // Check if this is a mutually exclusive group (all items share same unobtainable group)
+        const firstGroup = filteredItems[0]?.group;
+        const isAllSameGroup =
+          firstGroup
+          && filteredItems.every(
+            (item) => item.unobtainable === true && item.group === firstGroup,
+          );
+
+        if (isAllSameGroup) {
+          // For mutually exclusive groups (like quills)
+          if (shouldCheck) {
+            // Only select the first item
+            const firstItem = filteredItems[0];
+            if (firstItem) {
+              const completedValue = getCompletedValueForItem(firstItem);
+              setManualProgress(firstItem, completedValue);
+            }
+          } else {
+            // Uncheck whichever item is currently selected
+            for (const item of filteredItems) {
+              const uncompletedValue =
+                item.type === "collectable"
+                || item.type === "level"
+                || item.type === "journal"
+                || item.type === "quill"
+                  ? 0
+                  : false;
+              setManualProgress(item, uncompletedValue);
+            }
+          }
+        } else {
+          // Normal behavior: toggle all items in this category
+          for (const item of filteredItems) {
+            // Skip tool upgrades from being individually toggled
+            if (item.type === "tool" && item.upgradeOf !== undefined) {
+              continue;
+            }
+
+            const completedValue = getCompletedValueForItem(item);
+
+            if (shouldCheck) {
+              // Check item (regardless of current state)
+              setManualProgress(item, completedValue);
+
+              // Handle upgrade relationships
+              if (item.upgradeOf) {
+                const relatedItems = getUpgradeRelatedItems(item);
+                for (const relatedItem of relatedItems) {
+                  if (relatedItem.id === item.upgradeOf) {
+                    const baseCompletedValue =
+                      getCompletedValueForItem(relatedItem);
+                    setManualProgress(relatedItem, baseCompletedValue);
+                  }
+                }
+              }
+
+              // Handle mutually exclusive groups
+              if (item.unobtainable && item.group) {
+                const groupItems = getItemsByGroup(item.group);
+                for (const groupItem of groupItems) {
+                  if (groupItem.id !== item.id) {
+                    // Set to uncompleted value (0 or false)
+                    const uncompletedValue =
+                      groupItem.type === "collectable"
+                      || groupItem.type === "level"
+                      || groupItem.type === "journal"
+                        ? 0
+                        : false;
+                    setManualProgress(groupItem, uncompletedValue);
+                  }
+                }
+              }
+            } else {
+              // Uncheck item (set to uncompleted value)
+              const uncompletedValue =
+                item.type === "collectable"
+                || item.type === "level"
+                || item.type === "journal"
+                  ? 0
+                  : false;
+              setManualProgress(item, uncompletedValue);
+
+              // If upgrade, also uncheck base
+              if (item.upgradeOf) {
+                const relatedItems = getUpgradeRelatedItems(item);
+                for (const relatedItem of relatedItems) {
+                  if (relatedItem.id === item.upgradeOf) {
+                    const uncompletedValue =
+                      relatedItem.type === "collectable"
+                      || relatedItem.type === "level"
+                      || relatedItem.type === "journal"
+                        ? 0
+                        : false;
+                    setManualProgress(relatedItem, uncompletedValue);
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        // Trigger re-render
+        globalThis.dispatchEvent(new Event("manual-progress-changed"));
+      });
+
       section.append(heading);
 
       const desc = document.createElement("p");
@@ -193,17 +397,67 @@ export function updateTabProgress(): void {
 
       const visible = renderGenericGrid(subgrid, filteredItems, spoilerOn);
 
-      if (filteredItems.length === 0 || (showMissingOnly && visible === 0)) {
+      // Hide category if all items are filtered out
+      if (filteredItems.length === 0 || visible === 0) {
         continue;
       }
 
       section.append(subgrid);
+
+      // Create collapsible content wrapper
+      const collapsibleContent = document.createElement("div");
+      collapsibleContent.className = "category-content";
+
+      // Move description and grid into collapsible content
+      desc.remove();
+      subgrid.remove();
+      collapsibleContent.append(desc);
+      collapsibleContent.append(subgrid);
+      section.append(collapsibleContent);
+
+      // Restore collapsed state from localStorage
+      const collapsedKey = `category-collapsed-${category.label}`;
+      const isCollapsed = localStorage.getItem(collapsedKey) === "true";
+      if (isCollapsed) {
+        section.classList.add("collapsed");
+        collapseIcon.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+      }
+
+      // Add click handler to toggle collapse (but not on checkbox)
+      heading.addEventListener("click", (e) => {
+        // Don't toggle if clicking on the checkbox
+        if ((e.target as HTMLElement).closest(".category-checkbox")) {
+          return;
+        }
+
+        const isCurrentlyCollapsed = section.classList.toggle("collapsed");
+
+        // Update icon
+        collapseIcon.innerHTML = isCurrentlyCollapsed
+          ? '<i class="fa-solid fa-chevron-right"></i>'
+          : '<i class="fa-solid fa-chevron-down"></i>';
+
+        // Save state to localStorage
+        localStorage.setItem(collapsedKey, isCurrentlyCollapsed.toString());
+      });
+
       allProgressGrid.append(section);
+      hasVisibleSections = true;
+    }
+
+    // Remove category header if no sections are visible
+    if (!hasVisibleSections) {
+      categoryHeader.remove();
     }
   }
 
   buildDynamicTOC();
   initScrollSpy();
+
+  // Use the weighted completion calculation from calculate-completion.ts This properly weights
+  // categories (e.g. 18 spool fragments = 9%, 20 mask shards = 5%) instead of treating all items
+  // equally
+  updateCompletionPercentage();
 }
 
 let progressListenerRegistered = false;
@@ -215,6 +469,10 @@ function initProgressListeners() {
   progressListenerRegistered = true;
 
   globalThis.addEventListener("save-data-changed", () => {
+    updateTabProgress();
+  });
+
+  globalThis.addEventListener("manual-progress-changed", () => {
     updateTabProgress();
   });
 }
@@ -230,9 +488,27 @@ function initWorldMapListeners() {
   globalThis.addEventListener("save-data-changed", () => {
     renderWorldMapPins();
   });
+
+  // Re-render map pins when manual progress changes (checkboxes)
+  globalThis.addEventListener("manual-progress-changed", () => {
+    renderWorldMapPins();
+  });
+
+  // Re-render map pins when "show only missing" filter changes
+  showOnlyMissing.addEventListener("change", () => {
+    renderWorldMapPins();
+  });
+
+  // Re-render map pins when "progress only" filter changes
+  showProgressOnly.addEventListener("change", () => {
+    renderWorldMapPins();
+  });
 }
 
 function getUnlocked(item: Item, value: unknown): boolean {
+  // Manual progress is now integrated into the save data directly, so we don't need to check it
+  // separately
+
   if (item.type === "quest") {
     return value === "completed" || value === true;
   }
@@ -291,8 +567,13 @@ function getUnlocked(item: Item, value: unknown): boolean {
   }
 
   if (item.type === "sceneVisited") {
-    const visitedScenes = getSaveData()?.playerData.scenesVisited ?? [];
+    // If manually set to true, return true
+    if (value === true) {
+      return true;
+    }
 
+    // Otherwise check save data
+    const visitedScenes = getSaveData()?.playerData.scenesVisited ?? [];
     return Array.isArray(visitedScenes) && visitedScenes.includes(item.scene);
   }
 
@@ -381,8 +662,20 @@ function buildDynamicTOC() {
   // Append legend block at the bottom of the TOC.
   const legendBlock = document.createElement("div");
   legendBlock.className = "toc-legend";
+
+  // Check if legend is collapsed from localStorage
+  const isLegendCollapsed = localStorage.getItem("legend-collapsed") === "true";
+  if (isLegendCollapsed) {
+    legendBlock.classList.add("collapsed");
+  }
+
   legendBlock.innerHTML = `
-    <div class="legend-title">Legend</div>
+    <div class="legend-header">
+      <span class="legend-collapse-icon">
+        <i class="fa-solid fa-chevron-${isLegendCollapsed ? "right" : "down"}"></i>
+      </span>
+      <div class="legend-title">Legend</div>
+    </div>
     <ul class="legend-list">
       <li><i class="fa-solid fa-arrow-up"></i> Upgrade of another tool</li>
       <li><i class="fa-solid fa-code-branch"></i> Mutually exclusive item</li>
@@ -390,6 +683,22 @@ function buildDynamicTOC() {
     </ul>
   `;
   tocList.parentElement?.append(legendBlock);
+
+  // Add click handler to toggle collapsed state
+  const legendHeader = legendBlock.querySelector(".legend-header");
+  const legendIcon = legendBlock.querySelector(".legend-collapse-icon i");
+
+  legendHeader?.addEventListener("click", () => {
+    const isCollapsed = legendBlock.classList.toggle("collapsed");
+    localStorage.setItem("legend-collapsed", String(isCollapsed));
+
+    // Update chevron icon
+    if (legendIcon) {
+      legendIcon.className = isCollapsed
+        ? "fa-solid fa-chevron-right"
+        : "fa-solid fa-chevron-down";
+    }
+  });
 }
 
 function resolveIconSrc(icon: string | undefined): string {
@@ -433,13 +742,25 @@ function showGenericModal(item: Item) {
   }
 
   const pinIconSrc = resolveIconSrc(item.icon);
+  const saveData = getSaveData();
+  const saveDataFlags = getSaveDataFlags();
+  const value = getSaveDataValue(saveData, saveDataFlags, item);
+  const isCompleted = getUnlocked(item, value);
+  const isNeedle = pinIconSrc.includes("Needle");
 
   infoContent.innerHTML = `
-    <button id="modalCloseBtn" class="modal-close">✕</button>
-    <img src="${pinIconSrc}" alt="${item.label}" class="info-image">
-    <h2 class="info-title">${item.label}</h2>
+    <div class="modal-header-actions"></div>
+    <div class="modal-content-scroll">
+      ${
+        isNeedle
+          ? `<div class="rotated-image-wrapper">
+              <img src="${pinIconSrc}" alt="${item.label}" class="info-image rotated-needle">
+            </div>`
+          : `<img src="${pinIconSrc}" alt="${item.label}" class="info-image">`
+      }
+      <h2 class="info-title">${item.label}</h2>
 
-    <p class="info-description">${item.description}</p>
+      <p class="info-description">${item.description}</p>
 
     ${
       item.type === "journal"
@@ -521,19 +842,57 @@ ${(() => {
     </div>
   `;
 })()}
-
-    ${
-      item.link === ""
-        ? ""
-        : `
-        <div class="info-link-wrapper">
-          <a href="${item.link}" target="_blank" class="info-link">More info</a>
-        </div>
-      `
-    }
+    </div>
   `;
 
   infoOverlay.classList.remove("hidden");
+
+  // Get the header container
+  const headerActions = infoContent.querySelector(".modal-header-actions");
+  if (headerActions) {
+    // Add info link if available
+    if (item.link !== "") {
+      const infoLink = document.createElement("a");
+      infoLink.href = item.link;
+      infoLink.target = "_blank";
+      infoLink.className = "modal-info-link";
+      infoLink.title = "More info";
+      infoLink.setAttribute("aria-label", "More info");
+      infoLink.innerHTML = '<i class="fa-solid fa-circle-info"></i>';
+      headerActions.append(infoLink);
+    }
+
+    // Create a wrapper for checkbox and close button to keep them grouped
+    const rightControls = document.createElement("div");
+    rightControls.className = "modal-right-controls";
+
+    // Add checkbox in label for larger click area
+    const checkboxLabel = document.createElement("label");
+    checkboxLabel.className = "modal-checkbox-label";
+    const checkbox = createCheckbox(
+      item,
+      isCompleted,
+      () => {
+        infoOverlay.classList.add("hidden");
+      },
+      getItemsByGroup,
+      getUpgradeRelatedItems,
+    );
+    checkboxLabel.append(checkbox);
+    rightControls.append(checkboxLabel);
+
+    // Add close button
+    const closeBtn = document.createElement("button");
+    closeBtn.id = "modalCloseBtn";
+    closeBtn.className = "modal-close";
+    closeBtn.textContent = "✕";
+    closeBtn.addEventListener("click", () => {
+      infoOverlay.classList.add("hidden");
+    });
+    rightControls.append(closeBtn);
+
+    headerActions.append(rightControls);
+  }
 
   if (item.mapViewer) {
     const viewer = document.querySelector<HTMLElement>(
@@ -635,14 +994,6 @@ ${(() => {
       }
     }
   }
-
-  // Attach listener to the *newly created* close button.
-  const modalCloseBtn = document.querySelector("#modalCloseBtn");
-  if (modalCloseBtn) {
-    modalCloseBtn.addEventListener("click", () => {
-      infoOverlay.classList.add("hidden");
-    });
-  }
 }
 
 /**
@@ -714,100 +1065,33 @@ function renderGenericGrid(
     img.alt = item.label;
 
     const value = getSaveDataValue(saveData, saveDataFlags, item);
+    const isDone = getUnlocked(item, value);
 
-    let isDone: boolean;
+    // Check for "accepted" state (in-progress items)
     let isAccepted = false;
 
     switch (item.type) {
-      case "level": {
-        const current = Number.isFinite(Number(value)) ? Number(value) : 0;
-        isDone = current >= item.required;
-        break;
-      }
-
-      case "collectable": {
-        const current = Number.isFinite(Number(value)) ? Number(value) : 0;
-        isDone = current > 0;
-        break;
-      }
-
-      case "quill": {
-        isDone =
-          typeof value === "number"
-          && item.id === `QuillState_${value}`
-          && [1, 2, 3].includes(value);
-        break;
-      }
-
       case "quest": {
-        isDone = value === "completed" || value === true;
         isAccepted = value === "accepted";
+
         break;
       }
 
       case "relic":
       case "materium":
       case "device": {
-        isDone = value === "deposited";
         isAccepted = value === "collected";
+
         break;
       }
 
       case "journal": {
         const current = Number.isFinite(Number(value)) ? Number(value) : 0;
-        const { required } = item;
-        isDone = current >= required;
-        isAccepted = current > 0 && current < required;
+        isAccepted = current > 0 && current < item.required;
+
         break;
       }
-
-      case "anyOf": {
-        const anyOfResults: unknown[] = Array.isArray(value) ? value : [];
-        isDone = item.anyOf.some((check, index) => {
-          const someValue = anyOfResults[index];
-
-          const evaluateCheck = (): boolean => {
-            switch (check.type) {
-              case "flag":
-              case "sceneBool":
-              case "sceneVisited": {
-                return someValue === true;
-              }
-
-              case "flagInt": {
-                return typeof someValue === "number" ? someValue >= 1 : false;
-              }
-
-              case "level": {
-                const current = Number.isFinite(Number(someValue))
-                  ? Number(someValue)
-                  : 0;
-                return current >= check.required;
-              }
-            }
-          };
-
-          return evaluateCheck();
-        });
-        break;
-      }
-
-      case "key": {
-        isDone = value === true;
-        break;
-      }
-
-      case "sceneVisited": {
-        const visitedScenes = getSaveData()?.playerData.scenesVisited ?? [];
-        isDone =
-          Array.isArray(visitedScenes) && visitedScenes.includes(item.scene);
-        break;
-      }
-
-      default: {
-        isDone = value === true;
-        break;
-      }
+      // No default
     }
 
     // Unobtainable icon
@@ -834,6 +1118,11 @@ function renderGenericGrid(
       continue;
     }
 
+    // Hide non-progress items if "Progress only" is checked.
+    if (showProgressOnly.checked && !itemCountsTowardCompletion(item)) {
+      continue;
+    }
+
     // Missable icon
     if (item.missable === true) {
       const warn = document.createElement("span");
@@ -847,15 +1136,18 @@ function renderGenericGrid(
     const iconPath = resolveIconSrc(item.icon);
     const lockedPath = `${BASE_PATH}/assets/icons/locked.png`;
 
+    // Check if this item is crossed out because another in the group was obtained
+    const isCrossedOut = div.classList.contains("unobtainable");
+
     if (isDone) {
       img.src = iconPath;
       div.classList.add("done");
     } else if (isAccepted) {
       img.src = iconPath;
       div.classList.add("accepted");
-    } else if (item.unobtainable === true && saveData !== undefined) {
+    } else if (isCrossedOut) {
+      // Show icon for crossed-out items (another in group was obtained)
       img.src = iconPath;
-      div.classList.add("unobtainable");
     } else if (spoilerOn) {
       img.src = iconPath;
       div.classList.add("unlocked");
@@ -884,8 +1176,8 @@ function renderGenericGrid(
     title.textContent = item.label;
     div.append(img, title);
 
-    // Journal counter
-    if (item.type === "journal") {
+    // Journal counter (only show for multi-kill entries, not bosses)
+    if (item.type === "journal" && item.required > 1) {
       const current = Number.isFinite(Number(value)) ? Number(value) : 0;
       const counter = document.createElement("span");
       counter.className = "journal-counter";
@@ -894,6 +1186,18 @@ function renderGenericGrid(
       div.append(counter);
     }
 
+    // Add checkbox toggle (top-right)
+    const checkbox = createCheckbox(
+      item,
+      isDone,
+      undefined,
+      getItemsByGroup,
+      getUpgradeRelatedItems,
+    );
+    checkbox.classList.add("tile-checkbox");
+    div.append(checkbox);
+
+    // Click on card opens modal
     div.addEventListener("click", () => {
       showGenericModal(item);
     });
@@ -1043,10 +1347,6 @@ function renderWorldMapPins() {
   const img = document.querySelector<HTMLImageElement>("#worldMap");
   const overlay = document.querySelector<HTMLDivElement>("#mapPinsOverlay");
 
-  const searchInput = document.querySelector<HTMLInputElement>("#map-search");
-  if (searchInput) {
-    searchInput.addEventListener("input", renderWorldMapPins);
-  }
   if (!img || !overlay) {
     return;
   }
@@ -1056,6 +1356,7 @@ function renderWorldMapPins() {
   const currentSrc = img.getAttribute("src") ?? "";
   const currentResolved = resolveMapImageSrc(currentSrc);
 
+  const searchInput = document.querySelector<HTMLInputElement>("#map-search");
   const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : "";
 
   const items = collectAllItems();
@@ -1110,12 +1411,24 @@ function renderWorldMapPins() {
     pin.style.left = `${item.mapViewer.x * 100}%`;
     pin.style.top = `${item.mapViewer.y * 100}%`;
 
-    if (saveData !== undefined) {
-      const value = getSaveDataValue(saveData, saveDataFlags, item);
-      const unlocked = getUnlocked(item, value);
-      if (unlocked) {
-        pin.classList.add("obtained");
+    // Check if item is unlocked (either from save data or manual progress)
+    const value =
+      saveData === undefined
+        ? undefined
+        : getSaveDataValue(saveData, saveDataFlags, item);
+    const unlocked = getUnlocked(item, value);
+
+    if (unlocked) {
+      pin.classList.add("obtained");
+      // Skip obtained items when "show only missing" is enabled
+      if (showOnlyMissing.checked) {
+        continue;
       }
+    }
+
+    // Skip non-progress items when "Progress only" is enabled
+    if (showProgressOnly.checked && !itemCountsTowardCompletion(item)) {
+      continue;
     }
 
     pin.addEventListener("click", (e) => {
@@ -1137,6 +1450,7 @@ function formatLabel(slug: string): string {
 
 function generateFilterCheckboxes() {
   const container = document.querySelector<HTMLElement>("#map-filters");
+
   if (!container) {
     return;
   }
@@ -1176,12 +1490,11 @@ function generateFilterCheckboxes() {
 export function initWorldMapPins(): void {
   initWorldMapListeners();
 
-  const select = document.querySelector<HTMLSelectElement>("#map-act-select");
   const img = document.querySelector<HTMLImageElement>("#worldMap");
   const overlay = document.querySelector<HTMLDivElement>("#mapPinsOverlay");
   const pinsToggle = document.querySelector<HTMLInputElement>("#show-map-pins");
 
-  if (!select || !img || !overlay) {
+  if (!img || !overlay) {
     return;
   }
 
@@ -1193,6 +1506,14 @@ export function initWorldMapPins(): void {
     };
     pinsToggle.addEventListener("change", applyPinsVisibility);
     applyPinsVisibility();
+  }
+
+  // Attach search input listener
+  const searchInput = document.querySelector<HTMLInputElement>("#map-search");
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      renderWorldMapPins();
+    });
   }
 
   // eslint-disable-next-line unicorn/prefer-spread
@@ -1220,30 +1541,13 @@ export function initWorldMapPins(): void {
     renderWorldMapPins();
   });
 
-  const setMapFromSelect = () => {
-    const v = select.value.trim();
-    img.src =
-      v.startsWith("http") || v.startsWith("/") ? v : resolveMapImageSrc(v);
-  };
-
-  select.addEventListener("change", () => {
-    setMapFromSelect();
-    img.addEventListener(
-      "load",
-      () => {
-        renderWorldMapPins();
-      },
-      { once: true },
-    );
-  });
-
+  // Render pins when map image loads
   img.addEventListener("load", () => {
     renderWorldMapPins();
   });
 
+  // Initial render if image already loaded
   if (img.complete) {
     renderWorldMapPins();
-  } else {
-    setMapFromSelect();
   }
 }

@@ -99,13 +99,13 @@ body {
 
 .main-wrapper {
   margin-left: 220px;
-  /* width calc removed to prevent layout breakages with fixed sidebar */
 }
 
 .topbar {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px;
   top: 0;
   z-index: 10;
   height: 44px;
@@ -114,14 +114,8 @@ body {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04);
   position: relative;
-}
-
-.topbar-right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .section {
@@ -202,9 +196,7 @@ button,
   transform: scale(0.97);
 }
 
-/* Support legacy classes used in your markup */
-.sidebar-links,
-.sidebar-links.compact-icons {
+.sidebar-links {
   display: flex;
   justify-content: flex-start;
   gap: 12px;
@@ -262,6 +254,62 @@ button,
   color: #fff;
   font-weight: 600;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+/* ------------------
+   SIDEBAR: ACTION BUTTON (Upload/Reset)
+------------------- */
+
+.sidebar-action-section {
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-action-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  background: var(--bg-3);
+  color: var(--ink-1);
+  font-size: 0.87rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sidebar-action-btn:hover {
+  background: rgba(255, 153, 51, 0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(255, 153, 51, 0.2);
+}
+
+.sidebar-action-btn:active {
+  transform: translateY(0);
+}
+
+/* Reset state styling */
+.sidebar-action-btn.btn-reset {
+  background: rgba(255, 77, 77, 0.1);
+  color: #ff4d4d;
+  border-color: rgba(255, 77, 77, 0.3);
+}
+
+.sidebar-action-btn.btn-reset:hover {
+  background: #ff4d4d;
+  color: #fff;
+  border-color: #ff4d4d;
+  box-shadow: 0 2px 12px rgba(255, 77, 77, 0.4);
+}
+
+.sidebar-action-btn i {
+  font-size: 1rem;
 }
 
 a {
@@ -383,6 +431,78 @@ main a:hover,
   border-radius: 8px;
 }
 
+.btn-icon {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: "TrajanPro", serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+  transition:
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.btn-icon i {
+  font-size: 14px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.btn-icon span {
+  display: inline-block;
+  transform: translateY(2px);
+}
+
+.btn-icon:hover {
+  background: #a95b22;
+  box-shadow: 0 0 12px rgba(197, 106, 45, 0.4);
+}
+
+.btn-icon:active {
+  transform: scale(0.97);
+}
+
+.btn-reset {
+  background: #c74444;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: "TrajanPro", serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+  transition:
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.btn-reset:hover {
+  background: #a93939;
+  box-shadow: 0 0 12px rgba(199, 68, 68, 0.4);
+}
+
+.btn-reset:active {
+  transform: scale(0.97);
+}
+
 .topbar label {
   margin: 0;
   font-size: 0.9rem;
@@ -500,11 +620,16 @@ main a:hover,
 
 .modal {
   width: min(640px, 92vw);
+  max-height: 85vh;
   background: #1a1a1a;
   border: 1px solid #2c2c2c;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   padding: 16px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .modal-header {
@@ -519,19 +644,34 @@ main a:hover,
   color: #fff;
 }
 
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 12px;
+/* Unified modal header buttons */
+.modal-close,
+.modal-info-link {
   background: transparent;
   border: none;
   font-size: 20px;
   color: #aaa;
   cursor: pointer;
+  text-decoration: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+  flex-shrink: 0;
 }
 
-.modal-close:hover {
-  color: white;
+.modal-close:hover,
+.modal-info-link:hover {
+  color: var(--accent);
+  background: rgba(197, 106, 45, 0.1);
+}
+
+.modal-info-link i {
+  font-size: 20px;
 }
 
 /* ------------------
@@ -733,15 +873,66 @@ main a:hover,
 
 #info-content.modal {
   background: #1a1a1a;
-  padding: 30px;
+  padding: 0;
   border-radius: 12px;
   max-width: 480px;
+  max-height: 85vh;
   width: 90%;
   color: #fff;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
   text-align: center;
   position: relative;
   font-family: "TrajanPro-Regular", serif;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Modal header - stays fixed at top */
+#info-content.modal > .modal-header-actions {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #1a1a1a;
+  padding: 10px 12px;
+  border-radius: 12px 12px 0 0;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-right-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Modal content - scrollable */
+#info-content.modal > .modal-content-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px 30px 30px;
+  flex: 1;
+}
+
+#info-content.modal > .modal-content-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+#info-content.modal > .modal-content-scroll::-webkit-scrollbar-track {
+  background: #0f0f0f;
+  border-radius: 4px;
+}
+
+#info-content.modal > .modal-content-scroll::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+}
+
+#info-content.modal > .modal-content-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 /* style.css */
@@ -751,6 +942,28 @@ main a:hover,
   margin: 0 auto 18px;
   display: block;
   object-fit: contain; /* Mantiene le proporzioni */
+}
+
+/* Wrapper for rotated needle images - has swapped dimensions for layout */
+.rotated-image-wrapper {
+  width: 120px;
+  height: 72px;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+/* Needle image inside wrapper - rotated to horizontal */
+.rotated-image-wrapper .rotated-needle {
+  width: 72px;
+  height: 120px;
+  max-width: 72px;
+  max-height: 120px;
+  margin: 0;
+  transform: rotate(-90deg);
+  transform-origin: center center;
 }
 
 #info-content .info-title {
@@ -831,9 +1044,9 @@ main a:hover,
   border: 1px solid var(--stroke-soft);
   border-radius: 10px;
   font-weight: 600;
-  display: flex;
-  gap: 2rem;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
   margin-bottom: 1rem;
   font-size: 1rem;
   color: #ddd;
@@ -901,11 +1114,6 @@ main a:hover,
   margin-left: 1rem;
   cursor: pointer;
   font-size: 0.95rem;
-}
-
-.toggle input {
-  accent-color: #888; /* check color */
-  transform: scale(1.2); /* larger */
 }
 
 .main-stats div {
@@ -1268,12 +1476,75 @@ main a:hover,
 .category-title {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.6rem;
+}
+
+.category-label {
+  flex-grow: 1;
+  text-align: left;
+  font-size: 1em;
+  transform: translateY(2px);
 }
 
 .category-count {
-  font-size: 0.9em;
+  font-size: 0.85em;
   color: var(--ink-3);
+  flex-shrink: 0;
+  margin-left: auto;
+  transform: translateY(2px);
+}
+
+/* Category checkbox - only visible on hover */
+.category-checkbox {
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.category-title:hover .category-checkbox {
+  opacity: 1;
+}
+
+/* Indeterminate state styling */
+.category-checkbox:indeterminate {
+  opacity: 0;
+}
+
+.category-title:hover .category-checkbox:indeterminate {
+  opacity: 1;
+}
+
+/* Collapse icon */
+.collapse-icon {
+  color: var(--accent);
+  font-size: 0.8em;
+  transition: transform 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.collapsed .collapse-icon {
+  transform: rotate(0deg);
+}
+
+/* Category content wrapper for collapse animation */
+.category-content {
+  max-height: 5000px;
+  overflow: hidden;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.3s ease;
+  opacity: 1;
+}
+
+.collapsed .category-content {
+  max-height: 0;
+  opacity: 0;
 }
 
 /* MAIN% - centered and compact title */
@@ -1304,19 +1575,54 @@ main a:hover,
   vertical-align: baseline;
 }
 
-/* --- Custom checkboxes --- */
+/* --- Unified Standard Checkboxes --- */
 input[type="checkbox"] {
-  accent-color: var(--accent);
+  /* 1. This kills the native "black corner" box */
+  -webkit-appearance: none;
+  appearance: none;
+
+  /* Your existing layout styles */
   cursor: pointer;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 3px;
   border: 1px solid var(--stroke);
   background-color: var(--bg-2);
   transition: all 0.2s ease;
+
+  /* Layout for the checkmark */
+  display: grid;
+  place-content: center;
+  margin: 0; /* Reset browser default margins */
+
+  /* Prevent squishing in flex containers */
+  flex-shrink: 0;
 }
 
-/* When active (orange checkmark) */
+/* 1. Define the Checkmark as an SVG image */
+input[type="checkbox"]::before {
+  content: "";
+  width: 12px; /* Adjustable size */
+  height: 12px;
+
+  /* This is the SVG data URI for a perfect, squared checkmark */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpolyline points='20 5 9 18 4 13'%3E%3C/polyline%3E%3C/svg%3E");
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  /* Animation setup */
+  transform: scale(0);
+  transition: 0.1s transform ease-in-out;
+}
+
+/* 2. Show the checkmark when active */
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+/* (Keep your existing background/border styles for the input parent) */
 input[type="checkbox"]:checked {
   background-color: var(--accent);
   border-color: var(--accent);
@@ -1328,10 +1634,17 @@ input[type="checkbox"]:hover {
   box-shadow: 0 0 4px var(--accent);
 }
 
+/* Focus states */
+input[type="checkbox"]:focus,
+input[type="checkbox"]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 4px var(--accent);
+}
+
 /* --- FIX HOME LAYOUT ON SMALL SCREENS --- */
 @media (max-width: 1400px) {
   .main-wrapper {
-    margin-left: 240px; /* prevents text from going under sidebar */
+    margin-left: 220px; /* match sidebar width */
   }
 
   .home-content {
@@ -1377,6 +1690,170 @@ input[type="checkbox"]:hover {
 
   .home-content h1 {
     font-size: 1.8rem;
+  }
+}
+
+/* Hide desktop map filters sidebar always (use drawer for all screen sizes) */
+.map-sidebar {
+  display: none !important;
+}
+
+/* Mobile/Tablet: Hide desktop sidebars, use mobile drawers */
+@media (max-width: 1024px) {
+  /* Hide desktop left sidebar */
+  .sidebar {
+    display: none !important;
+  }
+
+  /* Hide desktop right TOC */
+  .toc-container {
+    display: none !important;
+  }
+
+  /* Hide desktop-only elements (upload/reset button - uses drawer on mobile) */
+  .desktop-only {
+    display: none !important;
+  }
+
+  /* Remove sidebar margins */
+  .main-wrapper {
+    margin-left: 0 !important;
+  }
+
+  #main {
+    margin-right: 0 !important;
+  }
+
+  /* Back to top button - adjust position when TOC is hidden */
+  #back-to-top {
+    right: 20px !important;
+  }
+
+  /* Map section - full width on mobile/tablet */
+  #map-section .map-wrapper {
+    width: 100% !important;
+    margin-right: 0 !important;
+  }
+
+  /* Map header - allow natural wrapping on tablets */
+  .map-header {
+    gap: 0.75rem;
+  }
+
+  .map-controls {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .map-control-group {
+    flex: 0 1 auto;
+  }
+
+  #desktop-pins-toggle {
+    flex-shrink: 0;
+  }
+
+  /* Topbar adjustments */
+  .topbar {
+    width: 100%;
+    padding: 0 8px;
+    grid-template-columns: auto 1fr auto;
+    gap: 8px;
+  }
+
+  .topbar-left {
+    gap: 6px;
+  }
+
+  .topbar-center {
+    gap: 6px;
+  }
+
+  .topbar-end {
+    gap: 6px;
+  }
+
+  /* Reduce button padding on mobile for better fit */
+  .btn-icon,
+  .dropdown-toggle {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    height: 32px;
+  }
+
+  .btn-icon i,
+  .dropdown-toggle i {
+    font-size: 13px;
+  }
+
+  /* Ensure hamburger menu button matches other buttons */
+  .mobile-tabs-toggle {
+    height: 32px;
+    padding: 6px 10px;
+  }
+
+  .mobile-tabs-toggle img {
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Simplify button labels on very small screens (phones) */
+  @media (max-width: 480px) {
+    .topbar {
+      padding: 0 6px;
+      gap: 6px;
+    }
+
+    .topbar-left,
+    .topbar-center,
+    .topbar-end {
+      gap: 4px;
+    }
+
+    .btn-icon,
+    .dropdown-toggle {
+      padding: 5px 7px;
+      font-size: 0.75rem;
+      height: 30px;
+    }
+
+    .mobile-tabs-toggle {
+      height: 30px;
+      padding: 5px 7px;
+    }
+
+    .mobile-tabs-toggle img {
+      width: 18px;
+      height: 18px;
+    }
+
+    .topbar-end .btn-icon span:not(#mobile-context-label) {
+      display: none;
+    }
+
+    /* On very small screens, hide text labels completely */
+    .dropdown-toggle span,
+    #mobile-context-label {
+      display: none;
+    }
+
+    .btn-icon i,
+    .dropdown-toggle i {
+      font-size: 12px;
+    }
+
+    /* Stack map header on small phones only */
+    .map-header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+    }
+
+    .map-controls {
+      width: 100%;
+      justify-content: space-between;
+    }
   }
 }
 
@@ -1500,6 +1977,52 @@ main::-webkit-scrollbar-thumb:hover {
   box-shadow: 0 0 6px rgba(241, 196, 15, 0.5);
 }
 
+/* ------------------
+   ITEM CHECKBOXES (TILES & MODAL)
+------------------- */
+
+/* Tile checkbox - top-right, hidden until hover */
+.item-checkbox.tile-checkbox {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+}
+
+/* Show on hover */
+.boss:hover .item-checkbox.tile-checkbox {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+/* Modal checkbox label - unified with other header icons */
+.modal-checkbox-label {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.modal-checkbox-label:hover {
+  background: rgba(197, 106, 45, 0.1);
+}
+
 #act-filter {
   display: flex;
   align-items: center;
@@ -1538,14 +2061,18 @@ main::-webkit-scrollbar-thumb:hover {
   font-family: "TrajanPro", serif;
   font-size: 0.9rem;
   border-radius: 4px;
-  width: 80px;
+  min-width: 120px;
   background: var(--accent);
   color: var(--ink-2);
   cursor: pointer;
-  padding: 0.3rem;
+  padding: 0.5rem;
   font-weight: bold;
   border: 1px solid var(--accent);
   outline: none;
+}
+
+#desktop-pins-toggle {
+  white-space: nowrap;
 }
 
 #act-filter select {
@@ -1788,6 +2315,32 @@ main::-webkit-scrollbar-thumb:hover {
   filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.4));
 }
 
+/* ------------------
+   RESPONSIVE FILTERS
+------------------- */
+
+/* Desktop: Show individual labels, hide dropdown */
+.dropdown.filters-dropdown-mobile {
+  display: none !important;
+}
+
+label.filter-label-desktop,
+.toggle.filter-label-desktop {
+  display: inline-flex;
+}
+
+/* Tablet and below: Hide individual labels, show dropdown */
+@media (max-width: 1024px) {
+  .dropdown.filters-dropdown-mobile {
+    display: inline-block !important;
+  }
+
+  label.filter-label-desktop,
+  .toggle.filter-label-desktop {
+    display: none !important;
+  }
+}
+
 .rawsave-container {
   padding: 20px 25px;
   color: var(--ink-2);
@@ -1917,7 +2470,7 @@ main::-webkit-scrollbar-thumb:hover {
 .missable-icon {
   position: absolute;
   top: 5px;
-  right: 5px;
+  left: 5px;
   width: 25px;
   height: 25px;
   display: flex;
@@ -1966,7 +2519,7 @@ main::-webkit-scrollbar-thumb:hover {
 .unobtainable-icon {
   position: absolute;
   top: 5px;
-  right: 5px;
+  left: 5px;
   width: 25px;
   height: 25px;
   display: flex;
@@ -2078,45 +2631,91 @@ main::-webkit-scrollbar-thumb:hover {
 
 .toc-legend {
   position: sticky;
-  bottom: 1.5rem;
+  bottom: -1.2rem;
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.9),
-    rgba(0, 0, 0, 0.4) 60%,
+    rgba(17, 17, 18, 1) 0%,
+    rgba(17, 17, 18, 1) 30%,
+    rgba(17, 17, 18, 0.98) 60%,
+    rgba(17, 17, 18, 0.85) 80%,
+    rgba(17, 17, 18, 0.4) 92%,
     transparent
   );
-  backdrop-filter: blur(2px);
-  padding-top: 1rem;
-  padding-bottom: 0.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(4px);
+  padding: 0.5rem 1.4rem 0.5rem 1.4rem;
+  margin: 0 -1.4rem -1.2rem -1.4rem;
+  border-top: 1px solid rgba(197, 106, 45, 0.25);
   font-size: 0.85rem;
-  line-height: 1.6;
+  line-height: 1.4;
   color: var(--ink-1);
-  opacity: 0.95;
   font-family: "TrajanPro", serif;
   letter-spacing: 0.02em;
   z-index: 2;
+}
+
+.legend-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 0;
+  margin-bottom: 0.4rem;
+  transition: color 0.2s ease;
+}
+
+.legend-header:hover {
+  color: var(--accent);
+}
+
+.legend-header:hover .legend-title {
+  color: var(--accent);
+}
+
+.legend-header:hover .legend-collapse-icon {
+  color: var(--accent);
+}
+
+.legend-collapse-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  color: var(--ink-1);
+  transition: color 0.2s ease;
+}
+
+.legend-collapse-icon i {
+  font-size: 12px;
 }
 
 .legend-title {
   font-weight: bold;
   text-transform: uppercase;
   font-size: 0.8rem;
-  color: var(--accent);
-  margin-bottom: 0.6rem;
+  color: var(--ink-1);
   letter-spacing: 0.06em;
+  flex-grow: 1;
+  transition: color 0.2s ease;
+}
+
+.toc-legend.collapsed .legend-list {
+  display: none;
+}
+
+.toc-legend.collapsed {
+  padding: 0.5rem 1.4rem 0.5rem 1.4rem;
 }
 
 .legend-list {
   list-style: none;
-  padding-left: 0.3rem;
+  padding: 0;
   margin: 0;
 }
 
 .legend-list li {
   display: flex;
   align-items: center;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.25rem;
   gap: 0.5rem;
 }
 
@@ -2171,8 +2770,26 @@ main::-webkit-scrollbar-thumb:hover {
   box-shadow: -3px 0 10px rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(8px);
   overflow-y: auto;
-  padding: 1.2rem 1.4rem;
+  padding: 1.2rem 1.4rem 1.2rem 0.75rem;
   z-index: 100;
+}
+
+/* On mobile/tablet, TOC behaves like a drawer */
+@media (max-width: 1024px) {
+  .toc-container {
+    top: 0;
+    width: 85%;
+    max-width: 340px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+    background: var(--bg-2);
+    padding: 1rem;
+  }
+
+  .toc-container.drawer-open {
+    transform: translateX(0);
+  }
 }
 
 #allprogress-grid {
@@ -2275,6 +2892,427 @@ main::-webkit-scrollbar-thumb:hover {
   text-shadow: 0 0 6px rgba(227, 180, 123, 0.3) !important;
 }
 
+/* ==================== MOBILE/TABLET DRAWERS (SHARED) ==================== */
+
+/* Toggle buttons - hidden on desktop (shown on mobile/tablet ≤1024px) */
+.mobile-tabs-toggle,
+.mobile-context-toggle {
+  display: none !important;
+}
+
+@media (max-width: 1024px) {
+  .mobile-tabs-toggle {
+    display: inline-flex !important;
+  }
+
+  /* Context toggle visibility controlled by JS based on active tab */
+  .mobile-context-toggle.visible {
+    display: inline-flex !important;
+  }
+}
+
+/* Topbar left section for mobile hamburger */
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-self: start;
+}
+
+/* Topbar center section for dropdowns/filters */
+.topbar-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+
+/* Topbar end section for context button + upload */
+.topbar-end {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-self: end;
+}
+
+/* Shared drawer backdrop */
+.mobile-drawer-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-drawer-backdrop.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Shared drawer base */
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  width: 85%;
+  max-width: 340px;
+  height: 100vh;
+  background: var(--bg-2);
+  z-index: 1000;
+  overflow-y: auto;
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Left drawer (slides from left) */
+.mobile-drawer-left {
+  left: 0;
+  transform: translateX(-100%);
+  border-right: 1px solid var(--stroke);
+}
+
+.mobile-drawer-left.open {
+  transform: translateX(0);
+}
+
+/* Right drawer (slides from right) */
+.mobile-drawer-right {
+  right: 0;
+  transform: translateX(100%);
+  border-left: 1px solid var(--stroke);
+}
+
+.mobile-drawer-right.open {
+  transform: translateX(0);
+}
+
+/* Hide tabs drawer on desktop (left drawer), but allow context drawer for map filters */
+@media (min-width: 1025px) {
+  .mobile-drawer-left,
+  #mobile-tabs-backdrop {
+    display: none !important;
+  }
+
+  /* Keep context drawer available for desktop pins toggle */
+  .mobile-drawer-right {
+    display: block;
+  }
+
+  #mobile-context-backdrop {
+    display: none;
+  }
+
+  #mobile-context-backdrop.active {
+    display: block;
+  }
+}
+
+/* Drawer header */
+.mobile-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid var(--stroke);
+  background: rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.mobile-drawer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink-1);
+}
+
+.mobile-drawer-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink-1);
+  margin: 0;
+}
+
+.mobile-drawer-close {
+  background: transparent;
+  border: none;
+  color: var(--ink-2);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.mobile-drawer-close:hover {
+  color: var(--ink-1);
+}
+
+/* Drawer content area */
+.mobile-drawer-content {
+  padding: 1rem 0;
+}
+
+.mobile-drawer-section-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+  margin: 0 0 0.75rem 0;
+  padding: 0 1rem;
+  font-weight: 600;
+}
+
+.mobile-drawer-divider {
+  height: 1px;
+  background: var(--stroke);
+  margin: 1.5rem 0;
+}
+
+/* Context content containers (TOC or Map Filters) */
+.mobile-context-content {
+  display: block;
+}
+
+.mobile-context-content.hidden {
+  display: none;
+}
+
+/* ==================== LEFT DRAWER (TABS) ==================== */
+
+.mobile-tab-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0 1rem;
+}
+
+.mobile-tab-items .sidebar-item {
+  padding: 0.875rem 1rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition:
+    background 0.2s,
+    color 0.2s;
+  text-decoration: none;
+  display: block;
+}
+
+.mobile-tab-items .sidebar-item:hover {
+  background: rgba(255, 153, 51, 0.1);
+}
+
+.mobile-tab-items .sidebar-item.is-active {
+  background: rgba(197, 100, 50, 0.2);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.mobile-external-links {
+  padding: 0 1rem;
+}
+
+.mobile-external-links .sidebar-wiki-btn {
+  display: block;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.mobile-external-links .sidebar-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+/* Mobile drawer actions (upload/reset) */
+.mobile-drawer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 1rem;
+}
+
+.mobile-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-3);
+  color: var(--ink-1);
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.mobile-action-btn:hover {
+  background: rgba(255, 153, 51, 0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.mobile-action-btn i {
+  font-size: 1rem;
+}
+
+/* Mobile action button - Reset state (red styling) */
+.mobile-action-btn.mobile-action-reset {
+  background: rgba(255, 77, 77, 0.1);
+  color: #ff4d4d;
+  border-color: rgba(255, 77, 77, 0.3);
+}
+
+.mobile-action-btn.mobile-action-reset:hover {
+  background: #ff4d4d;
+  color: #fff;
+  border-color: #ff4d4d;
+  box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
+}
+
+/* ==================== RIGHT DRAWER - MAP FILTERS (Map tab) ==================== */
+
+#map-filters-container {
+  padding: 0 1rem;
+}
+
+/* Search box in map filters drawer */
+#map-filters-container .search-container {
+  margin-bottom: 1rem;
+}
+
+#map-filters-container #map-search {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  background: var(--bg-1);
+  color: var(--ink-1);
+  font-size: 0.95rem;
+}
+
+#map-filters-container #map-search::placeholder {
+  color: var(--ink-3);
+}
+
+/* Show/Hide All buttons */
+#map-filters-container .filter-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+#map-filters-container .btn-small {
+  flex: 1;
+  padding: 0.625rem;
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  background: var(--bg-1);
+  color: var(--ink-2);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+#map-filters-container .btn-small:hover {
+  background: rgba(255, 153, 51, 0.1);
+  color: var(--ink-1);
+}
+
+/* Filter checkboxes list */
+#map-filters-container #map-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+#map-filters-container .filter-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+#map-filters-container .filter-item:hover {
+  background: rgba(255, 153, 51, 0.05);
+  border-color: rgba(255, 153, 51, 0.2);
+}
+
+#map-filters-container .filter-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+#map-filters-container .filter-item span {
+  flex: 1;
+  font-size: 0.9rem;
+  color: var(--ink-1);
+}
+
+/* Map toggle section (room names) */
+#map-filters-container .map-toggle-divider {
+  height: 1px;
+  background: var(--stroke);
+  margin: 1.5rem 0 1rem;
+}
+
+#map-filters-container .map-toggle-section {
+  padding: 0;
+}
+
+#map-filters-container .map-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+#map-filters-container .map-toggle-label:hover {
+  background: rgba(255, 153, 51, 0.05);
+  border-color: rgba(255, 153, 51, 0.2);
+}
+
+#map-filters-container .map-toggle-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+#map-filters-container .map-toggle-label span {
+  flex: 1;
+  font-size: 0.9rem;
+  color: var(--ink-1);
+}
+
 /* === DROPDOWN MULTISELECT === */
 .dropdown {
   position: relative;
@@ -2324,11 +3362,6 @@ main::-webkit-scrollbar-thumb:hover {
   display: none;
 }
 
-.dropdown-menu input[type="checkbox"] {
-  accent-color: var(--accent);
-  transform: scale(1.1);
-}
-
 .dropdown-divider {
   height: 1px;
   background: var(--stroke-soft);
@@ -2367,7 +3400,7 @@ main::-webkit-scrollbar-thumb:hover {
 .upgrade-icon {
   position: absolute;
   top: 5px;
-  right: 5px;
+  left: 5px;
   width: 25px;
   height: 25px;
   display: flex;
@@ -2411,7 +3444,8 @@ main::-webkit-scrollbar-thumb:hover {
 #modeBanner {
   position: absolute;
   top: 9px;
-  left: 14px;
+  left: 50%;
+  transform: translateX(-50%);
   background: #181715;
   border: 2px solid #8a6a3a;
   color: #d7b98a;
@@ -2421,7 +3455,7 @@ main::-webkit-scrollbar-thumb:hover {
   letter-spacing: 1px;
   padding: 4px 14px;
   border-radius: 6px;
-  z-index: 10;
+  z-index: 5;
   text-transform: uppercase;
   white-space: nowrap;
   pointer-events: none;
@@ -2429,6 +3463,7 @@ main::-webkit-scrollbar-thumb:hover {
   width: auto;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
   animation: modeBannerBlink 1.2s infinite alternate;
+  grid-column: 1 / -1;
 }
 
 @keyframes modeBannerBlink {
@@ -2480,6 +3515,7 @@ main::-webkit-scrollbar-thumb:hover {
   background: #000;
   cursor: grab;
   touch-action: none;
+  border-radius: 8px;
 }
 
 #worldMapInner {
@@ -2551,14 +3587,36 @@ main::-webkit-scrollbar-thumb:hover {
   backdrop-filter: blur(2px);
 }
 
+/* Map header with title and controls */
+.map-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.map-header h2 {
+  margin: 0;
+}
+
 .map-controls {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding-bottom: 20px;
-  font-weight: bold;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.map-control-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.map-control-group label {
+  font-size: 0.9rem;
+  color: var(--ink-2);
 }
 
 .map-controls select option {
@@ -2771,4 +3829,9 @@ main::-webkit-scrollbar-thumb:hover {
   background: #ff4d4d;
   color: #fff;
   box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
+}
+
+.btn-reset span {
+  display: inline-block;
+  transform: translateY(2px);
 }

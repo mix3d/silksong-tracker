@@ -51,7 +51,23 @@ export const rosariesValue = getHTMLElement("rosariesValue");
 export const shardsValue = getHTMLElement("shardsValue");
 export const tocList = getHTMLElement("toc-list");
 export const uploadOverlay = getHTMLElement("uploadOverlay");
-export const mapActSelector = getHTMLElement("map-act-select");
 export const worldMap = getHTMLElement("worldMap");
 export const logoLink = getHTMLElement("logo-link") as HTMLAnchorElement;
-export const clearDataBtn = getHTMLElement("clearDataBtn") as HTMLAnchorElement;
+
+// Map room names toggle (optional - may not exist on all pages)
+export function getShowRoomNamesToggle(): HTMLInputElement | null {
+  try {
+    return getHTMLElement("show-room-names") as HTMLInputElement;
+  } catch {
+    return null;
+  }
+}
+
+// Desktop-only element (may not exist on mobile)
+export function getDataActionBtn(): HTMLButtonElement | null {
+  try {
+    return getHTMLElement("data-action-btn") as HTMLButtonElement;
+  } catch {
+    return null;
+  }
+}
